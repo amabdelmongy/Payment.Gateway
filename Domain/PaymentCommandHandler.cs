@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Domain.Commands;
+using Domain.Events;
 
 namespace Domain
 {
@@ -12,8 +13,17 @@ namespace Domain
 
     public class PaymentCommandHandler : IHandlePaymentCommands
     {
-        private Result<Event> Handle(RequestProcessPayment requestProcessPaymentCommand)
+        private Result<Event> Handle(RequestProcessPayment requestProcessPayment)
         {
+            var paymentProcessCreated = new PaymentProcessCreated(
+                requestProcessPayment.PaymentId,
+                DateTime.Now,
+                1,
+                requestProcessPayment.Card,
+                requestProcessPayment.MerchantId,
+                requestProcessPayment.Amount
+            );
+
             return Result.Ok<Event>();
         }
 
