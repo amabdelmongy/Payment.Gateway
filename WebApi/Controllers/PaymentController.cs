@@ -36,17 +36,17 @@ namespace WebApi.Controllers
                     paymentRequestDto.Card.Cvv
                 ),
                 paymentRequestDto.MerchantId,
-                new Money(Double.Parse(paymentRequestDto.Amount.Value), paymentRequestDto.Amount.Currency)
+                new Money(paymentRequestDto.Amount.Value, paymentRequestDto.Amount.Currency)
             );
             var result = _paymentCommandHandler.Handle(requestProcessPayment.Value);
-
+            //TODO:-
             return Ok();
         }
 
         #region Dto
         public class MoneyDto
         {  
-            public string Value { get; set; }
+            public double Value { get; set; }
             public string Currency { get; set; }
         }
 
