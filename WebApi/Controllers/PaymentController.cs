@@ -37,7 +37,6 @@ namespace WebApi.Controllers
 
         public class PaymentRequestDto
         {
-            public Guid Id { get; set; }
 
             public CardDto Card { get; set; }
 
