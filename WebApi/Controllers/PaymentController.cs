@@ -7,7 +7,7 @@ using Service;
 namespace WebApi.Controllers
 {
     [ApiController]
-    [Route("payments")]
+    [Route("api/payment")]
     public class PaymentController : ControllerBase
     { 
 
