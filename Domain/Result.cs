@@ -87,7 +87,10 @@ namespace Domain
         public static Error CreateFrom(string subject, string message = null)
         { 
             return new Error(subject, null, message);
-        }
-
+        } 
+        public static Error CreateFrom(string subject, Exception exception)
+        {
+            return new Error(subject, exception, exception.Message);
+        } 
     }
 }

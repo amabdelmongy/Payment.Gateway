@@ -6,13 +6,20 @@ using Domain.Events;
 
 namespace Domain
 {
-    public interface IHandlePaymentCommands
+    public interface IPaymentCommandHandler
     {
         Result<Event> Handle(PaymentCommand command);
     }
 
-    public class PaymentCommandHandler : IHandlePaymentCommands
+    public class PaymentCommandHandler : IPaymentCommandHandler
     {
+        private readonly IPaymentEventRepository _paymentEventRepository;
+
+        public PaymentCommandHandler(IPaymentEventRepository paymentEventRepository)
+        {
+            _paymentEventRepository = paymentEventRepository;
+        }
+
         private Result<Event> Handle(RequestProcessPayment requestProcessPayment)
         {
             var paymentProcessCreated = new PaymentProcessCreated(
@@ -24,7 +31,12 @@ namespace Domain
                 requestProcessPayment.Amount
             );
 
-            return Result.Ok<Event>();
+            var result = _paymentEventRepository.Add(paymentProcessCreated);
+             
+            return
+                result.IsOk
+                    ? Result.Ok((Event)paymentProcessCreated)
+                    : Result.Failed<Event>(result.Errors);
         }
 
         public Result<Event> Handle(PaymentCommand command)

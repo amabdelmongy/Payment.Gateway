@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.Test", "Service.Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi.Integration.Test", "WebApi.Integration.Test\WebApi.Integration.Test.csproj", "{5AE1FBB5-C7AA-4850-B8CC-05CD1DC074AD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "Data\Data.csproj", "{C5E1E74F-425C-4ABF-9936-11D0A3598F4F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{5AE1FBB5-C7AA-4850-B8CC-05CD1DC074AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5AE1FBB5-C7AA-4850-B8CC-05CD1DC074AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5AE1FBB5-C7AA-4850-B8CC-05CD1DC074AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5E1E74F-425C-4ABF-9936-11D0A3598F4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5E1E74F-425C-4ABF-9936-11D0A3598F4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5E1E74F-425C-4ABF-9936-11D0A3598F4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5E1E74F-425C-4ABF-9936-11D0A3598F4F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
