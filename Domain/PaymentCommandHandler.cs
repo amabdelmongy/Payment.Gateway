@@ -12,7 +12,7 @@ namespace Domain
 
     public class PaymentCommandHandler : IHandlePaymentCommands
     {
-        private Result<Event> Handle(RequestProcessPaymentCommand requestProcessPaymentCommand)
+        private Result<Event> Handle(RequestProcessPayment requestProcessPaymentCommand)
         {
             return Result.Ok<Event>();
         }
@@ -21,7 +21,7 @@ namespace Domain
         { 
             return command switch
             {
-                RequestProcessPaymentCommand requestProcessPaymentCommand
+                RequestProcessPayment requestProcessPaymentCommand
                 => Handle(requestProcessPaymentCommand),
                 _ => Result.Failed<Event>(
                     Error.CreateFrom(
