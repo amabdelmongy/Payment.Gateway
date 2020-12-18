@@ -1,0 +1,7 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=0888cb7f_002D7fee_002D40cc_002Da582_002D53c7c103f007/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Tests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::733B8FC8-AE7F-4965-BAB2-68298D088C00::.NETCoreApp,Version=v3.1::WebApi.Test.WeatherForecastControllerTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::1BE727A6-1BEC-42D4-99E1-FA186B6DD69B::.NETCoreApp,Version=v3.1::Service.Test.ServiceTest.GIVEN_WeatherForecastController_WHEN_get_THEN_return_correct_List&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

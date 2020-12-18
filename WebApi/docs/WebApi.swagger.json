@@ -1,0 +1,78 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Billing Service",
+    "description": "API to manage billing service",
+    "version": "1.0.0"
+  },
+  "host": "localhost",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": { 
+    "/weather-forecast": {
+      "get": {
+        "tags": [
+          "web api"
+        ],
+        "summary": "Gets all weather forecast.",
+        "operationId": "GetWeatherForecast",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/weatherForecastList"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "weatherForecastList": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/weatherForecast"
+      }
+    },
+    "weatherForecast": {
+      "type": "object",
+      "required": [
+        "date",
+        "summary",
+        "temperature"
+      ],
+      "properties": {
+        "date": {
+          "description": "Represents a date, in the format of ISO 8601.",
+          "type": "string",
+          "format": "YYYY-MM-DDTHH:mm:ssZ",
+          "example": "2020-06-15T01:45:23Z"
+        },
+        "summary": {
+          "type": "string",
+          "example": "Cold"
+        },
+        "temperature": {
+          "type": "number",
+          "description": "The Temperature degree.",
+          "example": "30"
+        }
+      }
+    }
+  },
+  "parameters": {
+  },
+  "tags": [
+    {
+      "name": "Web api",
+      "description": "Web api management"
+    }
+  ]
+}
