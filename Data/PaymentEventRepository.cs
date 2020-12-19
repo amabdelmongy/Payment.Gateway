@@ -10,7 +10,7 @@ using Dapper;
 using Dapper.Contrib.Extensions;
 
 using Domain;
-using Domain.Events;
+using Domain.Payment.Events;
 
 namespace Data
 {

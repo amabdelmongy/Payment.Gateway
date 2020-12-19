@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
 using Newtonsoft.Json;
 
-namespace Domain.Events
+namespace Domain.Payment.Events
 {
     public class PaymentProcessCreated : Event
     {

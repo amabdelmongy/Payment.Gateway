@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using Domain;
-using Domain.Commands;
-using Service;
+using Domain.Payment;
+using Domain.Payment.Commands;
 
 namespace WebApi.Controllers
 {

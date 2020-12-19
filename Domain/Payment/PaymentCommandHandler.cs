@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Domain.Commands;
-using Domain.Events;
+using Domain.Payment.Commands;
+using Domain.Payment.Events;
 
-namespace Domain
+namespace Domain.Payment
 {
     public interface IPaymentCommandHandler
     {

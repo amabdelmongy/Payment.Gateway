@@ -1,12 +1,12 @@
 using Data;
 using Domain;
+using Domain.Payment;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Hosting;
-using Service;
+using Microsoft.Extensions.Hosting; 
 
 namespace WebApi
 {
@@ -21,12 +21,9 @@ namespace WebApi
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {  
-            services.AddTransient<IWeatherForecastService, WeatherForecastService>();
-            services.AddScoped<IPaymentEventRepository, PaymentEventRepository>((ctx) =>
-                { 
-                    return new PaymentEventRepository(Configuration.GetConnectionString("DefaultConnection"));
-                });
+        {   
+            services.AddScoped<IPaymentEventRepository, PaymentEventRepository>(
+                (ctx) => new PaymentEventRepository(Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<IPaymentCommandHandler, PaymentCommandHandler>();
 
             services.AddControllers();

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Domain
+namespace Domain.Payment
 {
     public class PaymentAggregate
     {

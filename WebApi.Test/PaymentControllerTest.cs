@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using Domain;
+using Domain; 
 using WebApi.Controllers;
 using Moq;
 
 namespace WebApi.Test
 {
-    public class WeatherForecastControllerTest
+    public class PaymentControllerTest
     {
         //[Test]
         //public void GIVEN_WeatherForecastController_WHEN_get_THEN_return_correct_List()

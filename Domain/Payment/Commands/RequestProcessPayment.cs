@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Domain.Commands
+namespace Domain.Payment.Commands
 {
     public class RequestProcessPayment : PaymentCommand
     {
