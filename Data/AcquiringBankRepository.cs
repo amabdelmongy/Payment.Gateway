@@ -2,21 +2,22 @@
 using AcquiringBank.Fake;
 using Domain;
 using Domain.AcquiringBank;
+using Domain.Payment;
 using Domain.Payment.Commands;
 
 namespace Data
-{ 
+{
     public class AcquiringBankRepository : IAcquiringBankRepository
     {
-        public Result<Object> ProcessPayment(ProcessPaymentAtAcquiringBank payment)
+        public Result<Object> ProcessPayment(Guid merchantId, Money amount, Card card)
         {
             var acquiringBankService = new AcquiringBankService();
 
             var acquiringBankPaymentRequest = new AcquiringBankPaymentRequest
             (
-                payment.MerchantId, 
-                new AcquiringBankMoney(payment.Amount.Value, payment.Amount.Currency),
-                new AcquiringBankCard(payment.Card.Number, payment.Card.Expiry, payment.Card.Cvv)
+                merchantId,
+                new AcquiringBankMoney(amount.Value, amount.Currency),
+                new AcquiringBankCard(card.Number, card.Expiry, card.Cvv)
             );
 
             var result = acquiringBankService.ProcessPayment(acquiringBankPaymentRequest);
@@ -30,7 +31,8 @@ namespace Data
                     // Todo
                     break;
             }
-            return Result.Ok<Object>(); 
+
+            return Result.Ok<Object>();
         }
     }
 }
