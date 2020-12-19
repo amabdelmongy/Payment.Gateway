@@ -25,7 +25,7 @@ namespace WebApi
             services.AddScoped<IPaymentEventRepository, PaymentEventRepository>(
                 (ctx) => new PaymentEventRepository(Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<IPaymentCommandHandler, PaymentCommandHandler>();
-
+            services.AddTransient<IRequestProcessPaymentInputValidator, RequestProcessPaymentInputValidator>();
             services.AddControllers();
         }
 

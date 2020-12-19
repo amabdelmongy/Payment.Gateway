@@ -13,10 +13,12 @@ namespace WebApi.Controllers
     public class PaymentController : ControllerBase
     {
         private readonly IPaymentCommandHandler _paymentCommandHandler;
+        private readonly IRequestProcessPaymentInputValidator _requestProcessPaymentInputValidator;
 
-        public PaymentController(IPaymentCommandHandler paymentCommandHandler)
+        public PaymentController(IPaymentCommandHandler paymentCommandHandler, IRequestProcessPaymentInputValidator requestProcessPaymentInputValidator)
         {
             _paymentCommandHandler = paymentCommandHandler;
+            _requestProcessPaymentInputValidator = requestProcessPaymentInputValidator;
         }
 
         [HttpGet]
@@ -29,7 +31,7 @@ namespace WebApi.Controllers
         [Route("request-process-payment")]
         public ActionResult RequestProcessPayment([FromBody] PaymentRequestDto paymentRequestDto)
         { 
-            var requestProcessPayment = new RequestProcessPaymentFactory().From(
+            var requestProcessPayment = new RequestProcessPaymentFactory(_requestProcessPaymentInputValidator).From(
                 new Card(
                     paymentRequestDto.Card.Number,
                     paymentRequestDto.Card.Expiry,
@@ -38,10 +40,28 @@ namespace WebApi.Controllers
                 paymentRequestDto.MerchantId,
                 new Money(paymentRequestDto.Amount.Value, paymentRequestDto.Amount.Currency)
             );
-            var result = _paymentCommandHandler.Handle(requestProcessPayment.Value);
-            //TODO:-
-            return Ok();
+
+            if (requestProcessPayment.IsOk)
+            {
+               var result = _paymentCommandHandler.Handle(requestProcessPayment.Value);
+
+                if (result.IsOk)
+                    return Ok();
+
+                return new BadRequestObjectResult(result.Errors);
+
+            }
+            else
+            { 
+                return new BadRequestObjectResult(
+                    requestProcessPayment.Errors.Select(error => new
+                {
+                    subject = error.Subject,
+                    message = error.Message
+                }));
+            }
         }
+         
 
         #region Dto
         public class MoneyDto
