@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Domain.AcquiringBank;
+using Domain.Payment.CommandHandlers;
 using Domain.Payment.Commands;
 
 namespace Domain.Payment

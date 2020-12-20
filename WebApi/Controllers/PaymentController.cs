@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Domain;
 using Domain.Payment;
+using Domain.Payment.CommandHandlers;
 using Domain.Payment.Commands;
 
 namespace WebApi.Controllers

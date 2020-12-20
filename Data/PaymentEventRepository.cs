@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.SqlClient;
 using System.Linq;
 using Newtonsoft.Json;
-
-
 using Dapper; 
 using Dapper.Contrib.Extensions;
-
 using Domain;
 using Domain.Payment.Events;
 
@@ -39,23 +35,6 @@ namespace Data
             catch (Exception ex)
             {
                 return Result.Failed<IEnumerable<Event>>(Error.CreateFrom("GetPaymentEvents", ex));
-            }
-        }
-
-        public Result<IEnumerable<Event>> Get()
-        {
-            try
-            {
-                using (var connection = new SqlConnection(_connectionString))
-                {
-                    var eventEntries = connection.GetAll<PaymentEvent>();
-                    var events = eventEntries.Select(DeserializeEvent).ToList();
-                    return Result.Ok(events.AsEnumerable());
-                }
-            }
-            catch (Exception ex)
-            {
-                return Result.Failed<IEnumerable<Event>>(Error.CreateFrom("GetAllPaymentEvents", ex));
             }
         }
 

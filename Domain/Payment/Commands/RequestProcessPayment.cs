@@ -4,7 +4,11 @@ namespace Domain.Payment.Commands
 {
     public class RequestProcessPayment : PaymentCommand
     {
-        public RequestProcessPayment(Card card, Guid merchantId, Money amount) : base(Guid.NewGuid())
+        public RequestProcessPayment(
+            Card card, 
+            Guid merchantId, 
+            Money amount) 
+            : base(Guid.NewGuid())
         {
 
             Card = card;

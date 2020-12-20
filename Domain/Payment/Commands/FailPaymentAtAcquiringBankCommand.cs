@@ -4,7 +4,10 @@ namespace Domain.Payment.Commands
 {
     public class FailPaymentAtAcquiringBankCommand : PaymentCommand
     {
-        public FailPaymentAtAcquiringBankCommand(Guid paymentId, Guid? acquiringBankId, string details) : base(paymentId)
+        public FailPaymentAtAcquiringBankCommand(
+            Guid paymentId, 
+            Guid? acquiringBankId, 
+            string details) : base(paymentId)
         {
             AcquiringBankId = acquiringBankId;
             Details = details;

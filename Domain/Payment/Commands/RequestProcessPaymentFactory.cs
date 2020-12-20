@@ -6,7 +6,8 @@ namespace Domain.Payment.Commands
     {
         private readonly IRequestProcessPaymentInputValidator _requestProcessPaymentInputValidator;
 
-        public RequestProcessPaymentFactory(IRequestProcessPaymentInputValidator requestProcessPaymentInputValidator)
+        public RequestProcessPaymentFactory(
+            IRequestProcessPaymentInputValidator requestProcessPaymentInputValidator)
         {
             _requestProcessPaymentInputValidator = requestProcessPaymentInputValidator;
         }

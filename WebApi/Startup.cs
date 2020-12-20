@@ -2,6 +2,7 @@ using Data;
 using Domain;
 using Domain.AcquiringBank;
 using Domain.Payment;
+using Domain.Payment.CommandHandlers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -25,11 +26,17 @@ namespace WebApi
         {   
             services.AddScoped<IPaymentEventRepository, PaymentEventRepository>(
                 (ctx) => new PaymentEventRepository(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddTransient<IPaymentCommandHandler, PaymentCommandHandler>();
-            services.AddTransient<IRequestProcessPaymentInputValidator, RequestProcessPaymentInputValidator>();
             services.AddTransient<IAcquiringBankRepository, AcquiringBankRepository>();
+
+
+            services.AddTransient<IPaymentCommandHandler, PaymentCommandHandler>(); 
+            services.AddTransient<IStartProcessPaymentAtAcquiringBankCommandHandler, StartProcessPaymentAtAcquiringBankCommandHandler>();
+            services.AddTransient<IFailPaymentAtAcquiringBankCommandHandler, FailPaymentAtAcquiringBankCommandHandler>();
+            services.AddTransient<IRequestProcessPaymentCommandHandler, RequestProcessPaymentCommandHandler>(); 
+            services.AddTransient<IProcessPaymentAtAcquiringBankCommandHandler, ProcessPaymentAtAcquiringBankCommandHandler>();
+            services.AddTransient<IRequestProcessPaymentInputValidator, RequestProcessPaymentInputValidator>();
+
             services.AddTransient<IPayments, Payments>();
-            services.AddTransient<IPaymentWorkflow, PaymentWorkflow>();
             services.AddTransient<IPaymentWorkflow, PaymentWorkflow>();
 
 
