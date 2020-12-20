@@ -7,8 +7,8 @@ namespace Domain.Payment.CommandHandlers
     public interface IFailAcquiringBankPaymentCommandHandler
     {
         Result<Event> Handle(
-            PaymentAggregate paymentAggregate,
-            FailAcquiringBankPaymentCommand failAcquiringBankPaymentCommand);
+            FailAcquiringBankPaymentCommand failAcquiringBankPaymentCommand,
+            int version);
     }
 
     public class FailAcquiringBankPaymentCommandHandler : IFailAcquiringBankPaymentCommandHandler
@@ -21,14 +21,14 @@ namespace Domain.Payment.CommandHandlers
         }
 
         public Result<Event> Handle(
-            PaymentAggregate paymentAggregate,
-            FailAcquiringBankPaymentCommand failAcquiringBankPaymentCommand)
+            FailAcquiringBankPaymentCommand failAcquiringBankPaymentCommand,
+            int version)
         {
             var acquiringBankPaymentFailedEvent =
                 new AcquiringBankPaymentFailedEvent(
                     failAcquiringBankPaymentCommand.PaymentId,
                     DateTime.Now,
-                    paymentAggregate.Version + 1,
+                    version + 1,
                     failAcquiringBankPaymentCommand.AcquiringBankId,
                     failAcquiringBankPaymentCommand.Details
                 );

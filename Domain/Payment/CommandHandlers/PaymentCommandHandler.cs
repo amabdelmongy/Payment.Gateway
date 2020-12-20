@@ -46,8 +46,10 @@ namespace Domain.Payment.CommandHandlers
                         processAcquiringBankPaymentCommand),
 
                 FailAcquiringBankPaymentCommand failAcquiringBankPaymentCommand
-                    => _failAcquiringBankPaymentCommandHandler.Handle(paymentResult.Value,
-                        failAcquiringBankPaymentCommand),
+                    => _failAcquiringBankPaymentCommandHandler.Handle(
+                        failAcquiringBankPaymentCommand,
+                        paymentResult.Value.Version
+                    ),
 
                 _ => Result.Failed<Event>(
                     Error.CreateFrom(
