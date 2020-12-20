@@ -3,9 +3,9 @@ using Newtonsoft.Json;
 
 namespace Domain.Payment.Events
 {
-    public class PaymentProcessCreated : Event
+    public class PaymentRequestedEvent : Event
     {
-        public PaymentProcessCreated (
+        public PaymentRequestedEvent(
             Guid requestId,
             DateTime timeStamp,
             int version,
@@ -17,8 +17,8 @@ namespace Domain.Payment.Events
                 requestId,
                 timeStamp,
                 version,
-                typeof(PaymentProcessCreated)
-                )
+                typeof(PaymentRequestedEvent)
+            )
         {
             RequestId = requestId;
             Card = card;
@@ -26,17 +26,17 @@ namespace Domain.Payment.Events
             Amount = amount;
         }
 
-        public Guid RequestId { get; set; }
+        public Guid RequestId { get; }
 
-        public Card Card { get; private set; }
+        public Card Card { get; }
 
-        public Guid MerchantId { get; private set; }
+        public Guid MerchantId { get; }
 
-        public Money Amount { get; private set; }
+        public Money Amount { get; }
 
-        public static PaymentProcessCreated CreateFrom(string eventData)
+        public static PaymentRequestedEvent CreateFrom(string eventData)
         {
-            return JsonConvert.DeserializeObject<PaymentProcessCreated>(eventData);
+            return JsonConvert.DeserializeObject<PaymentRequestedEvent>(eventData);
         }
     }
 }

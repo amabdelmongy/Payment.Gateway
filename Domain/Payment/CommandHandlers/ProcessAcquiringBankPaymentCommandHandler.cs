@@ -1,25 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Domain.AcquiringBank;
 using Domain.Payment.Commands;
 using Domain.Payment.Events;
 
 namespace Domain.Payment.CommandHandlers
 {
-    public interface IProcessPaymentAtAcquiringBankCommandHandler
+    public interface IProcessAcquiringBankPaymentCommandHandler
     {
         Result<Event> Handle(
             PaymentAggregate paymentAggregate,
-            ProcessPaymentAtAcquiringBank processPaymentAtAcquiringBank);
+            ProcessAcquiringBankPaymentCommand processAcquiringBankPaymentCommand);
     }
 
-    public class ProcessPaymentAtAcquiringBankCommandHandler : IProcessPaymentAtAcquiringBankCommandHandler
+    public class ProcessAcquiringBankPaymentCommandHandler : IProcessAcquiringBankPaymentCommandHandler
     {
         private readonly IPaymentEventRepository _paymentEventRepository;
         private readonly IAcquiringBankRepository _acquiringBankRepository;
 
-        public ProcessPaymentAtAcquiringBankCommandHandler(IPaymentEventRepository paymentEventRepository, IAcquiringBankRepository acquiringBankRepository)
+        public ProcessAcquiringBankPaymentCommandHandler(IPaymentEventRepository paymentEventRepository,
+            IAcquiringBankRepository acquiringBankRepository)
         {
             _paymentEventRepository = paymentEventRepository;
             _acquiringBankRepository = acquiringBankRepository;
@@ -27,7 +26,7 @@ namespace Domain.Payment.CommandHandlers
 
         public Result<Event> Handle(
             PaymentAggregate paymentAggregate,
-            ProcessPaymentAtAcquiringBank processPaymentAtAcquiringBank)
+            ProcessAcquiringBankPaymentCommand processAcquiringBankPaymentCommand)
         {
             var acquiringBankResult =
                 _acquiringBankRepository.ProcessPayment(
@@ -37,9 +36,9 @@ namespace Domain.Payment.CommandHandlers
             if (acquiringBankResult.HasErrors)
                 return Result.Failed<Event>(acquiringBankResult.Errors);
 
-            var paymentAtAcquiringBankProcessedEvent =
-                new PaymentAtAcquiringBankProcessedEvent(
-                    processPaymentAtAcquiringBank.PaymentId,
+            var acquiringBankPaymentProcessedEvent =
+                new AcquiringBankPaymentProcessedEvent(
+                    processAcquiringBankPaymentCommand.PaymentId,
                     DateTime.Now,
                     paymentAggregate.Version + 1,
                     acquiringBankResult.Value
@@ -47,11 +46,11 @@ namespace Domain.Payment.CommandHandlers
 
             var result =
                 _paymentEventRepository
-                    .Add(paymentAtAcquiringBankProcessedEvent);
+                    .Add(acquiringBankPaymentProcessedEvent);
 
             return
                 result.IsOk
-                    ? Result.Ok((Event)paymentAtAcquiringBankProcessedEvent)
+                    ? Result.Ok((Event) acquiringBankPaymentProcessedEvent)
                     : Result.Failed<Event>(result.Errors);
         }
 

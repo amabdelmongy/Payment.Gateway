@@ -7,8 +7,8 @@ namespace AcquiringBank.Fake
     public class AcquiringBankPaymentResult
     {
         public AcquiringBankPaymentResult(
-            Guid acquiringBankPaymentId, 
-            AcquiringBankPaymentStatus paymentStatus, 
+            Guid acquiringBankPaymentId,
+            AcquiringBankPaymentStatus paymentStatus,
             string details)
         {
             AcquiringBankPaymentId = acquiringBankPaymentId;

@@ -3,9 +3,9 @@ using Newtonsoft.Json;
 
 namespace Domain.Payment.Events
 {
-    public class PaymentAtAcquiringBankFailedEvent : Event
+    public class AcquiringBankPaymentFailedEvent : Event
     {
-        public PaymentAtAcquiringBankFailedEvent(
+        public AcquiringBankPaymentFailedEvent(
             Guid requestId,
             DateTime timeStamp,
             int version,
@@ -15,20 +15,20 @@ namespace Domain.Payment.Events
                 requestId,
                 timeStamp,
                 version,
-                typeof(PaymentAtAcquiringBankFailedEvent)
+                typeof(AcquiringBankPaymentFailedEvent)
             )
         {
             AcquiringBankId = acquiringBankId;
             Details = details;
         }
 
-        public Guid? AcquiringBankId { get; set; }
+        public Guid? AcquiringBankId { get; }
 
-        public string Details { get; set; }
+        public string Details { get; }
 
-        public static PaymentAtAcquiringBankFailedEvent CreateFrom(string eventData)
+        public static AcquiringBankPaymentFailedEvent CreateFrom(string eventData)
         {
-            return JsonConvert.DeserializeObject<PaymentAtAcquiringBankFailedEvent>(eventData);
+            return JsonConvert.DeserializeObject<AcquiringBankPaymentFailedEvent>(eventData);
         }
     }
 }

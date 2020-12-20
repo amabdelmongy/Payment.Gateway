@@ -10,7 +10,7 @@ using Domain.Payment.Events;
 
 namespace Data
 {
-     
+
     public class PaymentEventRepository : IPaymentEventRepository
     {
         private readonly string _connectionString;
@@ -18,7 +18,7 @@ namespace Data
         public PaymentEventRepository(String connectionString)
         {
             _connectionString = connectionString;
-        } 
+        }
 
         public Result<IEnumerable<Event>> Get(Guid id)
         {
@@ -61,22 +61,22 @@ namespace Data
             string eventData;
             switch (@event)
             {
-                case PaymentProcessCreated paymentCreatedEvent:
-                    eventData = JsonConvert.SerializeObject(paymentCreatedEvent);
+                case PaymentRequestedEvent paymentRequestedEvent:
+                    eventData = JsonConvert.SerializeObject(paymentRequestedEvent);
                     break;
-                case ProcessPaymentAtAcquiringBankStartedEvent processPaymentAtAcquiringBankStartedEvent:
-                    eventData = JsonConvert.SerializeObject(processPaymentAtAcquiringBankStartedEvent);
+
+                case AcquiringBankPaymentProcessedEvent acquiringBankPaymentProcessedEvent:
+                    eventData = JsonConvert.SerializeObject(acquiringBankPaymentProcessedEvent);
                     break;
-                case PaymentAtAcquiringBankProcessedEvent paymentAtAcquiringBankProcessedEvent:
-                    eventData = JsonConvert.SerializeObject(paymentAtAcquiringBankProcessedEvent);
+
+                case AcquiringBankPaymentFailedEvent acquiringBankPaymentFailedEvent:
+                    eventData = JsonConvert.SerializeObject(acquiringBankPaymentFailedEvent);
                     break;
-                case PaymentAtAcquiringBankFailedEvent paymentAtAcquiringBankFailedEvent:
-                    eventData = JsonConvert.SerializeObject(paymentAtAcquiringBankFailedEvent);
-                    break;
+
                 default:
                     return Result.Failed<string>(
-                        Error.CreateFrom("SerializePaymentEvent",  
-                        $"Not valid event type"));
+                        Error.CreateFrom("SerializePaymentEvent",
+                            $"Not valid event type"));
             }
 
             return Result.Ok(eventData);
@@ -103,18 +103,21 @@ namespace Data
         {
             return e.Type switch
             {
-                nameof(PaymentProcessCreated)
-                    => PaymentProcessCreated.CreateFrom(e.EventData),
-                nameof(ProcessPaymentAtAcquiringBankStartedEvent)
-                    => ProcessPaymentAtAcquiringBankStartedEvent.CreateFrom(e.EventData),
-                nameof(PaymentAtAcquiringBankProcessedEvent)
-                    => ProcessPaymentAtAcquiringBankStartedEvent.CreateFrom(e.EventData),
+                nameof(PaymentRequestedEvent)
+                    => PaymentRequestedEvent.CreateFrom(e.EventData),
+
+                nameof(AcquiringBankPaymentProcessedEvent)
+                    => AcquiringBankPaymentProcessedEvent.CreateFrom(e.EventData),
+
+                nameof(AcquiringBankPaymentFailedEvent)
+                    => AcquiringBankPaymentFailedEvent.CreateFrom(e.EventData),
+
                 _ => throw new AggregateException($"Couldn't process the event of Type {e.Type}'")
             };
         }
 
         [Dapper.Contrib.Extensions.Table("PaymentEvents")]
-        internal class PaymentEvent
+        class PaymentEvent
         {
             public int Id { get; set; }
             public Guid AggregateId { get; set; }

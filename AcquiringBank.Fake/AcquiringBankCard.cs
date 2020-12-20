@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace AcquiringBank.Fake
-{ 
+{
     public class AcquiringBankCard
     {
         public AcquiringBankCard(string number, string expiry, string cvv)
@@ -11,8 +11,8 @@ namespace AcquiringBank.Fake
             Expiry = expiry;
         }
 
-        public string Number { get; private set; }
-        public string Expiry { get; private set; }
-        public string Cvv { get; private set; }
+        public string Number { get; }
+        public string Expiry { get; }
+        public string Cvv { get; }
     }
 }

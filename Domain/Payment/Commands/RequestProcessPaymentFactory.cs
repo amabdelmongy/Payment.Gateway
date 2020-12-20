@@ -12,7 +12,7 @@ namespace Domain.Payment.Commands
             _requestProcessPaymentInputValidator = requestProcessPaymentInputValidator;
         }
 
-        public Result<RequestProcessPayment> From(
+        public Result<RequestPaymentCommand> From(
             Card card,
             Guid merchantId,
             Money amount)
@@ -20,7 +20,7 @@ namespace Domain.Payment.Commands
 
             var validateStatus = _requestProcessPaymentInputValidator.Validate(card, merchantId, amount);
             return validateStatus.IsOk
-                ? Result.Ok(new RequestProcessPayment(card, merchantId, amount))
+                ? Result.Ok(new RequestPaymentCommand(card, merchantId, amount))
                 : validateStatus;
         }
     }

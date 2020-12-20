@@ -4,39 +4,40 @@ using Domain.Payment.Events;
 
 namespace Domain.Payment.CommandHandlers
 {
-    public interface IFailPaymentAtAcquiringBankCommandHandler
+    public interface IFailAcquiringBankPaymentCommandHandler
     {
         Result<Event> Handle(
             PaymentAggregate paymentAggregate,
-            FailPaymentAtAcquiringBankCommand failPaymentAtAcquiringBankCommand);
+            FailAcquiringBankPaymentCommand failAcquiringBankPaymentCommand);
     }
 
-    public class FailPaymentAtAcquiringBankCommandHandler : IFailPaymentAtAcquiringBankCommandHandler
+    public class FailAcquiringBankPaymentCommandHandler : IFailAcquiringBankPaymentCommandHandler
     {
         private readonly IPaymentEventRepository _paymentEventRepository;
 
-        public FailPaymentAtAcquiringBankCommandHandler(IPaymentEventRepository paymentEventRepository)
+        public FailAcquiringBankPaymentCommandHandler(IPaymentEventRepository paymentEventRepository)
         {
             _paymentEventRepository = paymentEventRepository;
         }
+
         public Result<Event> Handle(
             PaymentAggregate paymentAggregate,
-            FailPaymentAtAcquiringBankCommand failPaymentAtAcquiringBankCommand)
+            FailAcquiringBankPaymentCommand failAcquiringBankPaymentCommand)
         {
-            var paymentAtAcquiringBankFailedEvent =
-                new PaymentAtAcquiringBankFailedEvent(
-                    failPaymentAtAcquiringBankCommand.PaymentId,
+            var acquiringBankPaymentFailedEvent =
+                new AcquiringBankPaymentFailedEvent(
+                    failAcquiringBankPaymentCommand.PaymentId,
                     DateTime.Now,
                     paymentAggregate.Version + 1,
-                    failPaymentAtAcquiringBankCommand.AcquiringBankId,
-                    failPaymentAtAcquiringBankCommand.Details
+                    failAcquiringBankPaymentCommand.AcquiringBankId,
+                    failAcquiringBankPaymentCommand.Details
                 );
 
-            var result = _paymentEventRepository.Add(paymentAtAcquiringBankFailedEvent);
+            var result = _paymentEventRepository.Add(acquiringBankPaymentFailedEvent);
 
             return
                 result.IsOk
-                    ? Result.Ok((Event)paymentAtAcquiringBankFailedEvent)
+                    ? Result.Ok((Event) acquiringBankPaymentFailedEvent)
                     : Result.Failed<Event>(result.Errors);
         }
     }

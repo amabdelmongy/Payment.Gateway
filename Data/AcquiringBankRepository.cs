@@ -23,7 +23,7 @@ namespace Data
         public Result<Guid> ProcessPayment(PaymentAggregate paymentAggregate)
         {
             try
-            { 
+            {
                 var acquiringBankPaymentRequest = new AcquiringBankPaymentRequest
                 (
                     paymentAggregate.MerchantId,
@@ -53,7 +53,7 @@ namespace Data
                         Result.Failed<Guid>(
                             RejectedAcquiringBankError.CreateFrom(
                                 processPayment.AcquiringBankPaymentId,
-                                $"Rejected to acquiring Bank with Payment Id { processPayment.AcquiringBankPaymentId }",
+                                $"Rejected to acquiring Bank with Payment Id {processPayment.AcquiringBankPaymentId}",
                                 processPayment.Details
                             )
                         ),

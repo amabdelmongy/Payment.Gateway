@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting; 
 
 namespace WebApi
@@ -23,17 +22,16 @@ namespace WebApi
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {   
+        {
             services.AddScoped<IPaymentEventRepository, PaymentEventRepository>(
                 (ctx) => new PaymentEventRepository(Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<IAcquiringBankRepository, AcquiringBankRepository>();
 
-
-            services.AddTransient<IPaymentCommandHandler, PaymentCommandHandler>(); 
-            services.AddTransient<IStartProcessPaymentAtAcquiringBankCommandHandler, StartProcessPaymentAtAcquiringBankCommandHandler>();
-            services.AddTransient<IFailPaymentAtAcquiringBankCommandHandler, FailPaymentAtAcquiringBankCommandHandler>();
-            services.AddTransient<IRequestProcessPaymentCommandHandler, RequestProcessPaymentCommandHandler>(); 
-            services.AddTransient<IProcessPaymentAtAcquiringBankCommandHandler, ProcessPaymentAtAcquiringBankCommandHandler>();
+            services.AddTransient<IPaymentCommandHandler, PaymentCommandHandler>();
+            services.AddTransient<IFailAcquiringBankPaymentCommandHandler, FailAcquiringBankPaymentCommandHandler>();
+            services.AddTransient<IRequestProcessPaymentCommandHandler, RequestPaymentCommandHandler>();
+            services
+                .AddTransient<IProcessAcquiringBankPaymentCommandHandler, ProcessAcquiringBankPaymentCommandHandler>();
             services.AddTransient<IRequestProcessPaymentInputValidator, RequestProcessPaymentInputValidator>();
 
             services.AddTransient<IPayments, Payments>();

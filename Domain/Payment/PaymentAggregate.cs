@@ -30,15 +30,15 @@ namespace Domain.Payment
             AcquiringBankId = acquiringBankId;
         }
 
-        public Guid PaymentId { get; private set; }
+        public Guid PaymentId { get; }
 
-        public Card Card { get; private set; }
+        public Card Card { get; }
 
-        public Guid MerchantId { get; private set; }
+        public Guid MerchantId { get; }
 
-        public Money Amount { get; private set; }
+        public Money Amount { get; }
 
-        public int Version { get; private set; }
+        public int Version { get; }
 
         public PaymentStatus PaymentStatus { get; }
 
@@ -58,7 +58,7 @@ namespace Domain.Payment
                     merchantId,
                     amount,
                     version,
-                    PaymentStatus);
+                    PaymentStatus.ProcessStarted);
         }
 
         public PaymentAggregate With(
@@ -94,7 +94,7 @@ namespace Domain.Payment
             Id = id;
         }
 
-        public string Id { get; } 
+        public string Id { get; }
     }
 
     public static class PaymentAggregateFactory
@@ -111,7 +111,7 @@ namespace Domain.Payment
                         {
                             switch (e)
                             {
-                                case PaymentProcessCreated @event:
+                                case PaymentRequestedEvent @event:
                                     paymentAggregate =
                                         paymentAggregate.With(
                                             @event.AggregateId,
@@ -121,14 +121,7 @@ namespace Domain.Payment
                                             @event.Version);
                                     break;
 
-                                case ProcessPaymentAtAcquiringBankStartedEvent @event:
-                                    paymentAggregate =
-                                        paymentAggregate.With(
-                                            PaymentStatus.ProcessStarted,
-                                            @event.Version);
-                                    break;
-
-                                case PaymentAtAcquiringBankProcessedEvent @event:
+                                case AcquiringBankPaymentProcessedEvent @event:
                                     paymentAggregate =
                                         paymentAggregate.With(
                                             PaymentStatus.Processed,
@@ -136,7 +129,7 @@ namespace Domain.Payment
                                             @event.AcquiringBankId);
                                     break;
 
-                                case PaymentAtAcquiringBankFailedEvent @event:
+                                case AcquiringBankPaymentFailedEvent @event:
                                     paymentAggregate =
                                         paymentAggregate.With(
                                             PaymentStatus.Failed,

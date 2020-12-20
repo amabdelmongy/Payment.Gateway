@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Linq; 
 
 namespace Domain.Payment
 {
@@ -20,7 +18,7 @@ namespace Domain.Payment
         }
 
         public Result<PaymentAggregate> Get(Guid paymentId)
-        { 
+        {
             var events = _events.Get(paymentId);
             if (!events.IsOk)
                 return Result.Failed<PaymentAggregate>(events.Errors);
@@ -28,6 +26,6 @@ namespace Domain.Payment
             if (!events.Value.Any()) return Result.Failed<PaymentAggregate>(Error.CreateFrom("PaymentAggregate"));
 
             return PaymentAggregateFactory.CreateFrom(events.Value);
-        } 
+        }
     }
 }

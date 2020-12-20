@@ -13,7 +13,7 @@ namespace Domain.Test
     {
        
         //[Test]
-        //public void GIVEN_PaymentCommandHandler_WHEN_Handle_RequestProcessPayment_THEN_Create_paymentProcessCreated_Event_and_return_Ok()
+        //public void GIVEN_PaymentCommandHandler_WHEN_Handle_RequestProcessPayment_THEN_Create_paymentRequestedEvent_Event_and_return_Ok()
         //{
         //    var paymentEventRepository = new Mock<IPaymentEventRepository>();
         //    paymentEventRepository
@@ -38,7 +38,7 @@ namespace Domain.Test
              
         //    Assert.IsTrue(actualResult.IsOk);
         //    var actual = actualResult.Value;
-        //    Assert.AreEqual("PaymentProcessCreated", actual.Type);
+        //    Assert.AreEqual("PaymentRequestedEvent", actual.Type);
         //    Assert.AreEqual(requestProcessPayment.PaymentId, actual.AggregateId);
         //    Assert.AreEqual(1, actual.Version);
         //}

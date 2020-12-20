@@ -14,9 +14,9 @@ namespace Domain
             Type = type.Name;
         }
 
-        public Guid AggregateId { get; private set; }
-        public DateTime TimeStamp { get; private set; }
-        public int Version { get; private set; }
+        public Guid AggregateId { get; }
+        public DateTime TimeStamp { get; }
+        public int Version { get; }
         public string Type { get; set; }
     }
 }

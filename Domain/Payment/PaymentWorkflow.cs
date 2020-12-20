@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Domain.AcquiringBank;
 using Domain.Payment.CommandHandlers;
 using Domain.Payment.Commands;
@@ -24,28 +23,21 @@ namespace Domain.Payment
 
         public Result<Event> Run(Guid paymentId)
         {
-            var processPaymentAtAcquiringBankStarted =
+            var processAcquiringBankPaymentCommandResult =
                 _paymentCommandHandler.Handle(
-                    new StartProcessPaymentAtAcquiringBank(paymentId));
+                    new ProcessAcquiringBankPaymentCommand(paymentId));
 
-            if (processPaymentAtAcquiringBankStarted.HasErrors)
-                return Result.Failed<Event>(processPaymentAtAcquiringBankStarted.Errors);
-
-            var processPaymentAtAcquiringBankResult =
-                _paymentCommandHandler.Handle(
-                    new ProcessPaymentAtAcquiringBank(paymentId));
-
-            if (processPaymentAtAcquiringBankResult.HasErrors)
+            if (processAcquiringBankPaymentCommandResult.HasErrors)
             {
                 var errors = new List<Error>();
-                errors.AddRange(processPaymentAtAcquiringBankResult.Errors);
+                errors.AddRange(processAcquiringBankPaymentCommandResult.Errors);
 
                 var rejectedAcquiringBankErrors =
-                    processPaymentAtAcquiringBankResult.Errors
+                    processAcquiringBankPaymentCommandResult.Errors
                         .OfType<RejectedAcquiringBankError>()
                         .Select(rejectedAcquiringBankResult =>
                             _paymentCommandHandler.Handle(
-                                new FailPaymentAtAcquiringBankCommand(
+                                new FailAcquiringBankPaymentCommand(
                                     paymentId,
                                     rejectedAcquiringBankResult.AcquiringBankResultId,
                                     rejectedAcquiringBankResult.Message)
@@ -53,11 +45,11 @@ namespace Domain.Payment
                         );
 
                 var genericErrors =
-                    processPaymentAtAcquiringBankResult.Errors
+                    processAcquiringBankPaymentCommandResult.Errors
                         .Where(t => !(t is RejectedAcquiringBankError))
                         .Select(error =>
                             _paymentCommandHandler.Handle(
-                                new FailPaymentAtAcquiringBankCommand(
+                                new FailAcquiringBankPaymentCommand(
                                     paymentId,
                                     null,
                                     error.Message)
@@ -70,7 +62,7 @@ namespace Domain.Payment
                 return Result.Failed<Event>(errors);
             }
 
-            return Result.Ok(processPaymentAtAcquiringBankResult.Value);
+            return Result.Ok(processAcquiringBankPaymentCommandResult.Value);
         }
     }
 }

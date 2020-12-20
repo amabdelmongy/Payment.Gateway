@@ -10,6 +10,5 @@ namespace Domain.Payment.Commands
         {
             PaymentId = paymentId;
         }
-
     }
 }

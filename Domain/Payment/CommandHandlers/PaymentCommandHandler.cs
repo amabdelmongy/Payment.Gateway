@@ -1,5 +1,4 @@
-﻿using Domain.AcquiringBank;
-using Domain.Payment.Commands;
+﻿using Domain.Payment.Commands;
 
 namespace Domain.Payment.CommandHandlers
 {
@@ -12,53 +11,43 @@ namespace Domain.Payment.CommandHandlers
     {
         private readonly IPayments _payments;
         private readonly IRequestProcessPaymentCommandHandler _requestProcessPaymentCommandHandler;
-        private readonly IStartProcessPaymentAtAcquiringBankCommandHandler _startProcessPaymentAtAcquiringBankCommandHandler;
-        private readonly IProcessPaymentAtAcquiringBankCommandHandler _acquiringBankCommandHandler;
-        private readonly IFailPaymentAtAcquiringBankCommandHandler _failPaymentAtAcquiringBankCommandHandler;
+        private readonly IProcessAcquiringBankPaymentCommandHandler _acquiringBankCommandHandler;
+        private readonly IFailAcquiringBankPaymentCommandHandler _failAcquiringBankPaymentCommandHandler;
 
         public PaymentCommandHandler(
-            IPaymentEventRepository paymentEventRepository, 
             IPayments payments,
-            IAcquiringBankRepository acquiringBankRepository, 
-            IRequestProcessPaymentCommandHandler requestProcessPaymentCommandHandler, 
-            IStartProcessPaymentAtAcquiringBankCommandHandler startProcessPaymentAtAcquiringBankCommandHandler,
-            IProcessPaymentAtAcquiringBankCommandHandler acquiringBankCommandHandler, 
-            IFailPaymentAtAcquiringBankCommandHandler failPaymentAtAcquiringBankCommandHandler)
+            IRequestProcessPaymentCommandHandler requestProcessPaymentCommandHandler,
+            IProcessAcquiringBankPaymentCommandHandler acquiringBankCommandHandler,
+            IFailAcquiringBankPaymentCommandHandler failAcquiringBankPaymentCommandHandler)
         {
             _payments = payments;
             _requestProcessPaymentCommandHandler = requestProcessPaymentCommandHandler;
-            _startProcessPaymentAtAcquiringBankCommandHandler = startProcessPaymentAtAcquiringBankCommandHandler;
-            _failPaymentAtAcquiringBankCommandHandler = failPaymentAtAcquiringBankCommandHandler;
+            _failAcquiringBankPaymentCommandHandler = failAcquiringBankPaymentCommandHandler;
             _acquiringBankCommandHandler = acquiringBankCommandHandler;
         }
-      
+
         public Result<Event> Handle(PaymentCommand command)
         {
-            var paymentResult = command is RequestProcessPayment
+            var paymentResult = command is RequestPaymentCommand
                 ? Result.Ok<PaymentAggregate>(null)
                 : _payments.Get(command.PaymentId);
-           
-            if (paymentResult.HasErrors) 
+
+            if (paymentResult.HasErrors)
                 return Result.Failed<Event>(paymentResult.Errors);
 
             return command switch
             {
-                RequestProcessPayment requestProcessPaymentCommand 
-                    => _requestProcessPaymentCommandHandler.Handle(requestProcessPaymentCommand),
+                RequestPaymentCommand requestPaymentCommand
+                    => _requestProcessPaymentCommandHandler.Handle(requestPaymentCommand),
 
-                StartProcessPaymentAtAcquiringBank startProcessPaymentAtAcquiringBank
-                    => _startProcessPaymentAtAcquiringBankCommandHandler.Handle(
-                        paymentResult.Value,
-                        startProcessPaymentAtAcquiringBank),
-                
-                ProcessPaymentAtAcquiringBank processPaymentAtAcquiringBank 
+                ProcessAcquiringBankPaymentCommand processAcquiringBankPaymentCommand
                     => _acquiringBankCommandHandler.Handle(
                         paymentResult.Value,
-                        processPaymentAtAcquiringBank),
-                     
-                FailPaymentAtAcquiringBankCommand failPaymentAtAcquiringBankCommand
-                    => _failPaymentAtAcquiringBankCommandHandler.Handle(paymentResult.Value,
-                        failPaymentAtAcquiringBankCommand),
+                        processAcquiringBankPaymentCommand),
+
+                FailAcquiringBankPaymentCommand failAcquiringBankPaymentCommand
+                    => _failAcquiringBankPaymentCommandHandler.Handle(paymentResult.Value,
+                        failAcquiringBankPaymentCommand),
 
                 _ => Result.Failed<Event>(
                     Error.CreateFrom(

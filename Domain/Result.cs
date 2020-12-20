@@ -32,7 +32,8 @@ namespace Domain
 
         public bool HasErrors => !IsOk;
     }
-     public static class Result
+
+    public static class Result
     {
         public static Result<T> Ok<T>(T value)
         {
@@ -70,11 +71,12 @@ namespace Domain
             }
         }
     }
+
     public class Error
-    { 
+    {
         protected Error(string subject, Exception exception, string message)
         {
-            Subject = subject; 
+            Subject = subject;
             Message = message;
             Exception = exception;
         }
@@ -82,14 +84,15 @@ namespace Domain
         public Exception Exception { get; }
         public string Subject { get; }
         public string Message { get; }
-         
+
         public static Error CreateFrom(string subject, string message = null)
-        { 
+        {
             return new Error(subject, null, message);
-        } 
+        }
+
         public static Error CreateFrom(string subject, Exception exception)
         {
             return new Error(subject, exception, exception.Message);
-        } 
+        }
     }
 }

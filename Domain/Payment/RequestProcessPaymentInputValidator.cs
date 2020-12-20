@@ -4,10 +4,9 @@ using Domain.Payment.Commands;
 
 namespace Domain.Payment
 {
-
     public interface IRequestProcessPaymentInputValidator
     {
-        Result<RequestProcessPayment> Validate(Card card, Guid merchantId, Money amount);
+        Result<RequestPaymentCommand> Validate(Card card, Guid merchantId, Money amount);
     }
 
     public class RequestProcessPaymentInputValidator : IRequestProcessPaymentInputValidator
@@ -38,17 +37,17 @@ namespace Domain.Payment
             return errors.Count > 0 ? Result.Failed<Card>(errors) : Result.Ok<Card>(card);
         }
 
-        public Result<RequestProcessPayment> Validate(Card card, Guid merchantId, Money amount)
+        public Result<RequestPaymentCommand> Validate(Card card, Guid merchantId, Money amount)
         {
             var validatedAmount =  ValidateAmount(amount);
             var validatedCard = ValidateCard(card);
             if (validatedCard.IsOk && validatedAmount.IsOk) 
-                return Result.Ok<RequestProcessPayment>();
+                return Result.Ok<RequestPaymentCommand>();
 
             var errors = new List<Error>();
             errors.AddRange(validatedAmount.Errors);
             errors.AddRange(validatedCard.Errors);
-            return Result.Failed<RequestProcessPayment>(errors);
+            return Result.Failed<RequestPaymentCommand>(errors);
         }
     }
 }

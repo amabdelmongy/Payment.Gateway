@@ -6,19 +6,23 @@ namespace Domain.AcquiringBank
 {
     public class RejectedAcquiringBankError : Error
     {
-        public RejectedAcquiringBankError(Guid acquiringBankResultId, string subject, string message) : base(subject , null , message)
+        private RejectedAcquiringBankError(
+            Guid acquiringBankResultId,
+            string subject,
+            string message) : base(subject, null, message)
         {
-            AcquiringBankResultId = acquiringBankResultId; 
+            AcquiringBankResultId = acquiringBankResultId;
         }
 
-        public Guid AcquiringBankResultId { get; } 
+        public Guid AcquiringBankResultId { get; }
+
         public static Error CreateFrom(Guid acquiringBankResultId, string subject, string message = null)
         {
             return new RejectedAcquiringBankError(acquiringBankResultId, subject, message);
-        } 
+        }
     }
 
-    public interface  IAcquiringBankRepository
+    public interface IAcquiringBankRepository
     {
         Result<Guid> ProcessPayment(PaymentAggregate paymentAggregate);
     }
