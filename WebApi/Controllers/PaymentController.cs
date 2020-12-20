@@ -16,15 +16,17 @@ namespace WebApi.Controllers
         private readonly IPaymentCommandHandler _paymentCommandHandler;
         private readonly IRequestProcessPaymentInputValidator _requestProcessPaymentInputValidator;
         private readonly IPaymentWorkflow _paymentWorkflow;
+        private IPayments _payments;
 
         public PaymentController(
             IPaymentCommandHandler paymentCommandHandler,
             IRequestProcessPaymentInputValidator requestProcessPaymentInputValidator,
-            IPaymentWorkflow paymentWorkflow)
+            IPaymentWorkflow paymentWorkflow, IPayments payments)
         {
             _paymentCommandHandler = paymentCommandHandler;
             _requestProcessPaymentInputValidator = requestProcessPaymentInputValidator;
             _paymentWorkflow = paymentWorkflow;
+            _payments = payments;
         }
 
         [HttpGet]
@@ -58,7 +60,16 @@ namespace WebApi.Controllers
                     var result = _paymentWorkflow.Run(paymentRequestedEventResult.Value.AggregateId);
 
                     if (result.IsOk)
-                        return Ok(); //Todo Get Object
+                    {
+                        var payment = _payments.Get(result.Value.AggregateId).Value; 
+                        return Ok(new
+                            {
+                                AcquiringBankId = payment.AcquiringBankId,
+                                MerchantId = payment.MerchantId,
+                                PaymentId = payment.PaymentId,
+                            }
+                        );
+                    }
 
                     return new BadRequestObjectResult(result.Errors.Select(error => new
                     {
