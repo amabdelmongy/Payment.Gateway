@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Domain.Payment.Commands;
 
@@ -21,20 +22,35 @@ namespace Domain.Payment
 
         public Result<Event> Run(Guid paymentId)
         {
-            var startProcessPaymentAtAcquiringBank = new StartProcessPaymentAtAcquiringBank(paymentId);  
             var processPaymentAtAcquiringBankStarted =
-                _paymentCommandHandler.Handle(startProcessPaymentAtAcquiringBank);
+                _paymentCommandHandler.Handle(
+                    new StartProcessPaymentAtAcquiringBank(paymentId));
+
             if (processPaymentAtAcquiringBankStarted.HasErrors)
                 return Result.Failed<Event>(processPaymentAtAcquiringBankStarted.Errors);
 
-            var processPaymentAtAcquiringBank = new ProcessPaymentAtAcquiringBank(paymentId);
-            var result =
-                _paymentCommandHandler.Handle(processPaymentAtAcquiringBank);
-            if (result.HasErrors)
-                return Result.Failed<Event>(result.Errors);
+            var processPaymentAtAcquiringBankResult =
+                _paymentCommandHandler.Handle(
+                    new ProcessPaymentAtAcquiringBank(paymentId));
 
+            if (processPaymentAtAcquiringBankResult.HasErrors)
+            {
+                var failPaymentAtAcquiringBankCommandResult =
+                    _paymentCommandHandler.Handle(
+                        new FailPaymentAtAcquiringBankCommand(
+                            paymentId,
+                            Guid.Parse(processPaymentAtAcquiringBankResult.Errors.First().Subject),
+                            processPaymentAtAcquiringBankResult.Errors.First().Message
+                        ));
 
-            return Result.Ok(processPaymentAtAcquiringBankStarted.Value);
+                var errors = new List<Error>();
+                errors.AddRange(processPaymentAtAcquiringBankResult.Errors);
+                errors.AddRange(failPaymentAtAcquiringBankCommandResult.Errors);
+
+                return Result.Failed<Event>(errors);
+            }
+
+            return Result.Ok(processPaymentAtAcquiringBankResult.Value);
         }
     }
 }

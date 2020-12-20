@@ -20,7 +20,9 @@ namespace Domain.Test
                     .Setup(repository => repository.Add(It.IsAny<Event>()))
                     .Returns(Result.Ok<object>());
 
-            var paymentCommandHandler = new PaymentCommandHandler(paymentEventRepository.Object);
+            Payments payments = new Payments(paymentEventRepository.Object);
+
+            var paymentCommandHandler = new PaymentCommandHandler(paymentEventRepository.Object , payments );
 
             var requestProcessPayment = new RequestProcessPayment(
             new Card(

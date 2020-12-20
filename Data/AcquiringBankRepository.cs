@@ -3,36 +3,46 @@ using AcquiringBank.Fake;
 using Domain;
 using Domain.AcquiringBank;
 using Domain.Payment;
-using Domain.Payment.Commands;
 
 namespace Data
 {
     public class AcquiringBankRepository : IAcquiringBankRepository
     {
-        public Result<Object> ProcessPayment(Guid merchantId, Money amount, Card card)
+        public Result<Guid> ProcessPayment(PaymentAggregate paymentAggregate)
         {
             var acquiringBankService = new AcquiringBankService();
 
             var acquiringBankPaymentRequest = new AcquiringBankPaymentRequest
             (
-                merchantId,
-                new AcquiringBankMoney(amount.Value, amount.Currency),
-                new AcquiringBankCard(card.Number, card.Expiry, card.Cvv)
+                paymentAggregate.MerchantId,
+                new AcquiringBankMoney(
+                    paymentAggregate.Amount.Value,
+                    paymentAggregate.Amount.Currency),
+                new AcquiringBankCard(
+                    paymentAggregate.Card.Number,
+                    paymentAggregate.Card.Expiry,
+                    paymentAggregate.Card.Cvv)
             );
 
-            var result = acquiringBankService.ProcessPayment(acquiringBankPaymentRequest);
+            var processPayment = acquiringBankService.ProcessPayment(acquiringBankPaymentRequest);
 
-            switch (result)
+            return processPayment.PaymentStatus switch
             {
-                case AcquiringBankPaymentStatus.Accepted:
-                    //Todo
-                    break;
-                case AcquiringBankPaymentStatus.Rejected:
-                    // Todo
-                    break;
-            }
+                AcquiringBankPaymentStatus.Accepted
+                    =>
+                    Result.Ok<Guid>(processPayment.AcquiringBankPaymentId),
 
-            return Result.Ok<Object>();
+                AcquiringBankPaymentStatus.Rejected
+                    =>
+                    Result.Failed<Guid>(
+                        Error.CreateFrom(
+                            processPayment.AcquiringBankPaymentId + "",
+                            processPayment.Details
+                        )
+                    ),
+                _ => throw new NotImplementedException()
+            };
+
         }
     }
 }

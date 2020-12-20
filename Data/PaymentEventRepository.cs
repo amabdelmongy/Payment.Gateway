@@ -26,7 +26,7 @@ namespace Data
 
         public Result<IEnumerable<Event>> Get(Guid id)
         {
-            var sql = $"SELECT * FROM PaymentEvent WHERE AggregateId = '{id}';";
+            var sql = $"SELECT * FROM PaymentEvents WHERE AggregateId = '{id}';";
             try
             {
                 using (var connection = new SqlConnection(_connectionString))
@@ -85,6 +85,15 @@ namespace Data
                 case PaymentProcessCreated paymentCreatedEvent:
                     eventData = JsonConvert.SerializeObject(paymentCreatedEvent);
                     break;
+                case ProcessPaymentAtAcquiringBankStartedEvent processPaymentAtAcquiringBankStartedEvent:
+                    eventData = JsonConvert.SerializeObject(processPaymentAtAcquiringBankStartedEvent);
+                    break;
+                case PaymentAtAcquiringBankProcessedEvent paymentAtAcquiringBankProcessedEvent:
+                    eventData = JsonConvert.SerializeObject(paymentAtAcquiringBankProcessedEvent);
+                    break;
+                case PaymentAtAcquiringBankFailedEvent paymentAtAcquiringBankFailedEvent:
+                    eventData = JsonConvert.SerializeObject(paymentAtAcquiringBankFailedEvent);
+                    break;
                 default:
                     return Result.Failed<string>(
                         Error.CreateFrom("SerializePaymentEvent",  
@@ -117,6 +126,10 @@ namespace Data
             {
                 nameof(PaymentProcessCreated)
                     => PaymentProcessCreated.CreateFrom(e.EventData),
+                nameof(ProcessPaymentAtAcquiringBankStartedEvent)
+                    => ProcessPaymentAtAcquiringBankStartedEvent.CreateFrom(e.EventData),
+                nameof(PaymentAtAcquiringBankProcessedEvent)
+                    => ProcessPaymentAtAcquiringBankStartedEvent.CreateFrom(e.EventData),
                 _ => throw new AggregateException($"Couldn't process the event of Type {e.Type}'")
             };
         }
