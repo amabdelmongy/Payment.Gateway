@@ -9,7 +9,7 @@ namespace Domain.Payment.Events
             Guid requestId,
             DateTime timeStamp,
             int version,
-            Guid acquiringBankId,
+            Guid? acquiringBankId,
             string details)
             : base(
                 requestId,
@@ -22,7 +22,7 @@ namespace Domain.Payment.Events
             Details = details;
         }
 
-        public Guid AcquiringBankId { get; set; }
+        public Guid? AcquiringBankId { get; set; }
 
         public string Details { get; set; }
 

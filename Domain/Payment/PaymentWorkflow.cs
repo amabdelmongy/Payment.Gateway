@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Domain.AcquiringBank;
 using Domain.Payment.Commands;
 
 namespace Domain.Payment
@@ -35,17 +36,35 @@ namespace Domain.Payment
 
             if (processPaymentAtAcquiringBankResult.HasErrors)
             {
-                var failPaymentAtAcquiringBankCommandResult =
-                    _paymentCommandHandler.Handle(
-                        new FailPaymentAtAcquiringBankCommand(
-                            paymentId,
-                            Guid.Parse(processPaymentAtAcquiringBankResult.Errors.First().Subject),
-                            processPaymentAtAcquiringBankResult.Errors.First().Message
-                        ));
-
                 var errors = new List<Error>();
                 errors.AddRange(processPaymentAtAcquiringBankResult.Errors);
-                errors.AddRange(failPaymentAtAcquiringBankCommandResult.Errors);
+
+                var rejectedAcquiringBankErrors =
+                    processPaymentAtAcquiringBankResult.Errors
+                        .OfType<RejectedAcquiringBankError>()
+                        .Select(rejectedAcquiringBankResult =>
+                            _paymentCommandHandler.Handle(
+                                new FailPaymentAtAcquiringBankCommand(
+                                    paymentId,
+                                    rejectedAcquiringBankResult.AcquiringBankResultId,
+                                    rejectedAcquiringBankResult.Message)
+                            )
+                        );
+
+                var genericErrors =
+                    processPaymentAtAcquiringBankResult.Errors
+                        .Where(t => !(t is RejectedAcquiringBankError))
+                        .Select(error =>
+                            _paymentCommandHandler.Handle(
+                                new FailPaymentAtAcquiringBankCommand(
+                                    paymentId,
+                                    null,
+                                    error.Message)
+                            )
+                        );
+
+                errors.AddRange(rejectedAcquiringBankErrors.SelectMany(t => t.Errors).ToList());
+                errors.AddRange(genericErrors.SelectMany(t => t.Errors).ToList());
 
                 return Result.Failed<Event>(errors);
             }

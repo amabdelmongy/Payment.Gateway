@@ -8,41 +8,66 @@ namespace Data
 {
     public class AcquiringBankRepository : IAcquiringBankRepository
     {
+        private readonly IAcquiringBankService _acquiringBankService;
+
+        public AcquiringBankRepository(IAcquiringBankService acquiringBankService)
+        {
+            _acquiringBankService = acquiringBankService;
+        }
+
+        public AcquiringBankRepository()
+        {
+            _acquiringBankService = new AcquiringBankService();
+        }
+
         public Result<Guid> ProcessPayment(PaymentAggregate paymentAggregate)
         {
-            var acquiringBankService = new AcquiringBankService();
+            try
+            { 
+                var acquiringBankPaymentRequest = new AcquiringBankPaymentRequest
+                (
+                    paymentAggregate.MerchantId,
 
-            var acquiringBankPaymentRequest = new AcquiringBankPaymentRequest
-            (
-                paymentAggregate.MerchantId,
-                new AcquiringBankMoney(
-                    paymentAggregate.Amount.Value,
-                    paymentAggregate.Amount.Currency),
-                new AcquiringBankCard(
-                    paymentAggregate.Card.Number,
-                    paymentAggregate.Card.Expiry,
-                    paymentAggregate.Card.Cvv)
-            );
+                    new AcquiringBankMoney(
+                        paymentAggregate.Amount.Value,
+                        paymentAggregate.Amount.Currency),
 
-            var processPayment = acquiringBankService.ProcessPayment(acquiringBankPaymentRequest);
+                    new AcquiringBankCard(
+                        paymentAggregate.Card.Number,
+                        paymentAggregate.Card.Expiry,
+                        paymentAggregate.Card.Cvv)
+                );
 
-            return processPayment.PaymentStatus switch
+                var processPayment =
+                    _acquiringBankService.ProcessPayment(
+                        acquiringBankPaymentRequest);
+
+                return processPayment.PaymentStatus switch
+                {
+                    AcquiringBankPaymentStatus.Accepted
+                        =>
+                        Result.Ok<Guid>(processPayment.AcquiringBankPaymentId),
+
+                    AcquiringBankPaymentStatus.Rejected
+                        =>
+                        Result.Failed<Guid>(
+                            RejectedAcquiringBankError.CreateFrom(
+                                processPayment.AcquiringBankPaymentId,
+                                "Rejected to acquiring Bank with Payment Id" + processPayment.AcquiringBankPaymentId,
+                                processPayment.Details
+                            )
+                        ),
+                    _ => throw new NotImplementedException()
+                };
+            }
+            catch (Exception e)
             {
-                AcquiringBankPaymentStatus.Accepted
-                    =>
-                    Result.Ok<Guid>(processPayment.AcquiringBankPaymentId),
-
-                AcquiringBankPaymentStatus.Rejected
-                    =>
-                    Result.Failed<Guid>(
-                        Error.CreateFrom(
-                            processPayment.AcquiringBankPaymentId + "",
-                            processPayment.Details
-                        )
-                    ),
-                _ => throw new NotImplementedException()
-            };
-
+                return Result.Failed<Guid>(
+                    Error.CreateFrom(
+                        "Failed calling Acquiring Bank",
+                        e
+                    ));
+            }
         }
     }
 }

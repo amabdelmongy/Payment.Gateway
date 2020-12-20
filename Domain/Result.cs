@@ -73,7 +73,7 @@ namespace Domain
     }
     public class Error
     { 
-        private Error(string subject, Exception exception, string message)
+        protected Error(string subject, Exception exception, string message)
         {
             Subject = subject; 
             Message = message;
