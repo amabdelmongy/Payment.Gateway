@@ -11,7 +11,7 @@ using NUnit.Framework;
 
 namespace Domain.Test
 {
-    public class ProcessAcquiringBankPaymentCommandHandlerTests
+    public class CommandHandlerProcessAcquiringBankPaymentTests
     {
         [Test]
         public void WHEN_Handle_processAcquiringBankPaymentCommand_THEN_Create_AcquiringBankPaymentProcessedEvent_Event_and_return_Ok()

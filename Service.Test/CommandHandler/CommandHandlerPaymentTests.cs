@@ -11,7 +11,7 @@ using NUnit.Framework;
 
 namespace Domain.Test
 {
-    public class PaymentCommandHandlerTests
+    public class CommandHandlerPaymentTests
     {
         private Mock<IPaymentService> paymentsMock()
         { 

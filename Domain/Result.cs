@@ -3,27 +3,27 @@ using System.Collections.Generic;
 
 namespace Domain
 {
-    public abstract class Result<T>
+    public class Result<T>
     {
         public readonly IEnumerable<Error> Errors;
         public readonly bool IsOk;
         public readonly T Value;
 
-        protected Result(IEnumerable<Error> errors)
+        internal Result(IEnumerable<Error> errors)
         {
             IsOk = false;
             Value = default;
             Errors = errors;
         }
 
-        protected Result()
+        internal Result()
         {
             IsOk = true;
             Value = default;
             Errors = new List<Error>();
         }
 
-        protected Result(T value)
+        internal Result(T value)
         {
             IsOk = true;
             Value = value;
@@ -37,39 +37,23 @@ namespace Domain
     {
         public static Result<T> Ok<T>(T value)
         {
-            return new ResultI<T>(value);
+            return new Result<T>(value);
         }
 
         public static Result<T> Ok<T>()
         {
-            return new ResultI<T>();
+            return new Result<T>();
         }
 
         public static Result<T> Failed<T>(IEnumerable<Error> errors)
         {
-            return new ResultI<T>(errors);
+            return new Result<T>(errors);
         }
 
         public static Result<T> Failed<T>(Error error)
         {
-            return new ResultI<T>(new List<Error> {error});
-        }
-
-        private class ResultI<T> : Result<T>
-        {
-            internal ResultI(IEnumerable<Error> errors)
-                : base(errors)
-            {
-            }
-
-            internal ResultI()
-            {
-            }
-
-            internal ResultI(T value) : base(value)
-            {
-            }
-        }
+            return new Result<T>(new List<Error> {error});
+        } 
     }
 
     public class Error

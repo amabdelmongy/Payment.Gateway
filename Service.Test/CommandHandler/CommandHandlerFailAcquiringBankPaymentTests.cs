@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 namespace Domain.Test
 {
-    public class FailAcquiringBankPaymentCommandHandlerTests
+    public class CommandHandlerFailAcquiringBankPaymentTests
     {
 
         [Test]

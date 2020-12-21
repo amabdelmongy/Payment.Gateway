@@ -1,6 +1,4 @@
-using System; 
 using System.Linq;
-using Domain.Payment;
 using Domain.Payment.CommandHandlers;
 using Domain.Payment.Commands;
 using Domain.Payment.Events;
@@ -9,7 +7,7 @@ using NUnit.Framework;
 
 namespace Domain.Test
 {
-    public class RequestPaymentCommandHandlerTests
+    public class CommandHandlerRequestPaymentTests
     {
 
         [Test]
@@ -22,7 +20,6 @@ namespace Domain.Test
              
             var requestProcessPaymentCommandHandler = new RequestPaymentCommandHandler(paymentEventRepository.Object); 
  
-
             var requestPaymentCommand = new RequestPaymentCommand(
             PaymentStubs.CardTest,
             PaymentStubs.MerchantIdTest,

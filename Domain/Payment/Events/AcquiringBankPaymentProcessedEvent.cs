@@ -6,13 +6,13 @@ namespace Domain.Payment.Events
     public class AcquiringBankPaymentProcessedEvent : Event
     {
         public AcquiringBankPaymentProcessedEvent(
-            Guid requestId,
+            Guid paymentId,
             DateTime timeStamp,
             int version,
             Guid acquiringBankId
         )
             : base(
-                requestId,
+                paymentId,
                 timeStamp,
                 version,
                 typeof(AcquiringBankPaymentProcessedEvent)

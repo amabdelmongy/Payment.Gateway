@@ -6,7 +6,7 @@ namespace Domain.Payment.Events
     public class PaymentRequestedEvent : Event
     {
         public PaymentRequestedEvent(
-            Guid requestId,
+            Guid paymentId,
             DateTime timeStamp,
             int version,
             Card card,
@@ -14,19 +14,19 @@ namespace Domain.Payment.Events
             Money amount
         )
             : base(
-                requestId,
+                paymentId,
                 timeStamp,
                 version,
                 typeof(PaymentRequestedEvent)
             )
         {
-            RequestId = requestId;
+            PaymentId = paymentId;
             Card = card;
             MerchantId = merchantId;
             Amount = amount;
         }
 
-        public Guid RequestId { get; }
+        public Guid PaymentId { get; }
 
         public Card Card { get; }
 

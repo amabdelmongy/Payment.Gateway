@@ -6,9 +6,8 @@ namespace Domain.Payment
 {
     public interface IPaymentInputValidator
     {
-        Result<RequestPaymentCommand> Validate(Card card, Guid merchantId, Money amount);
+        Result<object> Validate(Card card, Guid merchantId, Money amount);
     }
-
     public class PaymentInputValidator : IPaymentInputValidator
     {
         private Result<Money> ValidateAmount(Money amount)
@@ -37,17 +36,17 @@ namespace Domain.Payment
             return errors.Count > 0 ? Result.Failed<Card>(errors) : Result.Ok<Card>(card);
         }
 
-        public Result<RequestPaymentCommand> Validate(Card card, Guid merchantId, Money amount)
+        public Result<object> Validate(Card card, Guid merchantId, Money amount)
         {
             var validatedAmount =  ValidateAmount(amount);
             var validatedCard = ValidateCard(card);
             if (validatedCard.IsOk && validatedAmount.IsOk) 
-                return Result.Ok<RequestPaymentCommand>();
+                return Result.Ok<object>();
 
             var errors = new List<Error>();
             errors.AddRange(validatedAmount.Errors);
             errors.AddRange(validatedCard.Errors);
-            return Result.Failed<RequestPaymentCommand>(errors);
+            return Result.Failed<object>(errors);
         }
     }
 }

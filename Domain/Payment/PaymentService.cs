@@ -16,7 +16,6 @@ namespace Domain.Payment
         {
             _events = events;
         }
-
         public Result<PaymentAggregate> Get(Guid paymentId)
         {
             var events = _events.Get(paymentId);

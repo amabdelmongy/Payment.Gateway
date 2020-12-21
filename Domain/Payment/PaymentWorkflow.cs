@@ -12,7 +12,6 @@ namespace Domain.Payment
     {
         Result<Event> Run(Card card, Guid merchantId, Money amount);
     }
-
     public class PaymentWorkflow : IPaymentWorkflow
     {
         private readonly IPaymentCommandHandler _paymentCommandHandler;
