@@ -35,7 +35,7 @@ namespace WebApi.Integration.Test
         }
 
         [Test]
-        public async Task WHEN_Get_return_Exception_THEN_return_error()
+        public async Task WHEN_Get_return_Exception_THEN_return_Error()
         {
             var expectedError = Error.CreateFrom(
                 "Failed calling Data base",
@@ -70,7 +70,7 @@ namespace WebApi.Integration.Test
         }
 
         [Test]
-        public async Task WHEN_Add_return_Exception_THEN_return_error()
+        public async Task WHEN_Add_return_Exception_THEN_return_Error()
         {
             var expectedError = Error.CreateFrom(
                 "Failed calling Data base",

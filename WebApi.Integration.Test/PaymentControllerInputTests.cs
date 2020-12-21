@@ -83,7 +83,7 @@ namespace WebApi.Integration.Test
         }
 
         [Test]
-        public async Task WHEN_card_number_empty_THEN_return_error()
+        public async Task WHEN_card_number_empty_THEN_return_Error()
         {
             var paymentRequestDto = new PaymentController.PaymentRequestDto
             {
@@ -125,7 +125,7 @@ namespace WebApi.Integration.Test
         }
 
         [Test]
-        public async Task WHEN_card_Expiry_empty_THEN_return_error()
+        public async Task WHEN_card_Expiry_empty_THEN_return_Error()
         {
             var paymentRequestDto = new PaymentController.PaymentRequestDto
             {
@@ -167,7 +167,7 @@ namespace WebApi.Integration.Test
         }
 
         [Test]
-        public async Task WHEN_card_Cvv_empty_THEN_return_error()
+        public async Task WHEN_card_Cvv_empty_THEN_return_Error()
         {
             var paymentRequestDto = new PaymentController.PaymentRequestDto
             {
@@ -209,7 +209,7 @@ namespace WebApi.Integration.Test
         }
 
         [Test]
-        public async Task WHEN_Amount_Value_is_lessTHan_0_THEN_return_error()
+        public async Task WHEN_Amount_Value_is_lessTHan_0_THEN_return_Error()
         {
             var paymentRequestDto = new PaymentController.PaymentRequestDto
             {
@@ -251,7 +251,7 @@ namespace WebApi.Integration.Test
         }
 
         [Test]
-        public async Task WHEN_Amount_Currency_empty_THEN_return_error()
+        public async Task WHEN_Amount_Currency_empty_THEN_return_Error()
         {
             var paymentRequestDto = new PaymentController.PaymentRequestDto
             {

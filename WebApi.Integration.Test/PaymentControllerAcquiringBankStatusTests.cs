@@ -36,7 +36,7 @@ namespace WebApi.Integration.Test
         }
 
         [Test]
-        public async Task WHEN_ProcessPayment_return_Exception_THEN_return_error()
+        public async Task WHEN_ProcessPayment_return_Exception_THEN_return_Error()
         {
             var expectedError = Error.CreateFrom(
                 "Failed calling Acquiring Bank",
@@ -69,7 +69,7 @@ namespace WebApi.Integration.Test
         }
 
         [Test]
-        public async Task WHEN_ProcessPayment_return_Rejected_THEN_return_error()
+        public async Task WHEN_ProcessPayment_return_Rejected_THEN_return_Error()
         {
             var acquiringBankId = TestStubs.TestAcquiringBankId;
             var expectedError = Error.CreateFrom(
@@ -103,7 +103,7 @@ namespace WebApi.Integration.Test
         }
 
         [Test]
-        public async Task WHEN_ProcessPayment_return_RejectedAcquiringBankError_THEN_return_error()
+        public async Task WHEN_ProcessPayment_return_RejectedAcquiringBankError_THEN_return_Error()
         {
             var acquiringBankId = TestStubs.TestAcquiringBankId;
             var expectedError = RejectedAcquiringBankError.CreateFrom(

@@ -45,7 +45,6 @@ namespace WebApi.Integration.Test
 
             return
                 Result.Ok<IEnumerable<Event>>(events);
-
         }
     }
 }
