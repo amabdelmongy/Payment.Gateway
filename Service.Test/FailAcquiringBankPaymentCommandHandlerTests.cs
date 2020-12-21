@@ -12,7 +12,7 @@ namespace Domain.Test
     {
 
         [Test]
-        public void GIVEN_FailAcquiringBankPaymentCommandHandler_WHEN_Handle_RequestPaymentCommand_THEN_Create_PaymentRequestedEvent_Event_and_return_Ok()
+        public void WHEN_handle_RequestPaymentCommand_THEN_create_PaymentRequestedEvent_and_return_Ok()
         {
             var paymentEventRepository = new Mock<IPaymentEventRepository>();
             paymentEventRepository
@@ -46,7 +46,7 @@ namespace Domain.Test
         }
 
         [Test]
-        public void GIVEN_FailAcquiringBankPaymentCommandHandler_And_paymentEventRepository_return_error_WHEN_Handle_RequestPaymentCommand_THEN_return_Error()
+        public void WHEN_Handle_RequestPaymentCommand_and_paymentEventRepository_return_error_THEN_return_Error()
         {
             var expectedError =
                 Error.CreateFrom(

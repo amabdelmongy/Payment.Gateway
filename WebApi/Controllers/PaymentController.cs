@@ -16,7 +16,7 @@ namespace WebApi.Controllers
         private readonly IPaymentCommandHandler _paymentCommandHandler;
         private readonly IRequestProcessPaymentInputValidator _requestProcessPaymentInputValidator;
         private readonly IPaymentWorkflow _paymentWorkflow;
-        private IPayments _payments;
+        private readonly IPayments _payments;
 
         public PaymentController(
             IPaymentCommandHandler paymentCommandHandler,
@@ -82,7 +82,7 @@ namespace WebApi.Controllers
 
             }
             else
-            {
+            { 
                 return new BadRequestObjectResult(
                     requestProcessPaymentResult.Errors.Select(error => new
                     {
@@ -92,10 +92,9 @@ namespace WebApi.Controllers
             }
         }
 
+#region Dto
 
-        #region Dto
-
-        public class MoneyDto
+public class MoneyDto
         {
             public double Value { get; set; }
             public string Currency { get; set; }

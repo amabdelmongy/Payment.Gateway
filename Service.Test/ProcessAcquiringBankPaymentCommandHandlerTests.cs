@@ -14,8 +14,7 @@ namespace Domain.Test
     public class ProcessAcquiringBankPaymentCommandHandlerTests
     {
         [Test]
-        public void
-            GIVEN_ProcessAcquiringBankPaymentCommandHandler_WHEN_Handle_processAcquiringBankPaymentCommand_THEN_Create_AcquiringBankPaymentProcessedEvent_Event_and_return_Ok()
+        public void WHEN_Handle_processAcquiringBankPaymentCommand_THEN_Create_AcquiringBankPaymentProcessedEvent_Event_and_return_Ok()
         {
             var paymentEventRepository = new Mock<IPaymentEventRepository>();
             paymentEventRepository
@@ -49,7 +48,7 @@ namespace Domain.Test
 
             Assert.IsTrue(actualResult.IsOk);
             var actualEvent = (AcquiringBankPaymentProcessedEvent) actualResult.Value;
-            Assert.AreEqual("AcquiringBankPaymentFailedEvent", actualEvent.Type);
+            Assert.AreEqual("AcquiringBankPaymentProcessedEvent", actualEvent.Type);
             Assert.AreEqual(command.PaymentId, actualEvent.AggregateId);
 
             Assert.AreEqual(paymentAggregate.Version + 1, actualEvent.Version);
@@ -57,7 +56,7 @@ namespace Domain.Test
         }
 
         [Test]
-        public void GIVEN_ProcessAcquiringBankPaymentCommandHandler_And_paymentEventRepository_return_error_WHEN_Handle_ProcessAcquiringBankPaymentCommand_THEN_return_Error()
+        public void WHEN_Handle_ProcessAcquiringBankPaymentCommand_And_paymentEventRepository_return_error_THEN_return_Error()
         {
             var expectedError =
                 Error.CreateFrom(
@@ -106,7 +105,7 @@ namespace Domain.Test
         }
 
         [Test]
-        public void GIVEN_ProcessAcquiringBankPaymentCommandHandler_And_acquiringBankRepository_return_error_WHEN_Handle_ProcessAcquiringBankPaymentCommand_THEN_return_Error()
+        public void WHEN_Handle_ProcessAcquiringBankPaymentCommand_And_acquiringBankRepository_return_error_THEN_return_Error()
         {
             var expectedError =
                 Error.CreateFrom(

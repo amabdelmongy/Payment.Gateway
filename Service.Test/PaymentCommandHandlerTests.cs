@@ -61,8 +61,7 @@ namespace Domain.Test
         }
 
         [Test]
-        public void
-            GIVEN_PaymentCommandHandler_WHEN_Handle_RequestPaymentCommand_THEN_should_call_requestProcessPaymentCommandHandler()
+        public void WHEN_handle_RequestPaymentCommand_THEN_should_call_requestProcessPaymentCommandHandler()
         {  
             var requestProcessPaymentCommandHandler = requestProcessPaymentCommandHandlerMock();
 
@@ -88,8 +87,7 @@ namespace Domain.Test
         } 
 
         [Test]
-        public void
-            GIVEN_PaymentCommandHandler_WHEN_Handle_ProcessAcquiringBankPaymentCommand_THEN_should_call_ProcessAcquiringBankPaymentCommandHandler()
+        public void WHEN_handle_ProcessAcquiringBankPaymentCommand_THEN_should_call_ProcessAcquiringBankPaymentCommandHandler()
         {  
             var processAcquiringBankPaymentCommandHandlerMock = this.processAcquiringBankPaymentCommandHandlerMock();
 
@@ -117,8 +115,7 @@ namespace Domain.Test
         }
 
         [Test]
-        public void
-            GIVEN_PaymentCommandHandler_WHEN_Handle_FailAcquiringBankPaymentCommand_THEN_should_call_FailAcquiringBankPaymentCommandHandler()
+        public void WHEN_handle_FailAcquiringBankPaymentCommand_THEN_should_call_FailAcquiringBankPaymentCommandHandler()
         { 
             var processAcquiringBankPaymentCommandHandlerMock = this.processAcquiringBankPaymentCommandHandlerMock();
 
@@ -146,7 +143,7 @@ namespace Domain.Test
         }
 
         [Test]              
-        public void GIVEN_PaymentCommandHandler_and_payments_return_error_WHEN_Handle_FailAcquiringBankPaymentCommand_THEN_Create_PaymentRequestedEvent_Event_and_return_Ok()
+        public void WHEN_Handle_FailAcquiringBankPaymentCommand_and_payments_return_error_THEN_Create_return_errork()
         {
             var expectedError =
                 Error.CreateFrom(

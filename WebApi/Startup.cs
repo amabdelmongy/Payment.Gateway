@@ -23,7 +23,7 @@ namespace WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IPaymentEventRepository, PaymentEventRepository>(
+            services.AddTransient<IPaymentEventRepository, PaymentEventRepository>(
                 (ctx) => new PaymentEventRepository(Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<IAcquiringBankRepository, AcquiringBankRepository>();
 
