@@ -120,6 +120,39 @@ namespace WebApi.Integration.Test
         }
 
         [Test]
+        public async Task WHEN_ProcessPayment_return_RejectedAcquiringBankError_THEN_return_error()
+        {
+            var expectedError = RejectedAcquiringBankError.CreateFrom(
+                $"Rejected to acquiring Bank with Payment Id {_acquiringBankId}",
+                "Card is not valid");
+
+            Result<Guid> expectedResult = Result.Failed<Guid>(expectedError);
+
+            var client = CreateClient(expectedResult);
+            var response =
+                await client.PostAsJsonAsync(
+                    "/api/payment/request-process-payment/",
+                    _paymentRequestDto);
+
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+
+            var result = await response.Content.ReadAsStringAsync();
+
+            var outputErrorDefinition = new[]
+            {
+                new
+                {
+                    subject = "",
+                    message = ""
+                }
+            };
+
+            var output = JsonConvert.DeserializeAnonymousType(result, outputErrorDefinition);
+            Assert.AreEqual(expectedError.Subject, output[0].subject);
+            Assert.AreEqual(expectedError.Message, output[0].message);
+        }
+
+        [Test]
         public async Task WHEN_PaymentRequestDto_is_correct_THEN_return_OK()
         { 
             var client = CreateClient(Result.Ok<Guid>(_acquiringBankId));

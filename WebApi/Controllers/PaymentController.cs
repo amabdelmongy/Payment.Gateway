@@ -1,8 +1,6 @@
 ﻿using System;
-using Microsoft.AspNetCore.Mvc; 
-using System.Collections.Generic;
-using System.Linq;
-using Domain;
+using Microsoft.AspNetCore.Mvc;  
+using System.Linq; 
 using Domain.Payment;
 using Domain.Payment.CommandHandlers;
 using Domain.Payment.Commands;
@@ -27,13 +25,7 @@ namespace WebApi.Controllers
             _requestProcessPaymentInputValidator = requestProcessPaymentInputValidator;
             _paymentWorkflow = paymentWorkflow;
             _payments = payments;
-        }
-
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new List<string> {"1", "2", "3"};
-        }
+        } 
 
         [HttpPost]
         [Route("request-process-payment")]
