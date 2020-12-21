@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Domain.Payment.Commands;
 
 namespace Domain.Payment
 {
@@ -24,6 +22,8 @@ namespace Domain.Payment
             Card card,
             Money amount
         )
+
+        #region Amount 
 
         {
             var validatedAmountResult = ValidateAmount(amount);
@@ -53,6 +53,9 @@ namespace Domain.Payment
             return errors.Count > 0 ? Result.Failed<object>(errors) : Result.Ok<object>();
         }
 
+        #endregion
+
+        #region card 
         private Result<object> ValidateCard(Card card)
         {
             var errors = new List<Error>();
@@ -100,6 +103,7 @@ namespace Domain.Payment
 
             return Result.Ok<object>();
         }
+        #endregion 
 
         private static Error BuildError(CardValidationErrorType type, string message)
         {
