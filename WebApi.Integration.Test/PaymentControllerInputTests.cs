@@ -19,7 +19,7 @@ namespace WebApi.Integration.Test
     {
         private readonly HttpClient _client;
 
-        Guid _acquiringBankId = Guid.Parse("fc05a938-ac01-4090-aa1c-34721c1e3346");
+        Guid _acquiringBankId = TestStubs.TestAcquiringBankId;
          
         public PaymentControllerInputTests()
         {
