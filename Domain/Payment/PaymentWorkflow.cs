@@ -47,11 +47,11 @@ namespace Domain.Payment
             if (paymentRequestedEvent.HasErrors)
                 return Result.Failed<Event>(paymentRequestedEvent.Errors);
 
+            var paymentId = paymentRequestedEvent.Value.AggregateId;
+
             var acquiringBankPaymentProcessedEvent =
                 _paymentCommandHandler.Handle(
-                    new ProcessAcquiringBankPaymentCommand(
-                        paymentRequestedEvent.Value.AggregateId)
-                );
+                    new ProcessAcquiringBankPaymentCommand(paymentId));
 
             if (acquiringBankPaymentProcessedEvent.HasErrors)
             { 
@@ -60,7 +60,7 @@ namespace Domain.Payment
                         .Select(error =>
                             _paymentCommandHandler.Handle(
                                 new FailAcquiringBankPaymentCommand(
-                                    acquiringBankPaymentProcessedEvent.Value.AggregateId,
+                                    paymentId,
                                     error is RejectedAcquiringBankError
                                         ? (Guid?) ((RejectedAcquiringBankError) error).AcquiringBankResultId
                                         : null,
