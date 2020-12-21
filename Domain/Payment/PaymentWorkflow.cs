@@ -31,7 +31,6 @@ namespace Domain.Payment
             var validateStatus =
                 _paymentInputValidator.Validate(
                     card,
-                    merchantId,
                     amount
                 );
 

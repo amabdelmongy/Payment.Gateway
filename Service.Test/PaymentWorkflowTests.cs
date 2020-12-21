@@ -29,7 +29,7 @@ namespace Domain.Test
                 new Mock<IPaymentInputValidator>();
             paymentInputValidatorMock
                 .Setup(t =>
-                    t.Validate(It.IsAny<Card>(), It.IsAny<Guid>(), It.IsAny<Money>())
+                    t.Validate(It.IsAny<Card>(), It.IsAny<Money>())
                 )
                 .Returns(Result.Failed<object>(expectedError));
 
@@ -69,7 +69,6 @@ namespace Domain.Test
                 .Setup(t =>
                     t.Validate(
                         It.IsAny<Card>(),
-                        It.IsAny<Guid>(),
                         It.IsAny<Money>())
                 )
                 .Returns(Result.Ok<object>());

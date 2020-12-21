@@ -15,7 +15,7 @@ namespace WebApi.Integration.Test
         {
             Card = new PaymentController.CardDto
             {
-                Number = "348865529252519",
+                Number = "5105105105105100",
                 Expiry = "10/24",
                 Cvv = "123"
             },

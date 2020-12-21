@@ -49,7 +49,7 @@ namespace WebApi.Integration.Test
             {
                 Card = new PaymentController.CardDto
                 {
-                    Number = "348865529252519",
+                    Number = "5105105105105100",
                     Expiry = "10/24",
                     Cvv = "123"
                 },
@@ -120,7 +120,7 @@ namespace WebApi.Integration.Test
             };
 
             var output = JsonConvert.DeserializeAnonymousType(result, outputErrorDefinition);
-            Assert.AreEqual("Card Number", output[0].subject);
+            Assert.AreEqual("Invalid Card Number", output[0].subject);
             Assert.AreEqual("Card Number is Empty", output[0].message);
         }
 
@@ -131,7 +131,7 @@ namespace WebApi.Integration.Test
             {
                 Card = new PaymentController.CardDto
                 {
-                    Number = "348865529252519",
+                    Number = "5105105105105100",
                     Expiry = "",
                     Cvv = "123"
                 },
@@ -162,8 +162,8 @@ namespace WebApi.Integration.Test
             };
 
             var output = JsonConvert.DeserializeAnonymousType(result, outputErrorDefinition);
-            Assert.AreEqual("Card Expiry", output[0].subject);
-            Assert.AreEqual("Card Expiry is Empty", output[0].message);
+            Assert.AreEqual("Invalid Expiry Date", output[0].subject);
+            Assert.AreEqual("Expire date is Empty", output[0].message);
         }
 
         [Test]
@@ -173,7 +173,7 @@ namespace WebApi.Integration.Test
             {
                 Card = new PaymentController.CardDto
                 {
-                    Number = "348865529252519",
+                    Number = "5105105105105100",
                     Expiry = "10/24",
                     Cvv = ""
                 },
@@ -204,8 +204,8 @@ namespace WebApi.Integration.Test
             };
 
             var output = JsonConvert.DeserializeAnonymousType(result, outputErrorDefinition);
-            Assert.AreEqual("Card Cvv", output[0].subject);
-            Assert.AreEqual("Card Cvv is Empty", output[0].message);
+            Assert.AreEqual("Invalid CVV", output[0].subject);
+            Assert.AreEqual("Card CVV is Empty", output[0].message);
         }
 
         [Test]
@@ -215,7 +215,7 @@ namespace WebApi.Integration.Test
             {
                 Card = new PaymentController.CardDto
                 {
-                    Number = "348865529252519",
+                    Number = "5105105105105100",
                     Expiry = "10/24",
                     Cvv = "123"
                 },
@@ -246,8 +246,8 @@ namespace WebApi.Integration.Test
             };
 
             var output = JsonConvert.DeserializeAnonymousType(result, outputErrorDefinition);
-            Assert.AreEqual("Amount value", output[0].subject);
-            Assert.AreEqual("Amount value is less than 0", output[0].message);
+            Assert.AreEqual("Invalid Amount", output[0].subject);
+            Assert.AreEqual("Amount should be more than 0", output[0].message);
         }
 
         [Test]
@@ -257,7 +257,7 @@ namespace WebApi.Integration.Test
             {
                 Card = new PaymentController.CardDto
                 {
-                    Number = "348865529252519",
+                    Number = "5105105105105100",
                     Expiry = "10/24",
                     Cvv = "123"
                 },
@@ -288,7 +288,7 @@ namespace WebApi.Integration.Test
             };
 
             var output = JsonConvert.DeserializeAnonymousType(result, outputErrorDefinition);
-            Assert.AreEqual("Amount Currency", output[0].subject);
+            Assert.AreEqual("Invalid Amount", output[0].subject);
             Assert.AreEqual("Amount Currency is Empty", output[0].message);
         }
     }
