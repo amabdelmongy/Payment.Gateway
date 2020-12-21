@@ -72,7 +72,7 @@ namespace Domain.Payment
                     BuildError(CardValidationErrorType.InvalidCardNumber, "Card Number is Empty")
                 );
 
-            if (cardNumber.Length != 16)
+            if (!Regex.Match(cardNumber, @"^\d{16}$").Success)
                 return Result.Failed<object>(
                     BuildError(CardValidationErrorType.InvalidCardNumber, "Card Number is Invalid")
                 );
