@@ -32,9 +32,9 @@ namespace WebApi
             services.AddTransient<IRequestProcessPaymentCommandHandler, RequestPaymentCommandHandler>();
             services
                 .AddTransient<IProcessAcquiringBankPaymentCommandHandler, ProcessAcquiringBankPaymentCommandHandler>();
-            services.AddTransient<IRequestProcessPaymentInputValidator, RequestProcessPaymentInputValidator>();
+            services.AddTransient<IPaymentInputValidator, PaymentInputValidator>();
 
-            services.AddTransient<IPayments, Payments>();
+            services.AddTransient<IPaymentService, PaymentService>();
             services.AddTransient<IPaymentWorkflow, PaymentWorkflow>();
 
 

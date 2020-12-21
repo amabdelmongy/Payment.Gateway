@@ -4,65 +4,77 @@ using System.Linq;
 using Domain.AcquiringBank;
 using Domain.Payment.CommandHandlers;
 using Domain.Payment.Commands;
+using Domain.Payment.Events;
 
 namespace Domain.Payment
 {
     public interface IPaymentWorkflow
     {
-        Result<Event> Run(Guid paymentId);
+        Result<Event> Run(Card card, Guid merchantId, Money amount);
     }
 
     public class PaymentWorkflow : IPaymentWorkflow
     {
         private readonly IPaymentCommandHandler _paymentCommandHandler;
+        private readonly IPaymentInputValidator _paymentInputValidator;
 
-        public PaymentWorkflow(IPaymentCommandHandler paymentCommandHandler)
+        public PaymentWorkflow(
+            IPaymentCommandHandler paymentCommandHandler,
+            IPaymentInputValidator paymentInputValidator
+        )
         {
             _paymentCommandHandler = paymentCommandHandler;
+            _paymentInputValidator = paymentInputValidator;
         }
 
-        public Result<Event> Run(Guid paymentId)
+        public Result<Event> Run(Card card, Guid merchantId, Money amount)
         {
-            var processAcquiringBankPaymentCommandResult =
+            var validateStatus =
+                _paymentInputValidator.Validate(
+                    card,
+                    merchantId,
+                    amount
+                );
+
+            if (validateStatus.HasErrors)
+                return Result.Failed<Event>(validateStatus.Errors);
+
+            var paymentRequestedEvent =
                 _paymentCommandHandler.Handle(
-                    new ProcessAcquiringBankPaymentCommand(paymentId));
+                    new RequestPaymentCommand(card, merchantId, amount)
+                );
 
-            if (processAcquiringBankPaymentCommandResult.HasErrors)
-            {
-                var errors = new List<Error>();
-                errors.AddRange(processAcquiringBankPaymentCommandResult.Errors);
+            if (paymentRequestedEvent.HasErrors)
+                return Result.Failed<Event>(paymentRequestedEvent.Errors);
 
-                var rejectedAcquiringBankErrors =
-                    processAcquiringBankPaymentCommandResult.Errors
-                        .OfType<RejectedAcquiringBankError>()
-                        .Select(rejectedAcquiringBankResult =>
-                            _paymentCommandHandler.Handle(
-                                new FailAcquiringBankPaymentCommand(
-                                    paymentId,
-                                    rejectedAcquiringBankResult.AcquiringBankResultId,
-                                    rejectedAcquiringBankResult.Message)
-                            )
-                        );
+            var acquiringBankPaymentProcessedEvent =
+                _paymentCommandHandler.Handle(
+                    new ProcessAcquiringBankPaymentCommand(
+                        paymentRequestedEvent.Value.AggregateId)
+                );
 
-                var genericErrors =
-                    processAcquiringBankPaymentCommandResult.Errors
-                        .Where(t => !(t is RejectedAcquiringBankError))
+            if (acquiringBankPaymentProcessedEvent.HasErrors)
+            { 
+                var paymentErrors =
+                    acquiringBankPaymentProcessedEvent.Errors
                         .Select(error =>
                             _paymentCommandHandler.Handle(
                                 new FailAcquiringBankPaymentCommand(
-                                    paymentId,
-                                    null,
+                                    acquiringBankPaymentProcessedEvent.Value.AggregateId,
+                                    error is RejectedAcquiringBankError
+                                        ? (Guid?) ((RejectedAcquiringBankError) error).AcquiringBankResultId
+                                        : null,
                                     error.Message)
                             )
                         );
 
-                errors.AddRange(rejectedAcquiringBankErrors.SelectMany(t => t.Errors).ToList());
-                errors.AddRange(genericErrors.SelectMany(t => t.Errors).ToList());
-
+                var errors = new List<Error>();
+                errors.AddRange(acquiringBankPaymentProcessedEvent.Errors);
+                errors.AddRange(paymentErrors.SelectMany(t => t.Errors).ToList());
                 return Result.Failed<Event>(errors);
             }
 
-            return Result.Ok(processAcquiringBankPaymentCommandResult.Value);
+            return acquiringBankPaymentProcessedEvent;
         }
     }
 }

@@ -13,9 +13,9 @@ namespace Domain.Test
 {
     public class PaymentCommandHandlerTests
     {
-        private Mock<IPayments> paymentsMock()
+        private Mock<IPaymentService> paymentsMock()
         { 
-            var paymentsMock = new Mock<IPayments>();
+            var paymentsMock = new Mock<IPaymentService>();
 
             paymentsMock
                 .Setup(payments =>
@@ -150,7 +150,7 @@ namespace Domain.Test
                     "Error Subject",
                     "Error Message");
 
-            var paymentsMock = new Mock<IPayments>();
+            var paymentsMock = new Mock<IPaymentService>();
             paymentsMock
                 .Setup(repository =>
                     repository.Get(It.IsAny<Guid>()))

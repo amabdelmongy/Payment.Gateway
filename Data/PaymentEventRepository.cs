@@ -52,11 +52,23 @@ namespace Data
                 EventData = eventDataResult.Value,
                 Type = @event.Type
             };
-            var result = Add(insertModel);
-            return result;
+
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    connection.Insert(insertModel);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Result.Failed<object>(Error.CreateFrom("PersistPaymentEvent", ex));
+            }
+
+            return Result.Ok<object>();
         }
 
-        private static Result<string> SerializeEvent(Event @event)
+        private Result<string> SerializeEvent(Event @event)
         {
             string eventData;
             switch (@event)
@@ -81,36 +93,19 @@ namespace Data
 
             return Result.Ok(eventData);
         }
-
-        private Result<object> Add(PaymentEvent paymentEvent)
-        {
-            try
-            {
-                using (var connection = new SqlConnection(_connectionString))
-                {
-                    connection.Insert(paymentEvent);
-                }
-            }
-            catch (Exception ex)
-            {
-                return Result.Failed<object>(Error.CreateFrom("PersistPaymentEvent", ex));
-            }
-
-            return Result.Ok<object>();
-        }
-
-        private static Event DeserializeEvent(PaymentEvent e)
-        {
+        
+        private Event DeserializeEvent(PaymentEvent e)
+        { 
             return e.Type switch
             {
                 nameof(PaymentRequestedEvent)
-                    => PaymentRequestedEvent.CreateFrom(e.EventData),
+                    => JsonConvert.DeserializeObject<PaymentRequestedEvent>(e.EventData),
 
                 nameof(AcquiringBankPaymentProcessedEvent)
-                    => AcquiringBankPaymentProcessedEvent.CreateFrom(e.EventData),
+                    => JsonConvert.DeserializeObject<AcquiringBankPaymentProcessedEvent>(e.EventData),
 
                 nameof(AcquiringBankPaymentFailedEvent)
-                    => AcquiringBankPaymentFailedEvent.CreateFrom(e.EventData),
+                    => JsonConvert.DeserializeObject<AcquiringBankPaymentProcessedEvent>(e.EventData),
 
                 _ => throw new AggregateException($"Couldn't process the event of Type {e.Type}'")
             };

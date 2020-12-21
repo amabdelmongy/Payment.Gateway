@@ -33,10 +33,6 @@ namespace Domain.Payment.Events
         public Guid MerchantId { get; }
 
         public Money Amount { get; }
-
-        public static PaymentRequestedEvent CreateFrom(string eventData)
-        {
-            return JsonConvert.DeserializeObject<PaymentRequestedEvent>(eventData);
-        }
+         
     }
 }

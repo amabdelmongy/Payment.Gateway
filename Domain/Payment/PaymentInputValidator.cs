@@ -4,12 +4,12 @@ using Domain.Payment.Commands;
 
 namespace Domain.Payment
 {
-    public interface IRequestProcessPaymentInputValidator
+    public interface IPaymentInputValidator
     {
         Result<RequestPaymentCommand> Validate(Card card, Guid merchantId, Money amount);
     }
 
-    public class RequestProcessPaymentInputValidator : IRequestProcessPaymentInputValidator
+    public class PaymentInputValidator : IPaymentInputValidator
     {
         private Result<Money> ValidateAmount(Money amount)
         {

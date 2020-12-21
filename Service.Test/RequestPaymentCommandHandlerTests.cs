@@ -3,6 +3,7 @@ using System.Linq;
 using Domain.Payment;
 using Domain.Payment.CommandHandlers;
 using Domain.Payment.Commands;
+using Domain.Payment.Events;
 using Moq;
 using NUnit.Framework;
 

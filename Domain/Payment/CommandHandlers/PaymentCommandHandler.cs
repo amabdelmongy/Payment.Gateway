@@ -1,4 +1,5 @@
 ﻿using Domain.Payment.Commands;
+using Domain.Payment.Events;
 
 namespace Domain.Payment.CommandHandlers
 {
@@ -9,18 +10,18 @@ namespace Domain.Payment.CommandHandlers
 
     public class PaymentCommandHandler : IPaymentCommandHandler
     {
-        private readonly IPayments _payments;
+        private readonly IPaymentService _paymentService;
         private readonly IRequestProcessPaymentCommandHandler _requestProcessPaymentCommandHandler;
         private readonly IProcessAcquiringBankPaymentCommandHandler _acquiringBankCommandHandler;
         private readonly IFailAcquiringBankPaymentCommandHandler _failAcquiringBankPaymentCommandHandler;
 
         public PaymentCommandHandler(
-            IPayments payments,
+            IPaymentService paymentService,
             IRequestProcessPaymentCommandHandler requestProcessPaymentCommandHandler,
             IProcessAcquiringBankPaymentCommandHandler acquiringBankCommandHandler,
             IFailAcquiringBankPaymentCommandHandler failAcquiringBankPaymentCommandHandler)
         {
-            _payments = payments;
+            _paymentService = paymentService;
             _requestProcessPaymentCommandHandler = requestProcessPaymentCommandHandler;
             _failAcquiringBankPaymentCommandHandler = failAcquiringBankPaymentCommandHandler;
             _acquiringBankCommandHandler = acquiringBankCommandHandler;
@@ -30,7 +31,7 @@ namespace Domain.Payment.CommandHandlers
         {
             var paymentResult = command is RequestPaymentCommand
                 ? Result.Ok<PaymentAggregate>(null)
-                : _payments.Get(command.PaymentId);
+                : _paymentService.Get(command.PaymentId);
 
             if (paymentResult.HasErrors)
                 return Result.Failed<Event>(paymentResult.Errors);

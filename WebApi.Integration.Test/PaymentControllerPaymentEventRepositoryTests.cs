@@ -10,7 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using Domain.AcquiringBank;
-using Domain; 
+using Domain;
+using Domain.Payment.Events;
 
 namespace WebApi.Integration.Test
 {

@@ -22,11 +22,6 @@ namespace Domain.Payment.Events
 
         }
 
-        public Guid AcquiringBankId { get; }
-
-        public static AcquiringBankPaymentProcessedEvent CreateFrom(string eventData)
-        {
-            return JsonConvert.DeserializeObject<AcquiringBankPaymentProcessedEvent>(eventData);
-        }
+        public Guid AcquiringBankId { get; } 
     }
 }

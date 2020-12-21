@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace Domain
+namespace Domain.Payment.Events
 {
     public abstract class Event
     {
@@ -17,6 +17,6 @@ namespace Domain
         public Guid AggregateId { get; }
         public DateTime TimeStamp { get; }
         public int Version { get; }
-        public string Type { get; set; }
+        public string Type { get; }
     }
 }

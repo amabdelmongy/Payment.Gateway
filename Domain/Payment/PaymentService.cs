@@ -3,16 +3,16 @@ using System.Linq;
 
 namespace Domain.Payment
 {
-    public interface IPayments
+    public interface IPaymentService
     {
         Result<PaymentAggregate> Get(Guid paymentId);
     }
 
-    public class Payments : IPayments
+    public class PaymentService : IPaymentService
     {
         private readonly IPaymentEventRepository _events;
 
-        public Payments(IPaymentEventRepository events)
+        public PaymentService(IPaymentEventRepository events)
         {
             _events = events;
         }
@@ -20,10 +20,11 @@ namespace Domain.Payment
         public Result<PaymentAggregate> Get(Guid paymentId)
         {
             var events = _events.Get(paymentId);
-            if (!events.IsOk)
+            if (events.HasErrors)
                 return Result.Failed<PaymentAggregate>(events.Errors);
 
-            if (!events.Value.Any()) return Result.Failed<PaymentAggregate>(Error.CreateFrom("PaymentAggregate"));
+            if (!events.Value.Any()) 
+                return Result.Failed<PaymentAggregate>(Error.CreateFrom($"No PaymentAggregate with paymentId: { paymentId }"));
 
             return PaymentAggregateFactory.CreateFrom(events.Value);
         }

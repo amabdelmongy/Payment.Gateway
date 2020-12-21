@@ -11,8 +11,7 @@ namespace Domain.Payment
         {
 
         }
-
-        public PaymentAggregate(
+        PaymentAggregate(
             Guid id,
             Card card,
             Guid merchantId,
@@ -93,7 +92,6 @@ namespace Domain.Payment
         {
             Id = id;
         }
-
         public string Id { get; }
     }
 
@@ -140,7 +138,6 @@ namespace Domain.Payment
                                 default:
                                     throw new NotSupportedException();
                             }
-
                             return paymentAggregate;
                         });
 

@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Mvc;  
 using System.Linq; 
 using Domain.Payment;
-using Domain.Payment.CommandHandlers;
-using Domain.Payment.Commands;
 
 namespace WebApi.Controllers
 {
@@ -11,82 +9,62 @@ namespace WebApi.Controllers
     [Route("api/payment")]
     public class PaymentController : ControllerBase
     {
-        private readonly IPaymentCommandHandler _paymentCommandHandler;
-        private readonly IRequestProcessPaymentInputValidator _requestProcessPaymentInputValidator;
         private readonly IPaymentWorkflow _paymentWorkflow;
-        private readonly IPayments _payments;
+        private readonly IPaymentService _paymentService;
 
         public PaymentController(
-            IPaymentCommandHandler paymentCommandHandler,
-            IRequestProcessPaymentInputValidator requestProcessPaymentInputValidator,
-            IPaymentWorkflow paymentWorkflow, IPayments payments)
+            IPaymentWorkflow paymentWorkflow,
+            IPaymentService paymentService)
         {
-            _paymentCommandHandler = paymentCommandHandler;
-            _requestProcessPaymentInputValidator = requestProcessPaymentInputValidator;
             _paymentWorkflow = paymentWorkflow;
-            _payments = payments;
-        } 
+            _paymentService = paymentService;
+        }
 
         [HttpPost]
         [Route("request-process-payment")]
         public ActionResult RequestProcessPayment([FromBody] PaymentRequestDto paymentRequestDto)
         {
-            var requestProcessPaymentResult =
-                new RequestProcessPaymentFactory(_requestProcessPaymentInputValidator)
-                    .From(
-                        new Card(
-                            paymentRequestDto.Card.Number,
-                            paymentRequestDto.Card.Expiry,
-                            paymentRequestDto.Card.Cvv
-                        ),
-                        paymentRequestDto.MerchantId,
-                        new Money(paymentRequestDto.Amount.Value, paymentRequestDto.Amount.Currency)
-                    );
+            var paymentResult =
+                _paymentWorkflow.Run(
+                    new Card(
+                        paymentRequestDto.Card.Number,
+                        paymentRequestDto.Card.Expiry,
+                        paymentRequestDto.Card.Cvv
+                    ),
+                    paymentRequestDto.MerchantId,
+                    new Money(
+                        paymentRequestDto.Amount.Value,
+                        paymentRequestDto.Amount.Currency
+                    )
+                );
 
-            if (requestProcessPaymentResult.IsOk)
-            {
-                var paymentRequestedEventResult = _paymentCommandHandler.Handle(requestProcessPaymentResult.Value);
-
-                if (paymentRequestedEventResult.IsOk)
-                {
-                    var result = _paymentWorkflow.Run(paymentRequestedEventResult.Value.AggregateId);
-
-                    if (result.IsOk)
-                    {
-                        var payment = _payments.Get(result.Value.AggregateId).Value; 
-                        return Ok(new
-                            {
-                                AcquiringBankId = payment.AcquiringBankId,
-                                MerchantId = payment.MerchantId,
-                                PaymentId = payment.PaymentId,
-                            }
-                        );
-                    }
-
-                    return new BadRequestObjectResult(result.Errors.Select(error => new
-                    {
-                        subject = error.Subject,
-                        message = error.Message
-                    })); //Todo change error type
-                }
-
-                return new BadRequestObjectResult(paymentRequestedEventResult.Errors);
-
-            }
-            else
-            { 
+            if (paymentResult.HasErrors)
                 return new BadRequestObjectResult(
-                    requestProcessPaymentResult.Errors.Select(error => new
-                    {
-                        subject = error.Subject,
-                        message = error.Message
-                    }));
-            }
+                    paymentResult.Errors
+                        .Select(error => new
+                        {
+                            subject = error.Subject,
+                            message = error.Message
+                        }));
+
+            var paymentAggregate =
+                _paymentService
+                    .Get(paymentResult.Value.AggregateId)
+                    .Value;
+
+            return Ok(new
+
+                {
+                    AcquiringBankId = paymentAggregate.AcquiringBankId,
+                    MerchantId = paymentAggregate.MerchantId,
+                    PaymentId = paymentAggregate.PaymentId,
+                }
+            );
         }
 
-#region Dto
+        #region Dto
 
-public class MoneyDto
+        public class MoneyDto
         {
             public double Value { get; set; }
             public string Currency { get; set; }
