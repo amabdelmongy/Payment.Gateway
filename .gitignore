@@ -22,3 +22,5 @@ WebApi/obj/
 AcquiringBank.Fake/bin/
 AcquiringBank.Fake/obj/
 /.idea/.idea.Payment.Gateway
+/Domain.Test/obj
+/Domain.Test/bin/
