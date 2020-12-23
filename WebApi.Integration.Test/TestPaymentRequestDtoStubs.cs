@@ -1,9 +1,9 @@
 ﻿using System;
-using WebApi.Controllers;
+using WebApi.Controllers.v1;
 
 namespace WebApi.Integration.Test
 {
-    public class TestStubs
+    public static class TestStubs
     {
         public static readonly Guid TestAcquiringBankId = Guid.Parse("fc05a938-ac01-4090-aa1c-34721c1e3346");
 

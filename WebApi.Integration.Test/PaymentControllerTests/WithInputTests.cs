@@ -1,27 +1,25 @@
-using System; 
+using System;
 using System.Net;
-using System.Net.Http; 
-using System.Net.Http.Json; 
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
+using Domain;
+using Domain.AcquiringBank;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.DependencyInjection; 
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-using WebApi.Controllers;
-using Domain;
-using Domain.AcquiringBank;
-
-namespace WebApi.Integration.Test
+namespace WebApi.Integration.Test.PaymentControllerTests
 {
-    public class PaymentControllerInputTests
+    public class WithInputTests
     {
-        private readonly HttpClient _client;
+        private readonly HttpClient _client; 
+        private Guid _acquiringBankId = TestStubs.TestAcquiringBankId;
+        private const string UrlRequestPayment = "/api/v1/payment/request-payment/";
 
-        Guid _acquiringBankId = TestStubs.TestAcquiringBankId;
-         
-        public PaymentControllerInputTests()
+        public WithInputTests()
         {
             var acquiringBankFacade =
                 new InMemoryAcquiringBankFacade()
@@ -45,16 +43,16 @@ namespace WebApi.Integration.Test
         [Test]
         public async Task WHEN_PaymentRequestDto_is_correct_THEN_return_OK()
         {
-            var paymentRequestDto = new PaymentController.PaymentRequestDto
+            var paymentRequestDto = new Controllers.v1.PaymentController.PaymentRequestDto
             {
-                Card = new PaymentController.CardDto
+                Card = new Controllers.v1.PaymentController.CardDto
                 {
                     Number = "5105105105105100",
                     Expiry = "9/22",
                     Cvv = "123"
                 },
                 MerchantId = Guid.Parse("77d17eb6-a996-4375-bf1c-fb9808d95801"),
-                Amount = new PaymentController.MoneyDto
+                Amount = new Controllers.v1.PaymentController.MoneyDto
                 {
                     Currency = "Euro",
                     Value = 10.30
@@ -63,7 +61,7 @@ namespace WebApi.Integration.Test
 
             var response =
                 await _client.PostAsJsonAsync(
-                    "/api/payment/request-process-payment/",
+                    UrlRequestPayment,
                     paymentRequestDto);
              
             response.EnsureSuccessStatusCode();
@@ -85,16 +83,16 @@ namespace WebApi.Integration.Test
         [Test]
         public async Task WHEN_card_number_empty_THEN_return_Error()
         {
-            var paymentRequestDto = new PaymentController.PaymentRequestDto
+            var paymentRequestDto = new Controllers.v1.PaymentController.PaymentRequestDto
             {
-                Card = new PaymentController.CardDto
+                Card = new Controllers.v1.PaymentController.CardDto
                 {
                     Number = "",
                     Expiry = "10/24",
                     Cvv = "123"
                 },
                 MerchantId = Guid.Parse("77d17eb6-a996-4375-bf1c-fb9808d95801"),
-                Amount = new PaymentController.MoneyDto
+                Amount = new Controllers.v1.PaymentController.MoneyDto
                 {
                     Currency = "Euro",
                     Value = 10.30
@@ -103,7 +101,7 @@ namespace WebApi.Integration.Test
 
             var response =
                 await _client.PostAsJsonAsync(
-                    "/api/payment/request-process-payment/",
+                    UrlRequestPayment,
                     paymentRequestDto);
              
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode );
@@ -127,16 +125,16 @@ namespace WebApi.Integration.Test
         [Test]
         public async Task WHEN_card_Expiry_empty_THEN_return_Error()
         {
-            var paymentRequestDto = new PaymentController.PaymentRequestDto
+            var paymentRequestDto = new Controllers.v1.PaymentController.PaymentRequestDto
             {
-                Card = new PaymentController.CardDto
+                Card = new Controllers.v1.PaymentController.CardDto
                 {
                     Number = "5105105105105100",
                     Expiry = "",
                     Cvv = "123"
                 },
                 MerchantId = Guid.Parse("77d17eb6-a996-4375-bf1c-fb9808d95801"),
-                Amount = new PaymentController.MoneyDto
+                Amount = new Controllers.v1.PaymentController.MoneyDto
                 {
                     Currency = "Euro",
                     Value = 10.30
@@ -145,7 +143,7 @@ namespace WebApi.Integration.Test
 
             var response =
                 await _client.PostAsJsonAsync(
-                    "/api/payment/request-process-payment/",
+                    UrlRequestPayment,
                     paymentRequestDto);
              
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
@@ -169,16 +167,16 @@ namespace WebApi.Integration.Test
         [Test]
         public async Task WHEN_card_Cvv_empty_THEN_return_Error()
         {
-            var paymentRequestDto = new PaymentController.PaymentRequestDto
+            var paymentRequestDto = new Controllers.v1.PaymentController.PaymentRequestDto
             {
-                Card = new PaymentController.CardDto
+                Card = new Controllers.v1.PaymentController.CardDto
                 {
                     Number = "5105105105105100",
                     Expiry = "10/24",
                     Cvv = ""
                 },
                 MerchantId = Guid.Parse("77d17eb6-a996-4375-bf1c-fb9808d95801"),
-                Amount = new PaymentController.MoneyDto
+                Amount = new Controllers.v1.PaymentController.MoneyDto
                 {
                     Currency = "Euro",
                     Value = 10.30
@@ -187,7 +185,7 @@ namespace WebApi.Integration.Test
 
             var response =
                 await _client.PostAsJsonAsync(
-                    "/api/payment/request-process-payment/",
+                    UrlRequestPayment,
                     paymentRequestDto);
              
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
@@ -211,16 +209,16 @@ namespace WebApi.Integration.Test
         [Test]
         public async Task WHEN_Amount_Value_is_lessTHan_0_THEN_return_Error()
         {
-            var paymentRequestDto = new PaymentController.PaymentRequestDto
+            var paymentRequestDto = new Controllers.v1.PaymentController.PaymentRequestDto
             {
-                Card = new PaymentController.CardDto
+                Card = new Controllers.v1.PaymentController.CardDto
                 {
                     Number = "5105105105105100",
                     Expiry = "10/24",
                     Cvv = "123"
                 },
                 MerchantId = Guid.Parse("77d17eb6-a996-4375-bf1c-fb9808d95801"),
-                Amount = new PaymentController.MoneyDto
+                Amount = new Controllers.v1.PaymentController.MoneyDto
                 {
                     Currency = "Euro",
                     Value = -1
@@ -229,7 +227,7 @@ namespace WebApi.Integration.Test
 
             var response =
                 await _client.PostAsJsonAsync(
-                    "/api/payment/request-process-payment/",
+                    UrlRequestPayment,
                     paymentRequestDto);
              
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
@@ -253,16 +251,16 @@ namespace WebApi.Integration.Test
         [Test]
         public async Task WHEN_Amount_Currency_empty_THEN_return_Error()
         {
-            var paymentRequestDto = new PaymentController.PaymentRequestDto
+            var paymentRequestDto = new Controllers.v1.PaymentController.PaymentRequestDto
             {
-                Card = new PaymentController.CardDto
+                Card = new Controllers.v1.PaymentController.CardDto
                 {
                     Number = "5105105105105100",
                     Expiry = "10/24",
                     Cvv = "123"
                 },
                 MerchantId = Guid.Parse("77d17eb6-a996-4375-bf1c-fb9808d95801"),
-                Amount = new PaymentController.MoneyDto
+                Amount = new Controllers.v1.PaymentController.MoneyDto
                 {
                     Currency = "",
                     Value = 10.30
@@ -271,7 +269,7 @@ namespace WebApi.Integration.Test
 
             var response =
                 await _client.PostAsJsonAsync(
-                    "/api/payment/request-process-payment/",
+                    UrlRequestPayment,
                     paymentRequestDto);
              
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);

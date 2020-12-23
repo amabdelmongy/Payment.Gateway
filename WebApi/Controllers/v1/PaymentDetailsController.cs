@@ -1,28 +1,22 @@
 ﻿using System;
-using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using Domain.Payment;
 using Domain.Payment.Aggregate;
 using Domain.Payment.Projection;
+using Microsoft.AspNetCore.Mvc;
 
-namespace WebApi.Controllers
+namespace WebApi.Controllers.v1
 {
     [ApiController]
-    [Route("api/payment")]
-    public class PaymentController : ControllerBase
-    {
-        private readonly IPaymentWorkflow _paymentWorkflow;
-        private readonly IPaymentService _paymentService;
+    [Route("api/v1/payment-details")]
+    public class PaymentDetailsController : ControllerBase
+    { 
         private readonly IPaymentProjectionRepository _paymentProjectionRepository;
 
-        public PaymentController(
-            IPaymentWorkflow paymentWorkflow,
-            IPaymentService paymentService,
+        public PaymentDetailsController( 
             IPaymentProjectionRepository paymentProjectionRepository
         )
         {
-            _paymentWorkflow = paymentWorkflow;
-            _paymentService = paymentService;
             _paymentProjectionRepository = paymentProjectionRepository;
         }
          
@@ -103,70 +97,5 @@ namespace WebApi.Controllers
                 )
             );
         }
-
-        [HttpPost]
-        [Route("request-process-payment")]
-        public ActionResult RequestProcessPayment(
-            [FromBody] PaymentRequestDto paymentRequestDto
-        )
-        {
-            var paymentResult =
-                _paymentWorkflow.Run(
-                    new Card(
-                        paymentRequestDto.Card.Number,
-                        paymentRequestDto.Card.Expiry,
-                        paymentRequestDto.Card.Cvv
-                    ),
-                    paymentRequestDto.MerchantId,
-                    new Money(
-                        paymentRequestDto.Amount.Value,
-                        paymentRequestDto.Amount.Currency
-                    )
-                );
-
-            if (paymentResult.HasErrors)
-                return new BadRequestObjectResult(
-                    paymentResult.Errors
-                        .Select(error => new
-                        {
-                            subject = error.Subject,
-                            message = error.Message
-                        }));
-
-            var paymentAggregate =
-                _paymentService
-                    .Get(paymentResult.Value.AggregateId)
-                    .Value;
-
-            return Ok(new
-                {
-                    AcquiringBankId = paymentAggregate.AcquiringBankId,
-                    MerchantId = paymentAggregate.MerchantId,
-                    PaymentId = paymentAggregate.PaymentId,
-                }
-            );
-        }
-
-        #region Input Dto 
-        public class MoneyDto
-        {
-            public double Value { get; set; }
-            public string Currency { get; set; }
-        }
-
-        public class CardDto
-        {
-            public string Number { get; set; }
-            public string Expiry { get; set; }
-            public string Cvv { get; set; }
-        }
-
-        public class PaymentRequestDto
-        {
-            public Guid MerchantId { get; set; }
-            public MoneyDto Amount { get; set; }
-            public CardDto Card { get; set; }
-        } 
-        #endregion
     }
 }

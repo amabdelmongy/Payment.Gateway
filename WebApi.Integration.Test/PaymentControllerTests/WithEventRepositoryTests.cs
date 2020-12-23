@@ -1,22 +1,23 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Net.Http; 
-using System.Net.Http.Json; 
-using System.Threading.Tasks; 
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
+using Domain;
+using Domain.AcquiringBank;
+using Domain.Payment.Events;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.DependencyInjection; 
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using Domain.AcquiringBank;
-using Domain;
-using Domain.Payment.Events;
 
-namespace WebApi.Integration.Test
+namespace WebApi.Integration.Test.PaymentControllerTests
 {
-    public class PaymentControllerEventRepositoryTests
-    {  
+    public class WithEventRepositoryTests
+    {
+        private const string UrlRequestPayment = "/api/v1/payment/request-payment/";
         private HttpClient CreateClient(IEventRepository eventRepository)
         { 
             var factory =
@@ -25,7 +26,6 @@ namespace WebApi.Integration.Test
                     {
                         builder.ConfigureTestServices(services =>
                         {
-                            ; 
                             services.AddScoped(a => eventRepository);
                             services.AddScoped(a => (IAcquiringBankFacade)new InMemoryAcquiringBankFacade().WithId(TestStubs.TestAcquiringBankId));
                         });
@@ -48,7 +48,7 @@ namespace WebApi.Integration.Test
             var client = CreateClient((IEventRepository)eventRepository);
             var response =
                 await client.PostAsJsonAsync(
-                    "/api/payment/request-process-payment/",
+                    UrlRequestPayment,
                     TestStubs.TestPaymentRequestDto);
 
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
@@ -83,7 +83,7 @@ namespace WebApi.Integration.Test
             var client = CreateClient((IEventRepository)eventRepository);
             var response =
                 await client.PostAsJsonAsync(
-                    "/api/payment/request-process-payment/",
+                    UrlRequestPayment,
                     TestStubs.TestPaymentRequestDto);
 
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);

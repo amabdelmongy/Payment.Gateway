@@ -1,10 +1,9 @@
-﻿using System; 
+﻿using System;
 using Domain;
 using Domain.AcquiringBank;
-using Domain.Payment;
 using Domain.Payment.Aggregate;
 
-namespace WebApi.Integration.Test
+namespace WebApi.Integration.Test.PaymentControllerTests
 {
     public class InMemoryAcquiringBankFacade : IAcquiringBankFacade
     {  

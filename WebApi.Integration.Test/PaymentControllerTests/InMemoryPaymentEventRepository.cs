@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq; 
+using System.Linq;
 using Domain;
 using Domain.Payment.Events;
 
-namespace WebApi.Integration.Test
+namespace WebApi.Integration.Test.PaymentControllerTests
 {
     public class InMemoryEventRepository : IEventRepository
     {

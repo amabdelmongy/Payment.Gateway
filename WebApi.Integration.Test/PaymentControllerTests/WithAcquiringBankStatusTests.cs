@@ -1,20 +1,21 @@
-using System; 
+using System;
 using System.Net;
-using System.Net.Http; 
-using System.Net.Http.Json; 
-using System.Threading.Tasks; 
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
+using Domain;
+using Domain.AcquiringBank;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.DependencyInjection; 
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using Domain.AcquiringBank;
-using Domain; 
 
-namespace WebApi.Integration.Test
+namespace WebApi.Integration.Test.PaymentControllerTests
 {
-    public class PaymentControllerAcquiringBankStatusTests
-    { 
+    public class WithAcquiringBankStatusTests
+    {
+        private const string UrlRequestPayment = "/api/v1/payment/request-payment/";
         private HttpClient CreateClient(Result<Guid> result)
         {
             var acquiringBankFacade =
@@ -34,8 +35,7 @@ namespace WebApi.Integration.Test
 
             return factory.CreateClient();
         }
-
-
+        
         [Test]
         public async Task WHEN_ProcessPayment_return_Exception_THEN_return_Error()
         {
@@ -48,7 +48,7 @@ namespace WebApi.Integration.Test
             var client = CreateClient(expectedResult);
             var response =
                 await client.PostAsJsonAsync(
-                    "/api/payment/request-process-payment/",
+                    UrlRequestPayment,
                     TestStubs.TestPaymentRequestDto);
 
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
@@ -82,7 +82,7 @@ namespace WebApi.Integration.Test
             var client = CreateClient(expectedResult);
             var response =
                 await client.PostAsJsonAsync(
-                    "/api/payment/request-process-payment/",
+                    UrlRequestPayment,
                     TestStubs.TestPaymentRequestDto);
 
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
@@ -116,7 +116,7 @@ namespace WebApi.Integration.Test
             var client = CreateClient(expectedResult);
             var response =
                 await client.PostAsJsonAsync(
-                    "/api/payment/request-process-payment/",
+                    UrlRequestPayment,
                     TestStubs.TestPaymentRequestDto);
 
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
@@ -145,7 +145,7 @@ namespace WebApi.Integration.Test
 
             var response =
                 await client.PostAsJsonAsync(
-                    "/api/payment/request-process-payment/",
+                    UrlRequestPayment,
                     TestStubs.TestPaymentRequestDto);
 
             response.EnsureSuccessStatusCode();
