@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WebApi.Controllers;
 
 namespace WebApi.Integration.Test
@@ -16,7 +12,7 @@ namespace WebApi.Integration.Test
             Card = new PaymentController.CardDto
             {
                 Number = "5105105105105100",
-                Expiry = "10/24",
+                Expiry = "8/22",
                 Cvv = "123"
             },
             MerchantId = Guid.Parse("77d17eb6-a996-4375-bf1c-fb9808d95801"),

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Domain.Payment;
+using Domain.Payment.Aggregate;
 using Domain.Payment.Events;
 using NUnit.Framework;
 
@@ -27,7 +24,7 @@ namespace Domain.Test
             var actualAggregate = paymentAggregateResult.Value;
 
             Assert.AreEqual(expectedEvent.MerchantId, actualAggregate.MerchantId);
-            Assert.AreEqual(expectedEvent.PaymentId, actualAggregate.PaymentId);
+            Assert.AreEqual(expectedEvent.AggregateId, actualAggregate.PaymentId);
             Assert.AreEqual(expectedEvent.Card, actualAggregate.Card);
             Assert.AreEqual(expectedEvent.Amount, actualAggregate.Amount);
             Assert.AreEqual(expectedEvent.Version, actualAggregate.Version);

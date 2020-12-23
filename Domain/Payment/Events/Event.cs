@@ -6,7 +6,12 @@ namespace Domain.Payment.Events
     public abstract class Event
     {
         [JsonConstructor]
-        protected Event(Guid aggregateId, DateTime timeStamp, int version, Type type)
+        protected Event(
+            Guid aggregateId,
+            DateTime timeStamp,
+            int version,
+            Type type
+        )
         {
             AggregateId = aggregateId;
             TimeStamp = timeStamp;

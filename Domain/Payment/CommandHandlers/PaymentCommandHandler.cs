@@ -1,4 +1,5 @@
-﻿using Domain.Payment.Commands;
+﻿using Domain.Payment.Aggregate;
+using Domain.Payment.Commands;
 using Domain.Payment.Events;
 
 namespace Domain.Payment.CommandHandlers
@@ -19,7 +20,8 @@ namespace Domain.Payment.CommandHandlers
             IPaymentService paymentService,
             IRequestProcessPaymentCommandHandler requestProcessPaymentCommandHandler,
             IProcessAcquiringBankPaymentCommandHandler acquiringBankCommandHandler,
-            IFailAcquiringBankPaymentCommandHandler failAcquiringBankPaymentCommandHandler)
+            IFailAcquiringBankPaymentCommandHandler failAcquiringBankPaymentCommandHandler
+        )
         {
             _paymentService = paymentService;
             _requestProcessPaymentCommandHandler = requestProcessPaymentCommandHandler;

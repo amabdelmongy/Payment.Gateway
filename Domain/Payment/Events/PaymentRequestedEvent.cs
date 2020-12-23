@@ -1,12 +1,12 @@
 ﻿using System;
-using Newtonsoft.Json;
+using Domain.Payment.Aggregate;
 
 namespace Domain.Payment.Events
 {
     public class PaymentRequestedEvent : Event
     {
         public PaymentRequestedEvent(
-            Guid paymentId,
+            Guid aggregateId,
             DateTime timeStamp,
             int version,
             Card card,
@@ -14,25 +14,22 @@ namespace Domain.Payment.Events
             Money amount
         )
             : base(
-                paymentId,
+                aggregateId,
                 timeStamp,
                 version,
                 typeof(PaymentRequestedEvent)
             )
         {
-            PaymentId = paymentId;
             Card = card;
             MerchantId = merchantId;
             Amount = amount;
         }
-
-        public Guid PaymentId { get; }
 
         public Card Card { get; }
 
         public Guid MerchantId { get; }
 
         public Money Amount { get; }
-         
+
     }
 }

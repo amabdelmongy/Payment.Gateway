@@ -1,18 +1,18 @@
 ﻿using System;
-using Newtonsoft.Json;
 
 namespace Domain.Payment.Events
 {
     public class AcquiringBankPaymentFailedEvent : Event
     {
         public AcquiringBankPaymentFailedEvent(
-            Guid paymentId,
+            Guid aggregateId,
             DateTime timeStamp,
             int version,
             Guid? acquiringBankId,
-            string details)
+            string details
+        )
             : base(
-                paymentId,
+                aggregateId,
                 timeStamp,
                 version,
                 typeof(AcquiringBankPaymentFailedEvent)

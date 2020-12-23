@@ -6,29 +6,29 @@ using Domain.Payment.Events;
 
 namespace WebApi.Integration.Test
 {
-    public class InMemoryPaymentEventRepository : IPaymentEventRepository
+    public class InMemoryEventRepository : IEventRepository
     {
         readonly List<Tuple<Guid, Event>> _tuples = new List<Tuple<Guid, Event>>();
 
         private Result<object> _addResult;
 
-        public InMemoryPaymentEventRepository WithNewAdd(Result<object> result)
+        public InMemoryEventRepository WithNewAdd(Result<object> result)
         {
             _addResult = result;
             return this;
         }
 
-        public Result<object> Add(Event paymentEvent)
+        public Result<object> Add(Event @event)
         {
             if (_addResult != null) return _addResult;
 
-            _tuples.Add(new Tuple<Guid, Event>(paymentEvent.AggregateId, paymentEvent));
+            _tuples.Add(new Tuple<Guid, Event>(@event.AggregateId, @event));
             return Result.Ok<object>();
         }
 
         private Result<IEnumerable<Event>> _getResult;
 
-        public InMemoryPaymentEventRepository WithNewGet(Result<IEnumerable<Event>> result)
+        public InMemoryEventRepository WithNewGet(Result<IEnumerable<Event>> result)
         {
             _getResult = result;
             return this;

@@ -1,4 +1,5 @@
 ﻿using System;
+using Domain.Payment.Aggregate;
 
 namespace Domain.Payment.Commands
 {
@@ -7,7 +8,8 @@ namespace Domain.Payment.Commands
         public RequestPaymentCommand(
             Card card,
             Guid merchantId,
-            Money amount)
+            Money amount
+        )
             : base(Guid.NewGuid())
         {
 

@@ -1,8 +1,13 @@
-﻿namespace Domain.Payment
+﻿namespace Domain.Payment.Aggregate
 {
     public class Card
     {
-        public Card(string number, string expiry, string cvv)
+        public Card(
+            string number,
+            string expiry,
+            string cvv
+        )
+
         {
             Number = number;
             Cvv = cvv;

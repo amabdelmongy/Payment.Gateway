@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Linq; 
+using System.Linq;
+using Domain.Payment.Aggregate;
 
 namespace Domain.Payment
 {
@@ -7,15 +8,15 @@ namespace Domain.Payment
     {
         Result<PaymentAggregate> Get(Guid paymentId);
     }
-
     public class PaymentService : IPaymentService
     {
-        private readonly IPaymentEventRepository _events;
+        private readonly IEventRepository _events;
 
-        public PaymentService(IPaymentEventRepository events)
+        public PaymentService(IEventRepository events)
         {
             _events = events;
         }
+
         public Result<PaymentAggregate> Get(Guid paymentId)
         {
             var events = _events.Get(paymentId);

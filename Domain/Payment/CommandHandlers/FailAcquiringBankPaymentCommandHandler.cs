@@ -8,21 +8,21 @@ namespace Domain.Payment.CommandHandlers
     {
         Result<Event> Handle(
             FailAcquiringBankPaymentCommand failAcquiringBankPaymentCommand,
-            int version);
+            int version
+        );
     }
-
     public class FailAcquiringBankPaymentCommandHandler : IFailAcquiringBankPaymentCommandHandler
     {
-        private readonly IPaymentEventRepository _paymentEventRepository;
+        private readonly IEventRepository _eventRepository;
 
-        public FailAcquiringBankPaymentCommandHandler(IPaymentEventRepository paymentEventRepository)
+        public FailAcquiringBankPaymentCommandHandler(IEventRepository eventRepository)
         {
-            _paymentEventRepository = paymentEventRepository;
+            _eventRepository = eventRepository;
         }
-
         public Result<Event> Handle(
             FailAcquiringBankPaymentCommand failAcquiringBankPaymentCommand,
-            int version)
+            int version
+        )
         {
             var acquiringBankPaymentFailedEvent =
                 new AcquiringBankPaymentFailedEvent(
@@ -33,7 +33,7 @@ namespace Domain.Payment.CommandHandlers
                     failAcquiringBankPaymentCommand.Details
                 );
 
-            var result = _paymentEventRepository.Add(acquiringBankPaymentFailedEvent);
+            var result = _eventRepository.Add(acquiringBankPaymentFailedEvent);
 
             return
                 result.IsOk

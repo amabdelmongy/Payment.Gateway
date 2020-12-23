@@ -7,7 +7,11 @@ namespace Domain.AcquiringBank
         private RejectedAcquiringBankError(
             Guid acquiringBankResultId,
             string subject,
-            string message) : base(subject, null, message)
+            string message
+        ) : base(
+            subject,
+            null,
+            message)
         {
             AcquiringBankResultId = acquiringBankResultId;
         }

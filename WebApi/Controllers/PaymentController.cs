@@ -1,7 +1,9 @@
 ﻿using System;
-using Microsoft.AspNetCore.Mvc;  
-using System.Linq; 
+using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using Domain.Payment;
+using Domain.Payment.Aggregate;
+using Domain.Payment.Projection;
 
 namespace WebApi.Controllers
 {
@@ -11,18 +13,62 @@ namespace WebApi.Controllers
     {
         private readonly IPaymentWorkflow _paymentWorkflow;
         private readonly IPaymentService _paymentService;
+        private readonly IPaymentProjectionRepository _paymentProjectionRepository;
 
         public PaymentController(
             IPaymentWorkflow paymentWorkflow,
-            IPaymentService paymentService)
+            IPaymentService paymentService,
+            IPaymentProjectionRepository paymentProjectionRepository
+        )
         {
             _paymentWorkflow = paymentWorkflow;
             _paymentService = paymentService;
+            _paymentProjectionRepository = paymentProjectionRepository;
+        }
+         
+        [HttpGet]
+        [Route("{paymentId}")]
+        public ActionResult Get(Guid paymentId)
+        {
+            var payments =
+                _paymentProjectionRepository.Get(paymentId);
+
+            if (payments.HasErrors)
+                return new BadRequestObjectResult(
+                    payments.Errors
+                        .Select(error => new
+                        {
+                            subject = error.Subject,
+                            message = error.Message
+                        }));
+
+            if (!payments.Value.Any())
+                return new NotFoundResult();
+
+            var payment = payments.Value.First();
+
+            return Ok(
+                new
+                {
+                    paymentId = payment.PaymentId,
+                    MerchantId = payment.MerchantId,
+                    CardNumber = payment.CardNumber,
+                    CardExpiry = payment.CardExpiry,
+                    CardCvv = payment.CardCvv,
+                    Amount = payment.Amount,
+                    Currency = payment.Currency,
+                    PaymentStatus = payment.PaymentStatus,
+                    LastUpdatedDate = payment.LastUpdatedDate,
+                    AcquiringBankId = payment.AcquiringBankId
+                }
+            );
         }
 
         [HttpPost]
         [Route("request-process-payment")]
-        public ActionResult RequestProcessPayment([FromBody] PaymentRequestDto paymentRequestDto)
+        public ActionResult RequestProcessPayment(
+            [FromBody] PaymentRequestDto paymentRequestDto
+        )
         {
             var paymentResult =
                 _paymentWorkflow.Run(
@@ -53,7 +99,6 @@ namespace WebApi.Controllers
                     .Value;
 
             return Ok(new
-
                 {
                     AcquiringBankId = paymentAggregate.AcquiringBankId,
                     MerchantId = paymentAggregate.MerchantId,
@@ -62,8 +107,7 @@ namespace WebApi.Controllers
             );
         }
 
-        #region Dto
-
+        #region Input Dto 
         public class MoneyDto
         {
             public double Value { get; set; }
@@ -82,8 +126,7 @@ namespace WebApi.Controllers
             public Guid MerchantId { get; set; }
             public MoneyDto Amount { get; set; }
             public CardDto Card { get; set; }
-        }
-
+        } 
         #endregion
     }
 }

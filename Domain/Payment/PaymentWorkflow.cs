@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Domain.AcquiringBank;
+using Domain.Payment.Aggregate;
 using Domain.Payment.CommandHandlers;
 using Domain.Payment.Commands;
 using Domain.Payment.Events;
+using Domain.Payment.InputValidator;
 
 namespace Domain.Payment
 {

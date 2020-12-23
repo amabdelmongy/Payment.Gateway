@@ -4,9 +4,9 @@ using Domain.Payment.Events;
 
 namespace Domain
 {
-    public interface IPaymentEventRepository
+    public interface IEventRepository
     {
         Result<IEnumerable<Event>> Get(Guid id);
-        Result<object> Add(Event paymentEvent);
+        Result<object> Add(Event @event);
     }
 }

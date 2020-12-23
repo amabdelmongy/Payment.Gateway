@@ -1,5 +1,4 @@
-﻿
-namespace Domain.Payment
+﻿namespace Domain.Payment.Aggregate
 {
     public class PaymentStatus
     {

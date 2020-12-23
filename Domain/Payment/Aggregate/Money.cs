@@ -1,8 +1,11 @@
-﻿namespace Domain.Payment
+﻿namespace Domain.Payment.Aggregate
 {
     public class Money
     {
-        public Money(double value, string currency)
+        public Money(
+            double value,
+            string currency
+        )
         {
             Value = value;
             Currency = currency;

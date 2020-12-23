@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AcquiringBank.Fake
 {
@@ -11,11 +9,37 @@ namespace AcquiringBank.Fake
 
     public class AcquiringBankService : IAcquiringBankService
     {
-        public AcquiringBankPaymentResult ProcessPayment(AcquiringBankPaymentRequest acquiringBankPaymentRequest)
+        public AcquiringBankPaymentResult ProcessPayment(
+            AcquiringBankPaymentRequest acquiringBankPaymentRequest
+        )
         {
-            throw new Exception("Some thing modified");
-           // return new AcquiringBankPaymentResult(Guid.NewGuid(), AcquiringBankPaymentStatus.Accepted, "Accepted");
-            //return new AcquiringBankPaymentResult(Guid.NewGuid(), AcquiringBankPaymentStatus.Rejected, "Card is not valid");
+            return new Random().Next(0, 3) switch
+            {
+                0 => AcceptedResult(),
+                1 => ExceptionResult(),
+                2 => RejectedResultWithCard(),
+                3 => RejectedResultWithAmount(),
+                _ => AcceptedResult()
+            };
+        }
+
+        private AcquiringBankPaymentResult AcceptedResult()
+        {
+            return new AcquiringBankPaymentResult(Guid.NewGuid(), AcquiringBankPaymentStatus.Accepted, "Accepted");
+        }
+        private AcquiringBankPaymentResult ExceptionResult()
+        {
+            throw new Exception("something modified at Acquiring Bank Service.");
+        }
+
+        private AcquiringBankPaymentResult RejectedResultWithCard()
+        {
+            return new AcquiringBankPaymentResult(Guid.NewGuid(), AcquiringBankPaymentStatus.Rejected, "Card is not valid.");
+        }
+
+        private AcquiringBankPaymentResult RejectedResultWithAmount()
+        {
+            return new AcquiringBankPaymentResult(Guid.NewGuid(), AcquiringBankPaymentStatus.Rejected, "Amount is less than the required to transfer.");
         }
     }
 }

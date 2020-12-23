@@ -17,8 +17,8 @@ namespace WebApi.Integration.Test
     { 
         private HttpClient CreateClient(Result<Guid> result)
         {
-            var acquiringBankRepository =
-                new InMemoryAcquiringBankRepository()
+            var acquiringBankFacade =
+                new InMemoryAcquiringBankFacade()
                     .WithNewResult(result); 
             var factory =
                 new WebApplicationFactory<Startup>()
@@ -26,14 +26,15 @@ namespace WebApi.Integration.Test
                     {
                         builder.ConfigureTestServices(services =>
                         {
-                            IPaymentEventRepository paymentEventRepository = new InMemoryPaymentEventRepository(); 
-                            services.AddScoped(a => paymentEventRepository);
-                            services.AddScoped(a => (IAcquiringBankRepository) acquiringBankRepository);
+                            IEventRepository eventRepository = new InMemoryEventRepository(); 
+                            services.AddScoped(a => eventRepository);
+                            services.AddScoped(a => (IAcquiringBankFacade) acquiringBankFacade);
                         });
                     });
 
             return factory.CreateClient();
         }
+
 
         [Test]
         public async Task WHEN_ProcessPayment_return_Exception_THEN_return_Error()

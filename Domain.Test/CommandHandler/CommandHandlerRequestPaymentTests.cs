@@ -13,12 +13,12 @@ namespace Domain.Test
         [Test]
         public void WHEN_Handle_RequestPaymentCommand_THEN_Create_PaymentRequestedEvent_Event_and_return_Ok()
         {
-            var paymentEventRepository = new Mock<IPaymentEventRepository>();
-            paymentEventRepository
+            var eventRepository = new Mock<IEventRepository>();
+            eventRepository
                     .Setup(repository => repository.Add(It.IsAny<Event>()))
                     .Returns(Result.Ok<object>());
              
-            var requestProcessPaymentCommandHandler = new RequestPaymentCommandHandler(paymentEventRepository.Object); 
+            var requestProcessPaymentCommandHandler = new RequestPaymentCommandHandler(eventRepository.Object); 
  
             var requestPaymentCommand = new RequestPaymentCommand(
             PaymentStubs.CardTest,
@@ -33,28 +33,28 @@ namespace Domain.Test
             Assert.AreEqual("PaymentRequestedEvent", actual.Type);
             Assert.AreEqual(requestPaymentCommand.PaymentId, actual.AggregateId);
             Assert.AreEqual(1, actual.Version);
-            paymentEventRepository.Verify(mock => mock.Add(It.IsAny<Event>()), Times.Once());
+            eventRepository.Verify(mock => mock.Add(It.IsAny<Event>()), Times.Once());
         }
 
         [Test]
-        public void WHEN_Handle_RequestPaymentCommand_And_paymentEventRepository_return_error_THEN_return_Error()
+        public void WHEN_Handle_RequestPaymentCommand_And_eventRepository_return_error_THEN_return_Error()
         {
             var expectedError = 
                 Error.CreateFrom(
                     "Error Subject", 
                     "Error Message");
 
-            var paymentEventRepository =
-                new Mock<IPaymentEventRepository>();
+            var eventRepository =
+                new Mock<IEventRepository>();
 
-            paymentEventRepository
+            eventRepository
                 .Setup(repository =>
                     repository.Add(It.IsAny<Event>())
                     )
                 .Returns(Result.Failed<object>(expectedError));
 
             var requestProcessPaymentCommandHandler = 
-                new RequestPaymentCommandHandler(paymentEventRepository.Object);
+                new RequestPaymentCommandHandler(eventRepository.Object);
 
             var requestPaymentCommand = new RequestPaymentCommand(
                 PaymentStubs.CardTest,
@@ -71,7 +71,7 @@ namespace Domain.Test
             Assert.AreEqual(expectedError.Subject, error.Subject);
             Assert.AreEqual(expectedError.Message, error.Message);
 
-            paymentEventRepository.Verify(mock => mock.Add(It.IsAny<Event>()), Times.Once());
+            eventRepository.Verify(mock => mock.Add(It.IsAny<Event>()), Times.Once());
         }
     }
 }

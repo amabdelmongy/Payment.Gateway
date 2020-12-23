@@ -23,8 +23,8 @@ namespace WebApi.Integration.Test
          
         public PaymentControllerInputTests()
         {
-            var acquiringBankRepository =
-                new InMemoryAcquiringBankRepository()
+            var acquiringBankFacade =
+                new InMemoryAcquiringBankFacade()
                     .WithId(_acquiringBankId);
 
             var factory =
@@ -33,9 +33,9 @@ namespace WebApi.Integration.Test
                     {
                         builder.ConfigureTestServices(services =>
                         {
-                            IPaymentEventRepository paymentEventRepository = new InMemoryPaymentEventRepository(); 
-                            services.AddScoped(a => paymentEventRepository);
-                            services.AddScoped(a =>(IAcquiringBankRepository) acquiringBankRepository);
+                            IEventRepository eventRepository = new InMemoryEventRepository(); 
+                            services.AddScoped(a => eventRepository);
+                            services.AddScoped(a =>(IAcquiringBankFacade) acquiringBankFacade);
                         });
                     });
 
@@ -50,7 +50,7 @@ namespace WebApi.Integration.Test
                 Card = new PaymentController.CardDto
                 {
                     Number = "5105105105105100",
-                    Expiry = "10/24",
+                    Expiry = "9/22",
                     Cvv = "123"
                 },
                 MerchantId = Guid.Parse("77d17eb6-a996-4375-bf1c-fb9808d95801"),

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Domain.Payment.Events;
 
-namespace Domain.Payment
+namespace Domain.Payment.Aggregate
 {
     public static class PaymentAggregateFactory
     {

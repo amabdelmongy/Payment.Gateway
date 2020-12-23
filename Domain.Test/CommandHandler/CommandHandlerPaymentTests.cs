@@ -3,6 +3,7 @@ using System.Linq;
 using Domain;
 using Domain.AcquiringBank;
 using Domain.Payment;
+using Domain.Payment.Aggregate;
 using Domain.Payment.CommandHandlers;
 using Domain.Payment.Commands;
 using Domain.Payment.Events;

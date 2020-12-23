@@ -7,7 +7,9 @@ namespace Domain.Payment.Commands
         public FailAcquiringBankPaymentCommand(
             Guid paymentId,
             Guid? acquiringBankId,
-            string details) : base(paymentId)
+            string details
+        ) 
+            : base(paymentId)
         {
             AcquiringBankId = acquiringBankId;
             Details = details;

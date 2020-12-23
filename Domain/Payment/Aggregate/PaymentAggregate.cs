@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Domain.Payment
+namespace Domain.Payment.Aggregate
 {
     public class PaymentAggregate
     {
@@ -15,7 +15,8 @@ namespace Domain.Payment
             Money amount,
             int version,
             PaymentStatus paymentStatus,
-            Guid? acquiringBankId = null)
+            Guid? acquiringBankId = null
+        )
         {
             PaymentId = id;
             Card = card;
@@ -45,7 +46,8 @@ namespace Domain.Payment
             Card card,
             Guid merchantId,
             Money amount,
-            int version)
+            int version
+        )
         {
             return
                 new PaymentAggregate(
@@ -60,7 +62,8 @@ namespace Domain.Payment
         public PaymentAggregate With(
             PaymentStatus paymentStatus,
             int version,
-            Guid? acquiringBankId = null)
+            Guid? acquiringBankId = null
+        )
         {
             return
                 new PaymentAggregate(
@@ -72,5 +75,5 @@ namespace Domain.Payment
                     paymentStatus,
                     acquiringBankId);
         }
-    } 
+    }
 }

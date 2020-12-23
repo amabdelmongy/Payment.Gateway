@@ -1,9 +1,9 @@
 ﻿using System;
-using Domain.Payment;
+using Domain.Payment.Aggregate;
 
 namespace Domain.AcquiringBank
 { 
-    public interface IAcquiringBankRepository
+    public interface IAcquiringBankFacade
     {
         Result<Guid> ProcessPayment(PaymentAggregate paymentAggregate);
     }

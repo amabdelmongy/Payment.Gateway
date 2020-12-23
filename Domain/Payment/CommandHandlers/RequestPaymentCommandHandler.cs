@@ -11,11 +11,10 @@ namespace Domain.Payment.CommandHandlers
 
     public class RequestPaymentCommandHandler : IRequestProcessPaymentCommandHandler
     {
-        private readonly IPaymentEventRepository _paymentEventRepository;
-
-        public RequestPaymentCommandHandler(IPaymentEventRepository paymentEventRepository)
+        private readonly IEventRepository _eventRepository;
+        public RequestPaymentCommandHandler(IEventRepository eventRepository)
         {
-            _paymentEventRepository = paymentEventRepository;
+            _eventRepository = eventRepository;
         }
 
         public Result<Event> Handle(RequestPaymentCommand requestPaymentCommand)
@@ -29,7 +28,7 @@ namespace Domain.Payment.CommandHandlers
                 requestPaymentCommand.Amount
             );
 
-            var result = _paymentEventRepository.Add(paymentRequestedEvent);
+            var result = _eventRepository.Add(paymentRequestedEvent);
 
             return
                 result.IsOk

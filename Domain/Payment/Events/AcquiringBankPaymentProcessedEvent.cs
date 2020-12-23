@@ -5,23 +5,23 @@ namespace Domain.Payment.Events
 {
     public class AcquiringBankPaymentProcessedEvent : Event
     {
+        [JsonConstructor]
         public AcquiringBankPaymentProcessedEvent(
-            Guid paymentId,
+            Guid aggregateId,
             DateTime timeStamp,
             int version,
             Guid acquiringBankId
         )
             : base(
-                paymentId,
+                aggregateId,
                 timeStamp,
                 version,
                 typeof(AcquiringBankPaymentProcessedEvent)
             )
         {
             AcquiringBankId = acquiringBankId;
-
         }
-
-        public Guid AcquiringBankId { get; } 
+          
+        public Guid AcquiringBankId { get; }
     }
 }

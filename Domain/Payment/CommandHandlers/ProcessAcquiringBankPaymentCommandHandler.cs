@@ -1,5 +1,6 @@
 ﻿using System;
 using Domain.AcquiringBank;
+using Domain.Payment.Aggregate;
 using Domain.Payment.Commands;
 using Domain.Payment.Events;
 
@@ -9,27 +10,31 @@ namespace Domain.Payment.CommandHandlers
     {
         Result<Event> Handle(
             PaymentAggregate paymentAggregate,
-            ProcessAcquiringBankPaymentCommand processAcquiringBankPaymentCommand);
+            ProcessAcquiringBankPaymentCommand processAcquiringBankPaymentCommand
+        );
     }
 
     public class ProcessAcquiringBankPaymentCommandHandler : IProcessAcquiringBankPaymentCommandHandler
     {
-        private readonly IPaymentEventRepository _paymentEventRepository;
-        private readonly IAcquiringBankRepository _acquiringBankRepository;
+        private readonly IEventRepository _eventRepository;
+        private readonly IAcquiringBankFacade _acquiringBankFacade;
 
-        public ProcessAcquiringBankPaymentCommandHandler(IPaymentEventRepository paymentEventRepository,
-            IAcquiringBankRepository acquiringBankRepository)
+        public ProcessAcquiringBankPaymentCommandHandler(
+            IEventRepository eventRepository,
+            IAcquiringBankFacade acquiringBankFacade
+        )
         {
-            _paymentEventRepository = paymentEventRepository;
-            _acquiringBankRepository = acquiringBankRepository;
+            _eventRepository = eventRepository;
+            _acquiringBankFacade = acquiringBankFacade;
         }
 
         public Result<Event> Handle(
             PaymentAggregate paymentAggregate,
-            ProcessAcquiringBankPaymentCommand processAcquiringBankPaymentCommand)
+            ProcessAcquiringBankPaymentCommand processAcquiringBankPaymentCommand
+        )
         {
             var acquiringBankResult =
-                _acquiringBankRepository.ProcessPayment(
+                _acquiringBankFacade.ProcessPayment(
                     paymentAggregate
                 );
 
@@ -45,7 +50,7 @@ namespace Domain.Payment.CommandHandlers
                 );
 
             var result =
-                _paymentEventRepository
+                _eventRepository
                     .Add(acquiringBankPaymentProcessedEvent);
 
             return
@@ -53,6 +58,5 @@ namespace Domain.Payment.CommandHandlers
                     ? Result.Ok((Event) acquiringBankPaymentProcessedEvent)
                     : Result.Failed<Event>(result.Errors);
         }
-
     }
 }

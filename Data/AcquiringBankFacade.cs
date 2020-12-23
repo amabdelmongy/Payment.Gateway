@@ -2,20 +2,20 @@
 using AcquiringBank.Fake;
 using Domain;
 using Domain.AcquiringBank;
-using Domain.Payment;
+using Domain.Payment.Aggregate;
 
 namespace Data
 {
-    public class AcquiringBankRepository : IAcquiringBankRepository
+    public class AcquiringBankFacade : IAcquiringBankFacade
     {
         private readonly IAcquiringBankService _acquiringBankService;
 
-        public AcquiringBankRepository(IAcquiringBankService acquiringBankService)
+        public AcquiringBankFacade(IAcquiringBankService acquiringBankService)
         {
             _acquiringBankService = acquiringBankService;
         }
 
-        public AcquiringBankRepository()
+        public AcquiringBankFacade()
         {
             _acquiringBankService = new AcquiringBankService();
         }

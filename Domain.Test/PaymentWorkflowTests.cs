@@ -1,9 +1,10 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Domain.Payment;
+using Domain.Payment.Aggregate;
 using Domain.Payment.CommandHandlers;
 using Domain.Payment.Commands;
 using Domain.Payment.Events;
+using Domain.Payment.InputValidator;
 using Moq;
 using NUnit.Framework;
 

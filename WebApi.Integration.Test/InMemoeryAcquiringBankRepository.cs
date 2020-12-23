@@ -2,20 +2,21 @@
 using Domain;
 using Domain.AcquiringBank;
 using Domain.Payment;
+using Domain.Payment.Aggregate;
 
 namespace WebApi.Integration.Test
 {
-    public class InMemoryAcquiringBankRepository : IAcquiringBankRepository
+    public class InMemoryAcquiringBankFacade : IAcquiringBankFacade
     {  
         private Result<Guid> _result;
 
-        public InMemoryAcquiringBankRepository WithId(Guid id)
+        public InMemoryAcquiringBankFacade WithId(Guid id)
         {
             _result = Result.Ok<Guid>(id);
             return this;
         }
 
-        public InMemoryAcquiringBankRepository WithNewResult(Result<Guid> result)
+        public InMemoryAcquiringBankFacade WithNewResult(Result<Guid> result)
         {
             _result = result;
             return this;

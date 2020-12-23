@@ -15,9 +15,9 @@ using Domain.Payment.Events;
 
 namespace WebApi.Integration.Test
 {
-    public class PaymentControllerPaymentEventRepositoryTests
+    public class PaymentControllerEventRepositoryTests
     {  
-        private HttpClient CreateClient(IPaymentEventRepository paymentEventRepository)
+        private HttpClient CreateClient(IEventRepository eventRepository)
         { 
             var factory =
                 new WebApplicationFactory<Startup>()
@@ -26,8 +26,8 @@ namespace WebApi.Integration.Test
                         builder.ConfigureTestServices(services =>
                         {
                             ; 
-                            services.AddScoped(a => paymentEventRepository);
-                            services.AddScoped(a => (IAcquiringBankRepository)new InMemoryAcquiringBankRepository().WithId(TestStubs.TestAcquiringBankId));
+                            services.AddScoped(a => eventRepository);
+                            services.AddScoped(a => (IAcquiringBankFacade)new InMemoryAcquiringBankFacade().WithId(TestStubs.TestAcquiringBankId));
                         });
                     });
 
@@ -39,13 +39,13 @@ namespace WebApi.Integration.Test
         {
             var expectedError = Error.CreateFrom(
                 "Failed calling Data base",
-                new Exception("Test Exception PaymentEventRepository"));
+                new Exception("Test Exception from Event Repository"));
 
             Result<IEnumerable<Event>> expectedResult = Result.Failed<IEnumerable<Event>>(expectedError);
 
-            var paymentEventRepository = new InMemoryPaymentEventRepository().WithNewGet(expectedResult);
+            var eventRepository = new InMemoryEventRepository().WithNewGet(expectedResult);
 
-            var client = CreateClient((IPaymentEventRepository)paymentEventRepository);
+            var client = CreateClient((IEventRepository)eventRepository);
             var response =
                 await client.PostAsJsonAsync(
                     "/api/payment/request-process-payment/",
@@ -74,13 +74,13 @@ namespace WebApi.Integration.Test
         {
             var expectedError = Error.CreateFrom(
                 "Failed calling Data base",
-                new Exception("Test Exception PaymentEventRepository"));
+                new Exception("Test Exception from Event Repository"));
 
             Result<object> expectedResult = Result.Failed<object>(expectedError);
 
-            var paymentEventRepository = new InMemoryPaymentEventRepository().WithNewAdd(expectedResult);
+            var eventRepository = new InMemoryEventRepository().WithNewAdd(expectedResult);
 
-            var client = CreateClient((IPaymentEventRepository)paymentEventRepository);
+            var client = CreateClient((IEventRepository)eventRepository);
             var response =
                 await client.PostAsJsonAsync(
                     "/api/payment/request-process-payment/",
