@@ -21,9 +21,24 @@ namespace Data
             _connectionString = connectionString;
         }
 
-        public Result<IEnumerable<PaymentProjection>> Get(Guid id)
+        public Result<PaymentProjection> Get(Guid id)
         {
             var sql = $"SELECT * FROM [PaymentProjections] WHERE PaymentId = '{id}';";
+            try
+            {
+                using var connection = new SqlConnection(_connectionString);
+                var payments = connection.QueryFirstOrDefault<PaymentProjection>(sql);
+                return Result.Ok(payments);
+            }
+            catch (Exception ex)
+            {
+                return Result.Failed<PaymentProjection>(Error.CreateFrom("PaymentProjection", ex));
+            }
+        }
+
+        public Result<IEnumerable<PaymentProjection>> GetByMerchantId(Guid merchantId)
+        {
+            var sql = $"SELECT * FROM [PaymentProjections] WHERE MerchantId = '{merchantId}';";
             try
             {
                 using var connection = new SqlConnection(_connectionString);

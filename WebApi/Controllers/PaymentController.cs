@@ -30,22 +30,22 @@ namespace WebApi.Controllers
         [Route("{paymentId}")]
         public ActionResult Get(Guid paymentId)
         {
-            var payments =
+            var paymentResult =
                 _paymentProjectionRepository.Get(paymentId);
 
-            if (payments.HasErrors)
+            if (paymentResult.HasErrors)
                 return new BadRequestObjectResult(
-                    payments.Errors
+                    paymentResult.Errors
                         .Select(error => new
                         {
                             subject = error.Subject,
                             message = error.Message
                         }));
 
-            if (!payments.Value.Any())
+            if (paymentResult.Value == null)
                 return new NotFoundResult();
 
-            var payment = payments.Value.First();
+            var payment = paymentResult.Value;
 
             return Ok(
                 new
@@ -61,6 +61,46 @@ namespace WebApi.Controllers
                     LastUpdatedDate = payment.LastUpdatedDate,
                     AcquiringBankId = payment.AcquiringBankId
                 }
+            );
+        }
+
+        [HttpGet]
+        [Route("{merchantId}/get-by-merchant-id")]
+        public ActionResult GetByMerchantId(Guid merchantId)
+        {
+            var paymentsResult =
+                _paymentProjectionRepository.GetByMerchantId(merchantId);
+
+            if (paymentsResult.HasErrors)
+                return new BadRequestObjectResult(
+                    paymentsResult.Errors
+                        .Select(error => new
+                        {
+                            subject = error.Subject,
+                            message = error.Message
+                        }));
+
+            if (paymentsResult.Value == null)
+                return new NotFoundResult();
+
+            var payments = paymentsResult.Value;
+
+            return Ok(
+                payments.Select(payment =>
+                    new
+                    {
+                        paymentId = payment.PaymentId,
+                        MerchantId = payment.MerchantId,
+                        CardNumber = payment.CardNumber,
+                        CardExpiry = payment.CardExpiry,
+                        CardCvv = payment.CardCvv,
+                        Amount = payment.Amount,
+                        Currency = payment.Currency,
+                        PaymentStatus = payment.PaymentStatus,
+                        LastUpdatedDate = payment.LastUpdatedDate,
+                        AcquiringBankId = payment.AcquiringBankId
+                    }
+                )
             );
         }
 
