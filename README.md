@@ -76,11 +76,11 @@ Event Sourcing ensures that all changes to application state are stored as a se
 ### Onion architecture
 The Onion Architecture is an Architectural Pattern that enables maintainable and evolutionary enterprise systems.
 
-### unit tests 
- It validates if that code results in the expected state (state testing) or executes the expected sequence of events (behavior testing).
-It cover more than 83% for all code and more than 98% for Domain
+### Unit tests 
+ It validates if that code results in the expected state (state testing) or executes the expected sequence of events (behavior testing).  
+ It covers more than 83% of all code and more than 98% for Domain.  
 
-### integration tests
+### Integration tests
 individual software modules are combined and tested as a group
 
 ### Swagger documentation
@@ -92,7 +92,7 @@ Path under ```Payment.Gateway\Database\Up```
 Database scripts to create SQL tables 
 
 ##  How to run the code
- - Build with Visiual studio 2019 and run
+ - Build with Visual studio 2019 and run
 
 ## Deliverables  
 1. Build an API that allows a merchant to  
@@ -191,16 +191,16 @@ Database scripts to create SQL tables
 2. Build a simulator to mock the responses from the bank to test the API from your first deliverable.
     ### Acquiring Bank Mock returns  
       • Accepted Result :-  
-        payment succeeds to transfer money from Card to Merchant. It retuen succeeds with bank result Id.
+        payment succeeds to transfer money from Card to Merchant. It retuens succeeds with bank result Id.
 
       • Throw Exception :-  
         for example some unplanned changes happened on the Bankside.  
 
       • Rejected Card :-  
-        for example Bank rejects the transfer because the card invalid. It retuen Rejected with bank result Id.  
+        for example Bank rejects the transfer because the card invalid. It retuens Rejected with bank result Id.  
 
       • Rejected Amount :-  
-        for example Bank rejects the transfer because the card amount is not enough. It retuen Rejected with bank result Id.  
+        for example Bank rejects the transfer because the card amount is not enough. It retuens Rejected with bank result Id.  
         
         
 
