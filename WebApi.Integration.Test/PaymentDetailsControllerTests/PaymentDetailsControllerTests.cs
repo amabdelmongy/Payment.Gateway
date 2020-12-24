@@ -51,14 +51,18 @@ namespace WebApi.Integration.Test.PaymentDetailsControllerTests
                 PaymentId = Guid.Parse("f00526d2-cfe6-4a34-8ea4-f54ccc00ae7d"),
                 AcquiringBankId = Guid.Parse("0380df44-600a-43c1-b354-76fb59c61250"),
                 MerchantId = Guid.Parse("ce4b6c04-a63e-4556-8655-601bf8f573d7"),
-                CardNumber = "",
+                CardNumber = "5105105105105100",
+                CardExpiry = "10/24",
                 CardCvv = "321",
                 Currency = "Euro",
                 Amount = 10,
                 PaymentStatus = PaymentStatus.Processed.Id,
-                CardExpiry = "10/24",
                 LastUpdatedDate = DateTime.Now
             };
+            var expectedCardNumber = "510510xxxxxx5100";
+            var expectedCardExpiry = "1xxxx";
+            var expectedCardCvv = "3xx";
+
             var client = CreateClient(
                 new List<PaymentProjection>()
                 {
@@ -91,9 +95,9 @@ namespace WebApi.Integration.Test.PaymentDetailsControllerTests
             Assert.AreEqual(expectPaymentProjection.MerchantId.ToString(), output.MerchantId);
             Assert.AreEqual(expectPaymentProjection.PaymentId.ToString(), output.paymentId);
             Assert.AreEqual(expectPaymentProjection.AcquiringBankId.ToString(), output.AcquiringBankId);
-            Assert.AreEqual(expectPaymentProjection.CardNumber, output.CardNumber);
-            Assert.AreEqual(expectPaymentProjection.CardExpiry, output.CardExpiry);
-            Assert.AreEqual(expectPaymentProjection.CardCvv, output.CardCvv);
+            Assert.AreEqual(expectedCardNumber, output.CardNumber);
+            Assert.AreEqual(expectedCardExpiry, output.CardExpiry);
+            Assert.AreEqual(expectedCardCvv, output.CardCvv);
             Assert.AreEqual(expectPaymentProjection.PaymentStatus, output.PaymentStatus);
             Assert.AreEqual(expectPaymentProjection.Amount.ToString(), output.Amount);
             Assert.AreEqual(expectPaymentProjection.Currency, output.Currency);
@@ -109,7 +113,7 @@ namespace WebApi.Integration.Test.PaymentDetailsControllerTests
                 PaymentId = Guid.Parse("f00526d2-cfe6-4a34-8ea4-f54ccc00ae7d"),
                 AcquiringBankId = Guid.Parse("0380df44-600a-43c1-b354-76fb59c61250"),
                 MerchantId = Guid.Parse("ce4b6c04-a63e-4556-8655-601bf8f573d7"),
-                CardNumber = "",
+                CardNumber = "5105105105105100",
                 CardCvv = "321",
                 Currency = "Euro",
                 Amount = 10,
@@ -122,14 +126,17 @@ namespace WebApi.Integration.Test.PaymentDetailsControllerTests
                 PaymentId = Guid.Parse("5c0605ec-af80-4818-8808-e604bb05ee2f"),
                 AcquiringBankId = Guid.Parse("0380df44-600a-43c1-b354-76fb59c61250"),
                 MerchantId = Guid.Parse("ce4b6c04-a63e-4556-8655-601bf8f573d7"),
-                CardNumber = "",
+                CardNumber = "5105105105105100",
                 CardCvv = "321",
                 Currency = "Euro",
                 Amount = 20,
                 PaymentStatus = PaymentStatus.Processed.Id,
                 CardExpiry = "10/24",
                 LastUpdatedDate = DateTime.Now
-            };
+            }; 
+            var expectedCardNumber = "510510xxxxxx5100";
+            var expectedCardExpiry = "1xxxx";
+            var expectedCardCvv = "3xx";
             var expectPaymentProjections = new List<PaymentProjection>()
             {
                 expectPaymentProjection1,
@@ -175,9 +182,9 @@ namespace WebApi.Integration.Test.PaymentDetailsControllerTests
                 Assert.AreEqual(expectPaymentProjection.MerchantId.ToString(), output.MerchantId);
                 Assert.AreEqual(expectPaymentProjection.PaymentId.ToString(), output.paymentId);
                 Assert.AreEqual(expectPaymentProjection.AcquiringBankId.ToString(), output.AcquiringBankId);
-                Assert.AreEqual(expectPaymentProjection.CardNumber, output.CardNumber);
-                Assert.AreEqual(expectPaymentProjection.CardExpiry, output.CardExpiry);
-                Assert.AreEqual(expectPaymentProjection.CardCvv, output.CardCvv);
+                Assert.AreEqual(expectedCardNumber, output.CardNumber);
+                Assert.AreEqual(expectedCardExpiry, output.CardExpiry);
+                Assert.AreEqual(expectedCardCvv, output.CardCvv);
                 Assert.AreEqual(expectPaymentProjection.PaymentStatus, output.PaymentStatus);
                 Assert.AreEqual(expectPaymentProjection.Amount.ToString(), output.Amount);
                 Assert.AreEqual(expectPaymentProjection.Currency, output.Currency);
