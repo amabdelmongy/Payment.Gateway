@@ -59,6 +59,7 @@ Target frameworks: .NET core 5.0
  - NUnit
  - Moq
  - Dapper
+ - SQL Database
 
 ## Architecture
 ### CQRS
@@ -66,6 +67,7 @@ It clears that we need two paths one path to write and other path to read. so CQ
 CQRS stands for Command Query Responsibility Segregation. We use a different model to update information than the model you use to read information.
 
 ### EventSourcing
+The gateway should be stable when doing a huge number of requests so we are using Event sourcing.
 Capture all changes to an application state as a sequence of events.
 Event Sourcing ensures that all changes to application state are stored as a sequence of events.  
 1- we query these events,  
@@ -87,7 +89,7 @@ individual software modules are combined and tested as a group
 
 ### Database scripts 
 Path under ```Payment.Gateway\Database\Up```
-Database scripts to create tables 
+Database scripts to create SQL tables 
 
 ##  How to run the code
  - Build with Visiual studio 2019 and run

@@ -1,8 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Domain.Payment;
 using Domain.Payment.Aggregate;
-using Microsoft.AspNetCore.Mvc;
+using WebApi.dto;
 
 namespace WebApi.Controllers.v1
 {
@@ -64,27 +64,5 @@ namespace WebApi.Controllers.v1
                 }
             );
         }
-
-        #region Input Dto 
-        public class MoneyDto
-        {
-            public double Value { get; set; }
-            public string Currency { get; set; }
-        }
-
-        public class CardDto
-        {
-            public string Number { get; set; }
-            public string Expiry { get; set; }
-            public string Cvv { get; set; }
-        }
-
-        public class PaymentRequestDto
-        {
-            public Guid MerchantId { get; set; }
-            public MoneyDto Amount { get; set; }
-            public CardDto Card { get; set; }
-        } 
-        #endregion
     }
 }
