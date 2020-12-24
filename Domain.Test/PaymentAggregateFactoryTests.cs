@@ -11,7 +11,7 @@ namespace Domain.Test
         [Test]
         public void WHEN_pass_PaymentRequestedEvent_THEN_return_correct_Aggregate()
         { 
-            var expectedEvent = PaymentStubs.PaymentRequestedEventTest;
+            var expectedEvent = PaymentStubsTests.PaymentRequestedEventTest;
             var paymentAggregateResult =
                 PaymentAggregateFactory.CreateFrom(
                     new List<Event>
@@ -35,13 +35,13 @@ namespace Domain.Test
         [Test]
         public void WHEN_pass_AcquiringBankPaymentFailedEvent_THEN_return_correct_Aggregate()
         {
-            var expectedEvent = PaymentStubs.AcquiringBankPaymentFailedEventTest; 
+            var expectedEvent = PaymentStubsTests.AcquiringBankPaymentFailedEventTest; 
 
             var paymentAggregateResult = 
                 PaymentAggregateFactory.CreateFrom(
                     new List<Event>
                     {
-                        PaymentStubs.PaymentRequestedEventTest,
+                        PaymentStubsTests.PaymentRequestedEventTest,
                         expectedEvent
                     }
                 );
@@ -57,14 +57,14 @@ namespace Domain.Test
         [Test]
         public void WHEN_pass_AcquiringBankPaymentProcessedEvent_THEN_return_correct_Aggregate()
         {
-            var expectedEvent = PaymentStubs.AcquiringBankPaymentProcessedEventTest;
+            var expectedEvent = PaymentStubsTests.AcquiringBankPaymentProcessedEventTest;
 
 
             var paymentAggregateResult =
                 PaymentAggregateFactory.CreateFrom(
                     new List<Event>
                     {
-                        PaymentStubs.PaymentRequestedEventTest,
+                        PaymentStubsTests.PaymentRequestedEventTest,
                         expectedEvent
                     }
                 );

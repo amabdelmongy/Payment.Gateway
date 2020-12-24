@@ -28,7 +28,7 @@ namespace Domain.Test
                 .Setup(repository =>
                     repository.ProcessPayment(It.IsAny<PaymentAggregate>())
                 )
-                .Returns(Result.Ok<Guid>(PaymentStubs.AcquiringBankIdTest));
+                .Returns(Result.Ok<Guid>(PaymentStubsTests.AcquiringBankIdTest));
 
             var commandHandler = new ProcessAcquiringBankPaymentCommandHandler(
                 eventRepository.Object,
@@ -36,9 +36,9 @@ namespace Domain.Test
             );
 
             var command = new ProcessAcquiringBankPaymentCommand(
-                PaymentStubs.PaymentIdTest
+                PaymentStubsTests.PaymentIdTest
             );
-            var paymentAggregate = PaymentStubs.PaymentAggregateTest();
+            var paymentAggregate = PaymentStubsTests.PaymentAggregateTest();
 
             var actualResult =
                 commandHandler.Handle(
@@ -76,7 +76,7 @@ namespace Domain.Test
                 .Setup(repository =>
                     repository.ProcessPayment(It.IsAny<PaymentAggregate>())
                 )
-                .Returns(Result.Ok<Guid>(PaymentStubs.AcquiringBankIdTest));
+                .Returns(Result.Ok<Guid>(PaymentStubsTests.AcquiringBankIdTest));
 
             var commandHandler = new ProcessAcquiringBankPaymentCommandHandler(
                 eventRepository.Object,
@@ -84,9 +84,9 @@ namespace Domain.Test
             );
 
             var command = new ProcessAcquiringBankPaymentCommand(
-                PaymentStubs.PaymentIdTest
+                PaymentStubsTests.PaymentIdTest
             );
-            var paymentAggregate = PaymentStubs.PaymentAggregateTest();
+            var paymentAggregate = PaymentStubsTests.PaymentAggregateTest();
 
             var actualResult =
                 commandHandler.Handle(
@@ -135,9 +135,9 @@ namespace Domain.Test
             );
 
             var command = new ProcessAcquiringBankPaymentCommand(
-                PaymentStubs.PaymentIdTest
+                PaymentStubsTests.PaymentIdTest
             );
-            var paymentAggregate = PaymentStubs.PaymentAggregateTest();
+            var paymentAggregate = PaymentStubsTests.PaymentAggregateTest();
 
             var actualResult =
                 commandHandler.Handle(

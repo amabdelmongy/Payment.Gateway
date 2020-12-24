@@ -11,9 +11,9 @@ namespace Domain.Test
         public void WHEN_card_has_no_error_THEN_return_Ok()
         {
             var card = new Card(
-                PaymentStubs.CardTest.Number,
-                PaymentStubs.CardTest.Expiry,
-                PaymentStubs.CardTest.Cvv
+                PaymentStubsTests.CardTest.Number,
+                PaymentStubsTests.CardTest.Expiry,
+                PaymentStubsTests.CardTest.Cvv
             );
 
             var cardValidator = new CardValidator();
@@ -27,8 +27,8 @@ namespace Domain.Test
         {
             var card = new Card(
                 "",
-                PaymentStubs.CardTest.Expiry,
-                PaymentStubs.CardTest.Cvv
+                PaymentStubsTests.CardTest.Expiry,
+                PaymentStubsTests.CardTest.Cvv
             );
 
             var cardValidator = new CardValidator();
@@ -45,8 +45,8 @@ namespace Domain.Test
         {
             var card = new Card(
                 "asd",
-                PaymentStubs.CardTest.Expiry,
-                PaymentStubs.CardTest.Cvv
+                PaymentStubsTests.CardTest.Expiry,
+                PaymentStubsTests.CardTest.Cvv
             );
 
             var cardValidator = new CardValidator();
@@ -63,8 +63,8 @@ namespace Domain.Test
         {
             var card = new Card(
                 "1234567891234",
-                PaymentStubs.CardTest.Expiry,
-                PaymentStubs.CardTest.Cvv
+                PaymentStubsTests.CardTest.Expiry,
+                PaymentStubsTests.CardTest.Cvv
             );
 
             var cardValidator = new CardValidator();
@@ -80,9 +80,9 @@ namespace Domain.Test
         public void WHEN_card_Expiry_date_empty_THEN_return_Error()
         {
             var card = new Card(
-                PaymentStubs.CardTest.Number,
+                PaymentStubsTests.CardTest.Number,
                 "",
-                PaymentStubs.CardTest.Cvv
+                PaymentStubsTests.CardTest.Cvv
             );
 
             var cardValidator = new CardValidator();
@@ -98,9 +98,9 @@ namespace Domain.Test
         public void WHEN_card_Expiry_has_char_THEN_return_Error()
         {
             var card = new Card(
-                PaymentStubs.CardTest.Number,
+                PaymentStubsTests.CardTest.Number,
                 "asas",
-                PaymentStubs.CardTest.Cvv
+                PaymentStubsTests.CardTest.Cvv
             );
 
             var cardValidator = new CardValidator();
@@ -116,9 +116,9 @@ namespace Domain.Test
         public void WHEN_card_Expiry_has_invalid_date_THEN_return_Error()
         {
             var card = new Card(
-                PaymentStubs.CardTest.Number,
+                PaymentStubsTests.CardTest.Number,
                 "121/25",
-                PaymentStubs.CardTest.Cvv
+                PaymentStubsTests.CardTest.Cvv
             );
 
             var cardValidator = new CardValidator();
@@ -134,8 +134,8 @@ namespace Domain.Test
         public void WHEN_card_cvv_empty_THEN_return_Error()
         {
             var card = new Card(
-                PaymentStubs.CardTest.Number,
-                PaymentStubs.CardTest.Expiry,
+                PaymentStubsTests.CardTest.Number,
+                PaymentStubsTests.CardTest.Expiry,
                 ""
             );
 
@@ -152,8 +152,8 @@ namespace Domain.Test
         public void WHEN_card_cvv_has_char_THEN_return_Error()
         {
             var card = new Card(
-                PaymentStubs.CardTest.Number,
-                PaymentStubs.CardTest.Expiry,
+                PaymentStubsTests.CardTest.Number,
+                PaymentStubsTests.CardTest.Expiry,
                 "asd"
             );
 

@@ -21,7 +21,7 @@ namespace Domain.Test
             paymentsMock
                 .Setup(payments =>
                     payments.Get(It.IsAny<Guid>()))
-                .Returns(Result.Ok<PaymentAggregate>(PaymentStubs.PaymentAggregateTest()));
+                .Returns(Result.Ok<PaymentAggregate>(PaymentStubsTests.PaymentAggregateTest()));
             return paymentsMock;
         }
         private Mock<IRequestProcessPaymentCommandHandler> requestProcessPaymentCommandHandlerMock()
@@ -75,15 +75,17 @@ namespace Domain.Test
                 );
 
             var requestPaymentCommand = new RequestPaymentCommand(
-                PaymentStubs.CardTest,
-                PaymentStubs.MerchantIdTest,
-                PaymentStubs.AmountTest
+                PaymentStubsTests.CardTest,
+                PaymentStubsTests.MerchantIdTest,
+                PaymentStubsTests.AmountTest
             );
 
             paymentCommandHandler.Handle(requestPaymentCommand);
 
             requestProcessPaymentCommandHandler.Verify(
-                mock => mock.Handle(It.IsAny<RequestPaymentCommand>()),
+                mock =>
+                    mock.Handle(
+                        requestPaymentCommand),
                 Times.Once());
         } 
 
@@ -102,7 +104,7 @@ namespace Domain.Test
 
             var processAcquiringBankPaymentCommand =
                 new ProcessAcquiringBankPaymentCommand(
-                    PaymentStubs.PaymentIdTest
+                    PaymentStubsTests.PaymentIdTest
                 );
 
             paymentCommandHandler.Handle(processAcquiringBankPaymentCommand);
@@ -111,7 +113,7 @@ namespace Domain.Test
                 .Verify(mock =>
                         mock.Handle(
                             It.IsAny<PaymentAggregate>(),
-                            It.IsAny<ProcessAcquiringBankPaymentCommand>()),
+                            processAcquiringBankPaymentCommand),
                     Times.Once());
         }
 
@@ -130,7 +132,7 @@ namespace Domain.Test
 
             var requestPaymentCommand =
                 new ProcessAcquiringBankPaymentCommand(
-                    PaymentStubs.PaymentIdTest
+                    PaymentStubsTests.PaymentIdTest
                 );
 
             paymentCommandHandler.Handle(requestPaymentCommand);
@@ -139,7 +141,7 @@ namespace Domain.Test
                 .Verify(mock =>
                         mock.Handle(
                             It.IsAny<PaymentAggregate>(),
-                            It.IsAny<ProcessAcquiringBankPaymentCommand>()),
+                            requestPaymentCommand),
                     Times.Once());
         }
 
@@ -167,7 +169,7 @@ namespace Domain.Test
 
             var processAcquiringBankPaymentCommand =
                 new ProcessAcquiringBankPaymentCommand(
-                    PaymentStubs.PaymentIdTest
+                    PaymentStubsTests.PaymentIdTest
                 );
 
             var actualResult = 

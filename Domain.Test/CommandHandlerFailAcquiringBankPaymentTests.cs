@@ -1,4 +1,6 @@
-using System.Linq; 
+using System;
+using System.Linq;
+using Domain.AcquiringBank;
 using Domain.Payment.CommandHandlers;
 using Domain.Payment.Commands;
 using Domain.Payment.Events;
@@ -22,8 +24,8 @@ namespace Domain.Test
 
             var commandHandler = new FailAcquiringBankPaymentCommandHandler(eventRepository.Object);
             var command = new FailAcquiringBankPaymentCommand(
-                PaymentStubs.PaymentIdTest,
-                PaymentStubs.AcquiringBankIdTest,
+                PaymentStubsTests.PaymentIdTest,
+                PaymentStubsTests.AcquiringBankIdTest,
                 "Error message"
             );
 
@@ -63,8 +65,8 @@ namespace Domain.Test
 
             var commandHandler = new FailAcquiringBankPaymentCommandHandler(eventRepository.Object);
             var command = new FailAcquiringBankPaymentCommand(
-                PaymentStubs.PaymentIdTest,
-                PaymentStubs.AcquiringBankIdTest,
+                PaymentStubsTests.PaymentIdTest,
+                PaymentStubsTests.AcquiringBankIdTest,
                 "Error message"
             );
 
@@ -82,6 +84,43 @@ namespace Domain.Test
             Assert.AreEqual(expectedError.Message, error.Message);
 
             eventRepository.Verify(mock => mock.Add(It.IsAny<Event>()), Times.Once());
+        }
+
+        [Test]
+        public void WHEN_create_RejectedAcquiringBankError_THEN_return_correct_Object()
+        {
+            var expectedAcquiringBankId = PaymentStubsTests.AcquiringBankIdTest;
+            var expectedSubject = "subject";
+            var expectedMessage = "message";
+
+            var rejectedAcquiringBankError =
+                RejectedAcquiringBankError.CreateFrom(
+                    expectedAcquiringBankId,
+                    expectedSubject,
+                    expectedMessage
+                );
+
+
+            Assert.AreEqual(expectedSubject, rejectedAcquiringBankError.Subject);
+            Assert.AreEqual(expectedMessage, rejectedAcquiringBankError.Message);
+            Assert.AreEqual(expectedAcquiringBankId, rejectedAcquiringBankError.AcquiringBankResultId);
+        }
+
+        [Test]
+        public void WHEN_create_RejectedAcquiringBankError_with_exception_THEN_return_correct_Object()
+        { 
+            var expectedSubject = "subject";
+            var expectedException = new NotImplementedException();
+
+            var rejectedAcquiringBankError =
+                RejectedAcquiringBankError.CreateFrom( 
+                    expectedSubject,
+                    expectedException 
+                );
+
+
+            Assert.AreEqual(expectedSubject, rejectedAcquiringBankError.Subject);
+            Assert.AreEqual(expectedException, rejectedAcquiringBankError.Exception);
         }
     }
 }

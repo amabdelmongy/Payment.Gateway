@@ -62,7 +62,7 @@ namespace WebApi
             //AddSubscriptions to ServiceBus
             new MessageSubscription(
                 inMemoryServiceBus,
-                new Handler(paymentProjectionRepository)
+                new MessageBusHandler(paymentProjectionRepository)
             ).AddSubscriptions();
         }
 

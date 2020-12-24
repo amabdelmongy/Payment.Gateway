@@ -13,7 +13,7 @@ namespace Domain.Test
         [Test]
         public void WHEN_eventRepository_has_error_THEN_return_Aggregate()
         {
-            var expectedEvent = PaymentStubs.PaymentRequestedEventTest;
+            var expectedEvent = PaymentStubsTests.PaymentRequestedEventTest;
             var eventRepository = new Mock<IEventRepository>();
             eventRepository
                 .Setup(t =>
@@ -30,7 +30,7 @@ namespace Domain.Test
                 new PaymentService(eventRepository.Object);
 
             var actual =
-                paymentService.Get(PaymentStubs.PaymentIdTest);
+                paymentService.Get(PaymentStubsTests.PaymentIdTest);
 
             Assert.True(actual.IsOk);
             Assert.AreEqual(expectedEvent.AggregateId, actual.Value.PaymentId); 
@@ -51,7 +51,7 @@ namespace Domain.Test
                 new PaymentService(eventRepository.Object);
 
             var actual = 
-                paymentService.Get(PaymentStubs.PaymentIdTest);
+                paymentService.Get(PaymentStubsTests.PaymentIdTest);
 
             Assert.True(actual.HasErrors);
             Assert.AreEqual(1, actual.Errors.Count());
@@ -73,11 +73,11 @@ namespace Domain.Test
                 new PaymentService(eventRepository.Object);
 
             var actual =
-                paymentService.Get(PaymentStubs.PaymentIdTest);
+                paymentService.Get(PaymentStubsTests.PaymentIdTest);
 
             Assert.True(actual.HasErrors);
             Assert.AreEqual(1, actual.Errors.Count());
-            Assert.AreEqual($"No PaymentAggregate with paymentId: {PaymentStubs.PaymentIdTest}", actual.Errors.First().Subject);
+            Assert.AreEqual($"No PaymentAggregate with paymentId: {PaymentStubsTests.PaymentIdTest}", actual.Errors.First().Subject);
         }
     }
 }

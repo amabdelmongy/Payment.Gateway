@@ -21,9 +21,9 @@ namespace Domain.Test
             var requestProcessPaymentCommandHandler = new RequestPaymentCommandHandler(eventRepository.Object); 
  
             var requestPaymentCommand = new RequestPaymentCommand(
-            PaymentStubs.CardTest,
-            PaymentStubs.MerchantIdTest,
-            PaymentStubs.AmountTest
+            PaymentStubsTests.CardTest,
+            PaymentStubsTests.MerchantIdTest,
+            PaymentStubsTests.AmountTest
             );
 
             var actualResult = requestProcessPaymentCommandHandler.Handle(requestPaymentCommand);
@@ -57,9 +57,9 @@ namespace Domain.Test
                 new RequestPaymentCommandHandler(eventRepository.Object);
 
             var requestPaymentCommand = new RequestPaymentCommand(
-                PaymentStubs.CardTest,
-                PaymentStubs.MerchantIdTest,
-                PaymentStubs.AmountTest
+                PaymentStubsTests.CardTest,
+                PaymentStubsTests.MerchantIdTest,
+                PaymentStubsTests.AmountTest
             );
 
             var actualResult = requestProcessPaymentCommandHandler.Handle(requestPaymentCommand);

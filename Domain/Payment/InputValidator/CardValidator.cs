@@ -7,12 +7,10 @@ namespace Domain.Payment.InputValidator
 {
     public class CardValidator
     {
-        private enum CardValidationErrorType
-        { 
-            InvalidCardNumber,
-            InvalidCvv,
-            InvalidExpiry
-        }
+        private const string InvalidCardNumber = "Invalid Card Number";
+        private const string InvalidExpiry = "Invalid Expiry Date";
+        private const string InvalidCvv ="Invalid CVV";
+
         public Result<object> Validate(Card card)
         {
             var errors = new List<Error>();
@@ -26,16 +24,16 @@ namespace Domain.Payment.InputValidator
         {
             if (string.IsNullOrEmpty(cardNumber))
                 return Result.Failed<object>(
-                    BuildError(
-                        CardValidationErrorType.InvalidCardNumber,
+                    Error.CreateFrom( 
+                        InvalidCardNumber,
                         "Card Number is Empty"
                     )
                 );
 
             if (!Regex.Match(cardNumber, @"^\d{16}$").Success)
                 return Result.Failed<object>(
-                    BuildError(
-                        CardValidationErrorType.InvalidCardNumber,
+                    Error.CreateFrom( 
+                        InvalidCardNumber,
                         "Card Number is Invalid"
                     )
                 );
@@ -47,15 +45,15 @@ namespace Domain.Payment.InputValidator
         {
             if (string.IsNullOrEmpty(cvv))
                 return Result.Failed<object>(
-                    BuildError(
-                        CardValidationErrorType.InvalidCvv,
+                    Error.CreateFrom( 
+                        InvalidCvv,
                         "Card CVV is Empty")
                 );
 
             if (!Regex.Match(cvv, @"^\d{3}$").Success)
                 return Result.Failed<object>(
-                    BuildError(
-                        CardValidationErrorType.InvalidCvv,
+                    Error.CreateFrom( 
+                        InvalidCvv,
                         "Card CVV is Invalid"
                     )
                 );
@@ -65,25 +63,13 @@ namespace Domain.Payment.InputValidator
         private Result<object> ValidateExpiry(string expiry)
         {
             if (string.IsNullOrEmpty(expiry))
-                return Result.Failed<object>(BuildError(CardValidationErrorType.InvalidExpiry, "Expire date is Empty")
+                return Result.Failed<object>(Error.CreateFrom( InvalidExpiry, "Expire date is Empty")
                 );
 
             if (!Regex.Match(expiry, @"^(0?[1-9]|1[012])/[0-9]{2}$").Success)
-                return Result.Failed<object>(BuildError(CardValidationErrorType.InvalidExpiry, "Expire date is Invalid")
+                return Result.Failed<object>(Error.CreateFrom( InvalidExpiry, "Expire date is Invalid")
                 ); 
             return Result.Ok<object>();
-        }
-
-        private Error BuildError(CardValidationErrorType type, string message)
-        {
-            string subject = type switch
-            {
-                CardValidationErrorType.InvalidCardNumber => "Invalid Card Number",
-                CardValidationErrorType.InvalidExpiry => "Invalid Expiry Date",
-                CardValidationErrorType.InvalidCvv => "Invalid CVV",
-                _ => throw new NotImplementedException()
-            };
-            return Error.CreateFrom(subject, message);
-        }
+        } 
     }
 }

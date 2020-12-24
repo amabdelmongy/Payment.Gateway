@@ -6,16 +6,16 @@ using Domain.Payment.Projection;
 
 namespace Domain.MessageBus
 {
-    public interface IHandler
+    public interface IMessageBusHandler
     {
         Task Handle(Event paymentEvent);
     }
 
-    public class Handler : IHandler
+    public class MessageBusHandler : IMessageBusHandler
     {
         private readonly IPaymentProjectionRepository _paymentProjectionRepository;
 
-        public Handler(IPaymentProjectionRepository paymentProjectionRepository)
+        public MessageBusHandler(IPaymentProjectionRepository paymentProjectionRepository)
         {
             _paymentProjectionRepository = paymentProjectionRepository;
         }
@@ -48,8 +48,8 @@ namespace Domain.MessageBus
                 CardCvv = paymentRequestedEvent.Card.Cvv,
                 Currency = paymentRequestedEvent.Amount.Currency,
                 Amount = paymentRequestedEvent.Amount.Value,
-                PaymentStatus = PaymentStatus.ProcessStarted.Id,
-                LastUpdatedDate = DateTime.Now
+                PaymentStatus = paymentRequestedEvent.PaymentStatus.Id,
+                LastUpdatedDate = paymentRequestedEvent.TimeStamp
             };
             _paymentProjectionRepository.Add(paymentProjection);
         }

@@ -11,9 +11,9 @@ namespace Domain.Test
         public void WHEN_Card_and_Amount_has_no_error_THEN_return_Ok()
         {
             var card = new Card(
-                PaymentStubs.CardTest.Number,
-                PaymentStubs.CardTest.Expiry,
-                PaymentStubs.CardTest.Cvv
+                PaymentStubsTests.CardTest.Number,
+                PaymentStubsTests.CardTest.Expiry,
+                PaymentStubsTests.CardTest.Cvv
             );
             var amount = new Money(10 ,"Euro");
 
@@ -32,8 +32,8 @@ namespace Domain.Test
         {
             var card = new Card(
                 "",
-                PaymentStubs.CardTest.Expiry,
-                PaymentStubs.CardTest.Cvv
+                PaymentStubsTests.CardTest.Expiry,
+                PaymentStubsTests.CardTest.Cvv
             );
             var amount = new Money(10, "Euro");
 
@@ -54,9 +54,9 @@ namespace Domain.Test
         public void WHEN_Amount_less_than_0_THEN_return_Error()
         {
             var card = new Card(
-                PaymentStubs.CardTest.Number,
-                PaymentStubs.CardTest.Expiry,
-                PaymentStubs.CardTest.Cvv
+                PaymentStubsTests.CardTest.Number,
+                PaymentStubsTests.CardTest.Expiry,
+                PaymentStubsTests.CardTest.Cvv
             );
             var amount = new Money(-1, "Euro");
 
@@ -78,8 +78,8 @@ namespace Domain.Test
         {
             var card = new Card(
                 "",
-                PaymentStubs.CardTest.Expiry,
-                PaymentStubs.CardTest.Cvv
+                PaymentStubsTests.CardTest.Expiry,
+                PaymentStubsTests.CardTest.Cvv
             );
             var amount = new Money(-1, "Euro");
 

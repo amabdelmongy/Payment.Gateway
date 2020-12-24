@@ -9,56 +9,50 @@ namespace Domain.Payment.Aggregate
     {
         public static Result<PaymentAggregate> CreateFrom(IEnumerable<Event> events)
         {
-            try
-            {
-                var resultPayment =
-                    events
-                        .OrderBy(x => x.Version)
-                        .ToList()
-                        .Aggregate(new PaymentAggregate(), (paymentAggregate, e) =>
+            var resultPayment =
+                events
+                    .OrderBy(x => x.Version)
+                    .ToList()
+                    .Aggregate(new PaymentAggregate(), (paymentAggregate, e) =>
+                    {
+                        switch (e)
                         {
-                            switch (e)
-                            {
-                                case PaymentRequestedEvent @event:
-                                    paymentAggregate =
-                                        paymentAggregate.With(
-                                            @event.AggregateId,
-                                            @event.Card,
-                                            @event.MerchantId,
-                                            @event.Amount,
-                                            @event.Version,
-                                            @event.PaymentStatus
-                                            );
-                                    break;
+                            case PaymentRequestedEvent @event:
+                                paymentAggregate =
+                                    paymentAggregate.With(
+                                        @event.AggregateId,
+                                        @event.Card,
+                                        @event.MerchantId,
+                                        @event.Amount,
+                                        @event.Version,
+                                        @event.PaymentStatus
+                                    );
+                                break;
 
-                                case AcquiringBankPaymentProcessedEvent @event:
-                                    paymentAggregate =
-                                        paymentAggregate.With(
-                                            @event.PaymentStatus,
-                                            @event.Version,
-                                            @event.AcquiringBankId);
-                                    break;
+                            case AcquiringBankPaymentProcessedEvent @event:
+                                paymentAggregate =
+                                    paymentAggregate.With(
+                                        @event.PaymentStatus,
+                                        @event.Version,
+                                        @event.AcquiringBankId);
+                                break;
 
-                                case AcquiringBankPaymentFailedEvent @event:
-                                    paymentAggregate =
-                                        paymentAggregate.With(
-                                            @event.PaymentStatus,
-                                            @event.Version,
-                                            @event.AcquiringBankId);
-                                    break;
+                            case AcquiringBankPaymentFailedEvent @event:
+                                paymentAggregate =
+                                    paymentAggregate.With(
+                                        @event.PaymentStatus,
+                                        @event.Version,
+                                        @event.AcquiringBankId);
+                                break;
 
-                                default:
-                                    throw new NotSupportedException();
-                            }
-                            return paymentAggregate;
-                        });
+                            default:
+                                throw new NotSupportedException();
+                        }
 
-                return Result.Ok(resultPayment);
-            }
-            catch (Exception e)
-            {
-                return Result.Failed<PaymentAggregate>(Error.CreateFrom("CreatePayment", e));
-            }
+                        return paymentAggregate;
+                    });
+
+            return Result.Ok(resultPayment);
         }
     }
 }

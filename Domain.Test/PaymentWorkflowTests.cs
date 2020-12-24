@@ -42,9 +42,9 @@ namespace Domain.Test
 
             var actual =
                 paymentWorkflow.Run(
-                    PaymentStubs.CardTest,
-                    PaymentStubs.MerchantIdTest,
-                    PaymentStubs.AmountTest
+                    PaymentStubsTests.CardTest,
+                    PaymentStubsTests.MerchantIdTest,
+                    PaymentStubsTests.AmountTest
                 );
 
             Assert.True(actual.HasErrors);
@@ -81,9 +81,9 @@ namespace Domain.Test
 
             var actual =
                 paymentWorkflow.Run(
-                    PaymentStubs.CardTest,
-                    PaymentStubs.MerchantIdTest,
-                    PaymentStubs.AmountTest);
+                    PaymentStubsTests.CardTest,
+                    PaymentStubsTests.MerchantIdTest,
+                    PaymentStubsTests.AmountTest);
 
             Assert.True(actual.HasErrors);
             Assert.AreEqual(1, actual.Errors.Count());

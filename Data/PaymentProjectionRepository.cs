@@ -65,18 +65,6 @@ namespace Data
                 return Result.Failed<object>(Error.CreateFrom("Error when Adding to PaymentProjection", ex));
             }
         }
-
-        public Result<object> Update(AcquiringBankPaymentProcessedEvent paymentEvent)
-        {
-            var sql =
-                $"UPDATE [dbo].[PaymentProjections] " +
-                $"SET [PaymentStatus] = '{paymentEvent.PaymentStatus.Id}', " +
-                $"[LastUpdatedDate] = '{DateTime.Now}', " +
-                $"[AcquiringBankId] = '{paymentEvent.AcquiringBankId}' " +
-                $"WHERE PaymentId = '{paymentEvent.AggregateId}'";
-            return Update(sql);
-        }
-
         private Result<object> Update(string sql)
         {
             try
@@ -95,12 +83,23 @@ namespace Data
             }
         }
 
+        public Result<object> Update(AcquiringBankPaymentProcessedEvent paymentEvent)
+        {
+            var sql =
+                $"UPDATE [dbo].[PaymentProjections] " +
+                $"SET [PaymentStatus] = '{paymentEvent.PaymentStatus.Id}', " +
+                $"[LastUpdatedDate] = '{paymentEvent.TimeStamp}', " +
+                $"[AcquiringBankId] = '{paymentEvent.AcquiringBankId}' " +
+                $"WHERE PaymentId = '{paymentEvent.AggregateId}'";
+            return Update(sql);
+        }
+         
         public Result<object> Update(AcquiringBankPaymentFailedEvent paymentEvent)
         {
             var sql =
                 "UPDATE [dbo].[PaymentProjections] " +
                 $"SET [PaymentStatus] = '{paymentEvent.PaymentStatus.Id}', " +
-                $"[LastUpdatedDate] = '{DateTime.Now}', ";
+                $"[LastUpdatedDate] = '{paymentEvent.TimeStamp}', ";
 
             sql +=
                 paymentEvent.AcquiringBankId.HasValue ? $"[AcquiringBankId] = '{paymentEvent.AcquiringBankId}', " : "";
@@ -110,6 +109,6 @@ namespace Data
                 $"WHERE PaymentId = '{paymentEvent.AggregateId}'";
 
             return Update(sql);
-        }
+        } 
     }
 }
