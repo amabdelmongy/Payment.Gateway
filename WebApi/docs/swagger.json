@@ -1,0 +1,270 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Billing Service",
+    "description": "API to manage billing service",
+    "version": "1.0.0"
+  },
+  "host": "localhost",
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1/payment-details/{paymentId}": {
+      "get": {
+        "tags": [
+          "web api"
+        ],
+        "summary": "Gets payment by payment details id. The payment gateway is to allow a merchant to retrieve details of a previously made payment using its identifier. Doing this will help the merchant with their reconciliation and reporting needs.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/paymentId"
+          }
+        ],
+        "operationId": "GetPaymentById",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/payment"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/payment-details/{merchantId}/get-by-merchant-id": {
+      "get": {
+        "tags": [
+          "web api"
+        ],
+        "summary": "Gets payments details by merchant id. The payment gateway is to allow a merchant to retrieve details of a previously made payment using its identifier. Doing this will help the merchant with their reconciliation and reporting needs.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/merchantId"
+          }
+        ],
+        "operationId": "GetPaymentsByMerchantId",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/paymentList"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/payment/request-payment/": {
+      "post": {
+        "tags": [
+          "web api"
+        ],
+        "summary": "Request-payment. The payment gateway will need to provide merchants with a way to process a payment. To do this, the merchant should be able to submit a request to the payment gateway. A payment request should include appropriate fields such as the card number, expiry month/date, amount, currency, and cvv.",
+        "parameters": [
+          {
+            "name": "PaymentRequestDto",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PaymentRequestDto"
+            }
+          }
+        ],
+        "operationId": "PostPaymentById",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/PaymentRequestOutput"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "paymentList": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/payment"
+      }
+    },
+    "payment": {
+      "type": "object",
+      "required": [
+        "paymentId",
+        "CardNumber",
+        "CardExpiry",
+        "CardCvv",
+        "Amount",
+        "Currency",
+        "PaymentStatus",
+        "LastUpdatedDate",
+        "AcquiringBankId"
+      ],
+      "properties": {
+        "paymentId": {
+          "type": "string",
+          "example": "77d17eb6-a996-4375-bf1c-fb9808d95801"
+        },
+        "MerchantId": {
+          "type": "string",
+          "example": "21220994-fc2a-43ed-bc80-2f42990ae3ac"
+        },
+        "CardNumber": {
+          "type": "string",
+          "example": 5105105105105100
+        },
+        "CardExpiry": {
+          "type": "string",
+          "example": "8/22"
+        },
+        "CardCvv": {
+          "type": "string",
+          "example": 123
+        },
+        "Amount": {
+          "type": "number",
+          "example": 11.5,
+          "format": "decimal"
+        },
+        "Currency": {
+          "type": "string",
+          "example": "Euro"
+        },
+        "PaymentStatus": {
+          "type": "string",
+          "example": "Processed"
+        },
+        "LastUpdatedDate": {
+          "description": "Represents a date, in the format of ISO 8601.",
+          "type": "string",
+          "format": "YYYY-MM-DDTHH:mm:ssZ",
+          "example": "2021-06-15T01:45:23Z"
+        },
+        "AcquiringBankId": {
+          "type": "string",
+          "example": "77d17eb6-a996-4375-bf1c-fb9808d95801"
+        }
+      }
+    },
+    "PaymentRequestDto": {
+      "type": "object",
+      "required": [
+        "paymentId",
+        "Card",
+        "Amount"
+      ],
+      "properties": {
+        "MerchantId": {
+          "type": "string",
+          "example": "21220994-fc2a-43ed-bc80-2f42990ae3ac"
+        },
+        "Card": {
+          "$ref": "#/definitions/Card"
+        },
+        "Amount": {
+          "$ref": "#/definitions/Amount"
+        }
+      }
+    },
+    "Card": {
+      "type": "object",
+      "required": [
+        "CardNumber",
+        "CardExpiry",
+        "CardCvv"
+      ],
+      "properties": {
+        "CardNumber": {
+          "type": "string",
+          "example": 5105105105105100
+        },
+        "CardExpiry": {
+          "type": "string",
+          "example": "8/22"
+        },
+        "CardCvv": {
+          "type": "string",
+          "example": 123
+        }
+      }
+    },
+    "Amount": {
+      "type": "object",
+      "required": [
+        "Value",
+        "Currency"
+      ],
+      "properties": {
+        "Value": {
+          "type": "number",
+          "example": 11.5,
+          "format": "decimal"
+        },
+        "Currency": {
+          "type": "string",
+          "example": "Euro"
+        }
+      }
+    },
+    "PaymentRequestOutput": {
+      "type": "object",
+      "required": [
+        "paymentId",
+        "CardNumber",
+        "CardExpiry",
+        "CardCvv",
+        "Amount",
+        "Currency",
+        "PaymentStatus",
+        "LastUpdatedDate",
+        "AcquiringBankId"
+      ],
+      "properties": {
+        "paymentId": {
+          "type": "string",
+          "example": "77d17eb6-a996-4375-bf1c-fb9808d95801"
+        },
+        "MerchantId": {
+          "type": "string",
+          "example": "21220994-fc2a-43ed-bc80-2f42990ae3ac"
+        },
+        "AcquiringBankId": {
+          "type": "string",
+          "example": "77d17eb6-a996-4375-bf1c-fb9808d95801"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "paymentId": {
+      "name": "paymentId",
+      "type": "string",
+      "format": "uuid",
+      "in": "path",
+      "required": true,
+      "description": "77d17eb6-a996-4375-bf1c-fb9808d95801"
+    },
+    "merchantId": {
+      "name": "merchantId",
+      "type": "string",
+      "format": "uuid",
+      "in": "path",
+      "required": true,
+      "description": "21220994-FC2A-43ED-BC80-2F42990AE3AC"
+    }
+  },
+  "tags": [
+    {
+      "name": "Payment Gateway",
+      "description": "E-Commerce is experiencing exponential growth and merchants who sell their goods or services online need a way to easily collect money from their customers. We would like to build a payment gateway, an API based application that will allow a merchant to offer a way for their shoppers to pay for their product."
+    }
+  ]
+}
