@@ -10,7 +10,7 @@ namespace Domain.Test
     {
         public static readonly Guid PaymentIdTest = Guid.Parse("977d39b4-2a34-4223-baac-8496ff2a7bc1");
 
-        public static readonly Card CardTest = new Card("5105105105105100", "12/24", "321");
+        public static readonly Card CardTest = new Card("5105105105105100", "10/22", "321");
 
         public static readonly Guid MerchantIdTest = Guid.Parse("977d39b4-2a34-4223-baac-8496ff2a7bc1");
 
@@ -23,37 +23,48 @@ namespace Domain.Test
             var paymentAggregate = PaymentAggregateFactory.CreateFrom(
                 new List<Event>
                 {
-                    new PaymentRequestedEvent(PaymentIdTest, DateTime.Now, 1, CardTest, MerchantIdTest, AmountTest)
+                    new PaymentRequestedEvent(
+                        PaymentIdTest, 
+                        DateTime.Now, 
+                        1, 
+                        CardTest, 
+                        MerchantIdTest, 
+                        AmountTest,
+                        PaymentStatus.ProcessStarted
+                    )
                 }
             );
             return paymentAggregate.Value;
         } 
 
-        public static PaymentRequestedEvent PaymentRequestedEventTest =
+        public static readonly PaymentRequestedEvent PaymentRequestedEventTest =
             new PaymentRequestedEvent(
                 PaymentStubs.PaymentIdTest,
                 DateTime.Now,
                 1,
                 PaymentStubs.CardTest,
                 PaymentStubs.MerchantIdTest,
-                PaymentStubs.AmountTest
+                PaymentStubs.AmountTest,
+                PaymentStatus.ProcessStarted
             );
 
-        public static AcquiringBankPaymentFailedEvent AcquiringBankPaymentFailedEventTest =
+        public static readonly AcquiringBankPaymentFailedEvent AcquiringBankPaymentFailedEventTest =
             new AcquiringBankPaymentFailedEvent(
                 PaymentStubs.PaymentIdTest,
                 DateTime.Now,
                 1,
                 PaymentStubs.AcquiringBankIdTest,
-                "details"
+                "details",
+                PaymentStatus.Failed
             );
 
-        public static AcquiringBankPaymentProcessedEvent AcquiringBankPaymentProcessedEventTest =
+        public static readonly AcquiringBankPaymentProcessedEvent AcquiringBankPaymentProcessedEventTest =
             new AcquiringBankPaymentProcessedEvent(
                 PaymentStubs.PaymentIdTest,
                 DateTime.Now,
                 1,
-                PaymentStubs.AcquiringBankIdTest
+                PaymentStubs.AcquiringBankIdTest,
+                PaymentStatus.Processed
             );
     }
 }

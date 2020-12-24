@@ -1,4 +1,5 @@
 ﻿using System;
+using Domain.Payment.Aggregate;
 using Domain.Payment.Commands;
 using Domain.Payment.Events;
 
@@ -30,7 +31,8 @@ namespace Domain.Payment.CommandHandlers
                     DateTime.Now,
                     version + 1,
                     failAcquiringBankPaymentCommand.AcquiringBankId,
-                    failAcquiringBankPaymentCommand.Details
+                    failAcquiringBankPaymentCommand.Details,
+                    PaymentStatus.Failed
                 );
 
             var result = _eventRepository.Add(acquiringBankPaymentFailedEvent);

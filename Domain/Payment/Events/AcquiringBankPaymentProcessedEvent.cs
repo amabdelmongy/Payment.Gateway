@@ -1,4 +1,5 @@
 ﻿using System;
+using Domain.Payment.Aggregate;
 using Newtonsoft.Json;
 
 namespace Domain.Payment.Events
@@ -10,7 +11,8 @@ namespace Domain.Payment.Events
             Guid aggregateId,
             DateTime timeStamp,
             int version,
-            Guid acquiringBankId
+            Guid acquiringBankId,
+            PaymentStatus paymentStatus
         )
             : base(
                 aggregateId,
@@ -20,8 +22,11 @@ namespace Domain.Payment.Events
             )
         {
             AcquiringBankId = acquiringBankId;
+            PaymentStatus = paymentStatus;
         }
           
-        public Guid AcquiringBankId { get; }
+        public Guid AcquiringBankId { get; } 
+
+        public PaymentStatus PaymentStatus { get; }
     }
 }

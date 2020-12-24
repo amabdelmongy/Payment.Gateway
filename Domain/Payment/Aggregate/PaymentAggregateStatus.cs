@@ -11,10 +11,12 @@
         public static readonly PaymentStatus Failed =
             new PaymentStatus("failed");
 
-        private PaymentStatus(string id)
+        public PaymentStatus(string id)
         {
             Id = id;
         }
         public string Id { get; }
     }
+
+ 
 }

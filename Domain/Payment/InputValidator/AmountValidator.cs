@@ -3,7 +3,7 @@ using Domain.Payment.Aggregate;
 
 namespace Domain.Payment.InputValidator
 {
-    internal class AmountValidator
+    public class AmountValidator
     { 
         private const string ErrorTitleInvalidAmount = "Invalid Amount";
         public Result<object> Validate(Money amount)

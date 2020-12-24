@@ -1,4 +1,5 @@
 ﻿using System;
+using Domain.Payment.Aggregate;
 using Domain.Payment.Commands;
 using Domain.Payment.Events;
 
@@ -12,6 +13,7 @@ namespace Domain.Payment.CommandHandlers
     public class RequestPaymentCommandHandler : IRequestProcessPaymentCommandHandler
     {
         private readonly IEventRepository _eventRepository;
+
         public RequestPaymentCommandHandler(IEventRepository eventRepository)
         {
             _eventRepository = eventRepository;
@@ -19,14 +21,16 @@ namespace Domain.Payment.CommandHandlers
 
         public Result<Event> Handle(RequestPaymentCommand requestPaymentCommand)
         {
-            var paymentRequestedEvent = new PaymentRequestedEvent(
-                requestPaymentCommand.PaymentId,
-                DateTime.Now,
-                1,
-                requestPaymentCommand.Card,
-                requestPaymentCommand.MerchantId,
-                requestPaymentCommand.Amount
-            );
+            var paymentRequestedEvent =
+                new PaymentRequestedEvent(
+                    requestPaymentCommand.PaymentId,
+                    DateTime.Now,
+                    1,
+                    requestPaymentCommand.Card,
+                    requestPaymentCommand.MerchantId,
+                    requestPaymentCommand.Amount,
+                    PaymentStatus.ProcessStarted
+                );
 
             var result = _eventRepository.Add(paymentRequestedEvent);
 

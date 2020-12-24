@@ -26,13 +26,15 @@ namespace Domain.Payment.Aggregate
                                             @event.Card,
                                             @event.MerchantId,
                                             @event.Amount,
-                                            @event.Version);
+                                            @event.Version,
+                                            @event.PaymentStatus
+                                            );
                                     break;
 
                                 case AcquiringBankPaymentProcessedEvent @event:
                                     paymentAggregate =
                                         paymentAggregate.With(
-                                            PaymentStatus.Processed,
+                                            @event.PaymentStatus,
                                             @event.Version,
                                             @event.AcquiringBankId);
                                     break;
@@ -40,7 +42,7 @@ namespace Domain.Payment.Aggregate
                                 case AcquiringBankPaymentFailedEvent @event:
                                     paymentAggregate =
                                         paymentAggregate.With(
-                                            PaymentStatus.Failed,
+                                            @event.PaymentStatus,
                                             @event.Version,
                                             @event.AcquiringBankId);
                                     break;

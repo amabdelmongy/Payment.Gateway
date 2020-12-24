@@ -46,7 +46,8 @@ namespace Domain.Payment.Aggregate
             Card card,
             Guid merchantId,
             Money amount,
-            int version
+            int version,
+            PaymentStatus paymentStatus
         )
         {
             return
@@ -56,7 +57,7 @@ namespace Domain.Payment.Aggregate
                     merchantId,
                     amount,
                     version,
-                    PaymentStatus.ProcessStarted);
+                    paymentStatus);
         }
 
         public PaymentAggregate With(

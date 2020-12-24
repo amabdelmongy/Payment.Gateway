@@ -11,7 +11,8 @@ namespace Domain.Payment.Events
             int version,
             Card card,
             Guid merchantId,
-            Money amount
+            Money amount, 
+            PaymentStatus paymentStatus
         )
             : base(
                 aggregateId,
@@ -23,6 +24,7 @@ namespace Domain.Payment.Events
             Card = card;
             MerchantId = merchantId;
             Amount = amount;
+            PaymentStatus = paymentStatus;
         }
 
         public Card Card { get; }
@@ -30,6 +32,8 @@ namespace Domain.Payment.Events
         public Guid MerchantId { get; }
 
         public Money Amount { get; }
+         
+        public PaymentStatus PaymentStatus { get; }
 
     }
 }

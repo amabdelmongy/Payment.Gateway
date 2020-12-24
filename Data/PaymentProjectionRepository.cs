@@ -70,7 +70,7 @@ namespace Data
         {
             var sql =
                 $"UPDATE [dbo].[PaymentProjections] " +
-                $"SET [PaymentStatus] = '{PaymentStatus.Processed.Id}', " +
+                $"SET [PaymentStatus] = '{paymentEvent.PaymentStatus.Id}', " +
                 $"[LastUpdatedDate] = '{DateTime.Now}', " +
                 $"[AcquiringBankId] = '{paymentEvent.AcquiringBankId}' " +
                 $"WHERE PaymentId = '{paymentEvent.AggregateId}'";
@@ -99,7 +99,7 @@ namespace Data
         {
             var sql =
                 "UPDATE [dbo].[PaymentProjections] " +
-                $"SET [PaymentStatus] = '{PaymentStatus.Failed.Id}', " +
+                $"SET [PaymentStatus] = '{paymentEvent.PaymentStatus.Id}', " +
                 $"[LastUpdatedDate] = '{DateTime.Now}', ";
 
             sql +=

@@ -5,7 +5,7 @@ using Domain.Payment.Aggregate;
 
 namespace Domain.Payment.InputValidator
 {
-    internal class CardValidator
+    public class CardValidator
     {
         private enum CardValidationErrorType
         { 
@@ -68,7 +68,7 @@ namespace Domain.Payment.InputValidator
                 return Result.Failed<object>(BuildError(CardValidationErrorType.InvalidExpiry, "Expire date is Empty")
                 );
 
-            if (Regex.Match(expiry, @"^(0[1-9]|1[0-2])\/?([0-9]{2})$").Success)
+            if (!Regex.Match(expiry, @"^(0?[1-9]|1[012])/[0-9]{2}$").Success)
                 return Result.Failed<object>(BuildError(CardValidationErrorType.InvalidExpiry, "Expire date is Invalid")
                 ); 
             return Result.Ok<object>();
@@ -79,8 +79,8 @@ namespace Domain.Payment.InputValidator
             string subject = type switch
             {
                 CardValidationErrorType.InvalidCardNumber => "Invalid Card Number",
-                CardValidationErrorType.InvalidCvv => "Invalid CVV",
                 CardValidationErrorType.InvalidExpiry => "Invalid Expiry Date",
+                CardValidationErrorType.InvalidCvv => "Invalid CVV",
                 _ => throw new NotImplementedException()
             };
             return Error.CreateFrom(subject, message);

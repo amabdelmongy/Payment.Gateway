@@ -46,7 +46,8 @@ namespace Domain.Payment.CommandHandlers
                     processAcquiringBankPaymentCommand.PaymentId,
                     DateTime.Now,
                     paymentAggregate.Version + 1,
-                    acquiringBankResult.Value
+                    acquiringBankResult.Value, 
+                    PaymentStatus.Processed
                 );
 
             var result =

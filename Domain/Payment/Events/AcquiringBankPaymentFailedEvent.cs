@@ -1,4 +1,5 @@
 ﻿using System;
+using Domain.Payment.Aggregate;
 
 namespace Domain.Payment.Events
 {
@@ -9,7 +10,8 @@ namespace Domain.Payment.Events
             DateTime timeStamp,
             int version,
             Guid? acquiringBankId,
-            string details
+            string details, 
+            PaymentStatus paymentStatus
         )
             : base(
                 aggregateId,
@@ -20,10 +22,13 @@ namespace Domain.Payment.Events
         {
             AcquiringBankId = acquiringBankId;
             Details = details;
+            PaymentStatus = paymentStatus;
         }
 
         public Guid? AcquiringBankId { get; }
 
         public string Details { get; } 
+
+        public PaymentStatus PaymentStatus { get; }
     }
 }
