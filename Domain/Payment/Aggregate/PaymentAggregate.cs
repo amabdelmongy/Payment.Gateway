@@ -57,7 +57,8 @@ namespace Domain.Payment.Aggregate
                     merchantId,
                     amount,
                     version,
-                    paymentStatus);
+                    paymentStatus
+                );
         }
 
         public PaymentAggregate With(
@@ -74,7 +75,8 @@ namespace Domain.Payment.Aggregate
                     Amount,
                     version,
                     paymentStatus,
-                    acquiringBankId);
+                    acquiringBankId
+                );
         }
     }
 }

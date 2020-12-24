@@ -15,11 +15,12 @@ using NUnit.Framework;
 
 namespace WebApi.Integration.Test.PaymentControllerTests
 {
-    public class WithEventRepositoryTests
+    public class EventRepositoryTests
     {
         private const string UrlRequestPayment = "/api/v1/payment/request-payment/";
+
         private HttpClient CreateClient(IEventRepository eventRepository)
-        { 
+        {
             var factory =
                 new WebApplicationFactory<Startup>()
                     .WithWebHostBuilder(builder =>
@@ -27,7 +28,9 @@ namespace WebApi.Integration.Test.PaymentControllerTests
                         builder.ConfigureTestServices(services =>
                         {
                             services.AddScoped(a => eventRepository);
-                            services.AddScoped(a => (IAcquiringBankFacade)new InMemoryAcquiringBankFacade().WithId(TestStubs.TestAcquiringBankId));
+                            services.AddScoped(a =>
+                                (IAcquiringBankFacade) new InMemoryAcquiringBankFacade().WithId(PaymentDtoTests
+                                    .TestAcquiringBankId));
                         });
                     });
 
@@ -37,9 +40,11 @@ namespace WebApi.Integration.Test.PaymentControllerTests
         [Test]
         public async Task WHEN_Get_return_Exception_THEN_return_Error()
         {
-            var expectedError = Error.CreateFrom(
-                "Failed calling Data base",
-                new Exception("Test Exception from Event Repository"));
+            var expectedError =
+                Error.CreateFrom(
+                    "Failed calling Data base",
+                    new Exception("Test Exception from Event Repository")
+                );
 
             Result<IEnumerable<Event>> expectedResult = Result.Failed<IEnumerable<Event>>(expectedError);
 
@@ -49,7 +54,8 @@ namespace WebApi.Integration.Test.PaymentControllerTests
             var response =
                 await client.PostAsJsonAsync(
                     UrlRequestPayment,
-                    TestStubs.TestPaymentRequestDto);
+                    PaymentDtoTests.TestPaymentRequestDto
+                );
 
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
 
@@ -76,7 +82,7 @@ namespace WebApi.Integration.Test.PaymentControllerTests
                 "Failed calling Data base",
                 new Exception("Test Exception from Event Repository"));
 
-            Result<object> expectedResult = Result.Failed<object>(expectedError);
+            var expectedResult = Result.Failed<object>(expectedError);
 
             var eventRepository = new InMemoryEventRepository().WithNewAdd(expectedResult);
 
@@ -84,7 +90,8 @@ namespace WebApi.Integration.Test.PaymentControllerTests
             var response =
                 await client.PostAsJsonAsync(
                     UrlRequestPayment,
-                    TestStubs.TestPaymentRequestDto);
+                    PaymentDtoTests.TestPaymentRequestDto
+                );
 
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
 

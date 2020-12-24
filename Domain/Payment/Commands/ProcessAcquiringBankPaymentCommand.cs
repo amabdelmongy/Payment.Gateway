@@ -6,7 +6,8 @@ namespace Domain.Payment.Commands
     {
         public ProcessAcquiringBankPaymentCommand(
             Guid paymentId
-        ) : base(paymentId)
+        )
+            : base(paymentId)
         {
         }
     }

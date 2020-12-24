@@ -21,6 +21,8 @@ namespace Data
 
     public class DispatchRepository : IDispatchRepository
     {
+        private const string TableName = "[Dispatchs]";
+
         private readonly string _connectionString;
         private readonly IServiceBusPublisher _serviceBusPublishers;
 
@@ -28,7 +30,7 @@ namespace Data
         {
             _serviceBusPublishers = serviceBusPublishers;
             _connectionString = connectionString;
-        } 
+        }
 
         public void AddEvent(
             string eventType,
@@ -48,8 +50,8 @@ namespace Data
 
         public async Task DeleteAndGetDispatchedEventsAsync()
         {
-            var sql = $"DELETE FROM [dbo].[Dispatchs] OUTPUT DELETED.[Type], DELETED.[EventData]";
-           
+            var sql = $"DELETE FROM {TableName} OUTPUT DELETED.[Type], DELETED.[EventData]";
+
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
@@ -67,14 +69,17 @@ namespace Data
                             );
 
                             _serviceBusPublishers.Publish(@event);
-                        } 
+                        }
+
                         dataReader.Dispose();
-                    } 
+                    }
+
                     transaction.Commit();
                 }
             }
         }
 
+        [Table(TableName)]
         class Dispatch
         {
             public int Id { get; set; }

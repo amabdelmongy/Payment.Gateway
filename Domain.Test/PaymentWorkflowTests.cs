@@ -18,23 +18,21 @@ namespace Domain.Test
             var expectedError =
                 Error.CreateFrom("subject", "message");
 
-            var paymentCommandHandlerMock =
-                new Mock<IPaymentCommandHandler>();
+            var paymentCommandHandlerMock = new Mock<IPaymentCommandHandler>();
             paymentCommandHandlerMock
                 .Setup(t =>
                     t.Handle(It.IsAny<PaymentCommand>())
                 )
                 .Returns(Result.Ok<Event>());
 
-            var paymentInputValidatorMock =
-                new Mock<IPaymentInputValidator>();
+            var paymentInputValidatorMock = new Mock<IPaymentInputValidator>();
             paymentInputValidatorMock
                 .Setup(t =>
                     t.Validate(It.IsAny<Card>(), It.IsAny<Money>())
                 )
                 .Returns(Result.Failed<object>(expectedError));
 
-            PaymentWorkflow paymentWorkflow =
+            var paymentWorkflow =
                 new PaymentWorkflow(
                     paymentCommandHandlerMock.Object,
                     paymentInputValidatorMock.Object
@@ -57,8 +55,8 @@ namespace Domain.Test
         public void WHEN_PaymentCommandHandler_has_error_THEN_return_Error()
         {
             var expectedError = Error.CreateFrom("subject", "message");
-            var paymentCommandHandlerMock = new Mock<IPaymentCommandHandler>();
 
+            var paymentCommandHandlerMock = new Mock<IPaymentCommandHandler>();
             paymentCommandHandlerMock
                 .Setup(t =>
                     t.Handle(It.IsAny<PaymentCommand>())
@@ -74,7 +72,7 @@ namespace Domain.Test
                 )
                 .Returns(Result.Ok<object>());
 
-            PaymentWorkflow paymentWorkflow =
+            var paymentWorkflow =
                 new PaymentWorkflow(
                     paymentCommandHandlerMock.Object,
                     paymentInputValidatorMock.Object);

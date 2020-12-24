@@ -13,7 +13,7 @@ using NUnit.Framework;
 
 namespace WebApi.Integration.Test.PaymentControllerTests
 {
-    public class WithAcquiringBankStatusTests
+    public class AcquiringBankStatusTests
     {
         private const string UrlRequestPayment = "/api/v1/payment/request-payment/";
         private HttpClient CreateClient(Result<Guid> result)
@@ -39,17 +39,19 @@ namespace WebApi.Integration.Test.PaymentControllerTests
         [Test]
         public async Task WHEN_ProcessPayment_return_Exception_THEN_return_Error()
         {
-            var expectedError = Error.CreateFrom(
-                "Failed calling Acquiring Bank",
-                new Exception("Test Exception"));
+            var expectedError =
+                Error.CreateFrom(
+                    "Failed calling Acquiring Bank",
+                    new Exception("Test Exception")
+                );
 
-            Result <Guid> expectedResult = Result.Failed<Guid>(expectedError);
+            var expectedResult = Result.Failed<Guid>(expectedError);
 
             var client = CreateClient(expectedResult);
             var response =
                 await client.PostAsJsonAsync(
                     UrlRequestPayment,
-                    TestStubs.TestPaymentRequestDto);
+                    PaymentDtoTests.TestPaymentRequestDto);
 
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
 
@@ -72,18 +74,20 @@ namespace WebApi.Integration.Test.PaymentControllerTests
         [Test]
         public async Task WHEN_ProcessPayment_return_Rejected_THEN_return_Error()
         {
-            var acquiringBankId = TestStubs.TestAcquiringBankId;
-            var expectedError = Error.CreateFrom(
+            var acquiringBankId = PaymentDtoTests.TestAcquiringBankId;
+            var expectedError = 
+                Error.CreateFrom(
                 $"Rejected to acquiring Bank with Payment Id {acquiringBankId}",
-                "Card is not valid");
+                "Card is not valid"
+                );
                    
-            Result<Guid> expectedResult = Result.Failed<Guid>(expectedError);
+            var expectedResult = Result.Failed<Guid>(expectedError);
               
             var client = CreateClient(expectedResult);
             var response =
                 await client.PostAsJsonAsync(
                     UrlRequestPayment,
-                    TestStubs.TestPaymentRequestDto);
+                    PaymentDtoTests.TestPaymentRequestDto);
 
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
 
@@ -106,18 +110,20 @@ namespace WebApi.Integration.Test.PaymentControllerTests
         [Test]
         public async Task WHEN_ProcessPayment_return_RejectedAcquiringBankError_THEN_return_Error()
         {
-            var acquiringBankId = TestStubs.TestAcquiringBankId;
-            var expectedError = RejectedAcquiringBankError.CreateFrom(
-                $"Rejected to acquiring Bank with Payment Id {acquiringBankId}",
-                "Card is not valid");
+            var acquiringBankId = PaymentDtoTests.TestAcquiringBankId;
+            var expectedError =
+                RejectedAcquiringBankError.CreateFrom(
+                    $"Rejected to acquiring Bank with Payment Id {acquiringBankId}",
+                    "Card is not valid"
+                );
 
-            Result<Guid> expectedResult = Result.Failed<Guid>(expectedError);
+            var expectedResult = Result.Failed<Guid>(expectedError);
 
             var client = CreateClient(expectedResult);
             var response =
                 await client.PostAsJsonAsync(
                     UrlRequestPayment,
-                    TestStubs.TestPaymentRequestDto);
+                    PaymentDtoTests.TestPaymentRequestDto);
 
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
 
@@ -140,13 +146,14 @@ namespace WebApi.Integration.Test.PaymentControllerTests
         [Test]
         public async Task WHEN_PaymentRequestDto_is_correct_THEN_return_OK()
         {
-            var acquiringBankId = TestStubs.TestAcquiringBankId;
+            var acquiringBankId = PaymentDtoTests.TestAcquiringBankId;
             var client = CreateClient(Result.Ok<Guid>(acquiringBankId));
 
             var response =
                 await client.PostAsJsonAsync(
                     UrlRequestPayment,
-                    TestStubs.TestPaymentRequestDto);
+                    PaymentDtoTests.TestPaymentRequestDto
+                );
 
             response.EnsureSuccessStatusCode();
 
@@ -160,7 +167,7 @@ namespace WebApi.Integration.Test.PaymentControllerTests
             };
 
             var output = JsonConvert.DeserializeAnonymousType(result, outputDefinition);
-            Assert.AreEqual(TestStubs.TestPaymentRequestDto.MerchantId.ToString(), output.merchantId);
+            Assert.AreEqual(PaymentDtoTests.TestPaymentRequestDto.MerchantId.ToString(), output.merchantId);
             Assert.AreEqual(acquiringBankId.ToString(), output.acquiringBankId);
         }
     }

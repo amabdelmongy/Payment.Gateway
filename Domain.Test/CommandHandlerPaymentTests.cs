@@ -1,7 +1,5 @@
 using System; 
 using System.Linq;
-using Domain;
-using Domain.AcquiringBank;
 using Domain.Payment;
 using Domain.Payment.Aggregate;
 using Domain.Payment.CommandHandlers;
@@ -14,33 +12,33 @@ namespace Domain.Test
 {
     public class CommandHandlerPaymentTests
     {
-        private Mock<IPaymentService> paymentsMock()
+        private Mock<IPaymentService> paymentServiceMock()
         { 
-            var paymentsMock = new Mock<IPaymentService>();
+            var paymentServiceMock = new Mock<IPaymentService>();
 
-            paymentsMock
-                .Setup(payments =>
-                    payments.Get(It.IsAny<Guid>()))
+            paymentServiceMock
+                .Setup(service =>
+                    service.Get(It.IsAny<Guid>()))
                 .Returns(Result.Ok<PaymentAggregate>(PaymentStubsTests.PaymentAggregateTest()));
-            return paymentsMock;
+            return paymentServiceMock;
         }
         private Mock<IRequestProcessPaymentCommandHandler> requestProcessPaymentCommandHandlerMock()
         {
-            var requestProcessPaymentCommandHandler = new Mock<IRequestProcessPaymentCommandHandler>();
-            requestProcessPaymentCommandHandler
-                .Setup(repository =>
-                    repository.Handle(It.IsAny<RequestPaymentCommand>())
+            var requestProcessPaymentCommandHandlerMock = new Mock<IRequestProcessPaymentCommandHandler>();
+            requestProcessPaymentCommandHandlerMock
+                .Setup(commandHandler =>
+                    commandHandler.Handle(It.IsAny<RequestPaymentCommand>())
                 )
                 .Returns(It.IsAny<Result<Event>>());
-            return requestProcessPaymentCommandHandler;
+            return requestProcessPaymentCommandHandlerMock;
         }
 
         private Mock<IFailAcquiringBankPaymentCommandHandler> failAcquiringBankPaymentCommandHandlerMock()
         {
             var requestProcessPaymentCommandHandlerMock = new Mock<IFailAcquiringBankPaymentCommandHandler>();
             requestProcessPaymentCommandHandlerMock
-                .Setup(repository =>
-                    repository.Handle(
+                .Setup(commandHandler =>
+                    commandHandler.Handle(
                         It.IsAny<FailAcquiringBankPaymentCommand>(),
                         It.IsAny<int>())
                 )
@@ -52,8 +50,8 @@ namespace Domain.Test
         {
             var processAcquiringBankPaymentCommandHandlerMock = new Mock<IProcessAcquiringBankPaymentCommandHandler>();
             processAcquiringBankPaymentCommandHandlerMock
-                .Setup(handler =>
-                    handler.Handle(
+                .Setup(commandHandler =>
+                    commandHandler.Handle(
                         It.IsAny<PaymentAggregate>(),
                         It.IsAny<ProcessAcquiringBankPaymentCommand>())
                 )
@@ -68,7 +66,7 @@ namespace Domain.Test
 
             var paymentCommandHandler =
                 new PaymentCommandHandler(
-                    paymentsMock().Object,
+                    paymentServiceMock().Object,
                     requestProcessPaymentCommandHandler.Object,
                     processAcquiringBankPaymentCommandHandlerMock().Object,
                     failAcquiringBankPaymentCommandHandlerMock().Object
@@ -87,16 +85,17 @@ namespace Domain.Test
                     mock.Handle(
                         requestPaymentCommand),
                 Times.Once());
-        } 
+        }
 
         [Test]
-        public void WHEN_handle_ProcessAcquiringBankPaymentCommand_THEN_should_call_ProcessAcquiringBankPaymentCommandHandler()
-        {  
+        public void
+            WHEN_handle_ProcessAcquiringBankPaymentCommand_THEN_should_call_ProcessAcquiringBankPaymentCommandHandler()
+        {
             var processAcquiringBankPaymentCommandHandlerMock = this.processAcquiringBankPaymentCommandHandlerMock();
 
             var paymentCommandHandler =
                 new PaymentCommandHandler(
-                    paymentsMock().Object,
+                    paymentServiceMock().Object,
                     requestProcessPaymentCommandHandlerMock().Object,
                     processAcquiringBankPaymentCommandHandlerMock.Object,
                     failAcquiringBankPaymentCommandHandlerMock().Object
@@ -124,7 +123,7 @@ namespace Domain.Test
 
             var paymentCommandHandler =
                 new PaymentCommandHandler(
-                    paymentsMock().Object,
+                    paymentServiceMock().Object,
                     requestProcessPaymentCommandHandlerMock().Object,
                     processAcquiringBankPaymentCommandHandlerMock.Object,
                     failAcquiringBankPaymentCommandHandlerMock().Object
@@ -153,15 +152,15 @@ namespace Domain.Test
                     "Error Subject",
                     "Error Message");
 
-            var paymentsMock = new Mock<IPaymentService>();
-            paymentsMock
+            var paymentServiceMock = new Mock<IPaymentService>();
+            paymentServiceMock
                 .Setup(repository =>
                     repository.Get(It.IsAny<Guid>()))
                 .Returns(Result.Failed<PaymentAggregate>(expectedError));
 
             var paymentCommandHandler =
                 new PaymentCommandHandler(
-                    paymentsMock.Object,
+                    paymentServiceMock.Object,
                     requestProcessPaymentCommandHandlerMock().Object,
                     processAcquiringBankPaymentCommandHandlerMock().Object,
                     failAcquiringBankPaymentCommandHandlerMock().Object

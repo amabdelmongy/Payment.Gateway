@@ -1,5 +1,5 @@
-using System.ComponentModel.DataAnnotations;
 using Data;
+using Data.MessageBus;
 using Domain;
 using Domain.AcquiringBank;
 using Domain.MessageBus;

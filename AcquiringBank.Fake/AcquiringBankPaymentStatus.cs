@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AcquiringBank.Fake
+﻿namespace AcquiringBank.Fake
 {
     public enum AcquiringBankPaymentStatus
     {

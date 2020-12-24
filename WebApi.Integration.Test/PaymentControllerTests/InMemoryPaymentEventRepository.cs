@@ -44,7 +44,7 @@ namespace WebApi.Integration.Test.PaymentControllerTests
                     .Select(t => t.Item2);
 
             return
-                Result.Ok<IEnumerable<Event>>(events);
+                Result.Ok(events);
         }
     }
 }

@@ -18,12 +18,12 @@ namespace Domain.Test
                     .Setup(repository => repository.Add(It.IsAny<Event>()))
                     .Returns(Result.Ok<object>());
              
-            var requestProcessPaymentCommandHandler = new RequestPaymentCommandHandler(eventRepository.Object); 
- 
+            var requestProcessPaymentCommandHandler = new RequestPaymentCommandHandler(eventRepository.Object);
+
             var requestPaymentCommand = new RequestPaymentCommand(
-            PaymentStubsTests.CardTest,
-            PaymentStubsTests.MerchantIdTest,
-            PaymentStubsTests.AmountTest
+                PaymentStubsTests.CardTest,
+                PaymentStubsTests.MerchantIdTest,
+                PaymentStubsTests.AmountTest
             );
 
             var actualResult = requestProcessPaymentCommandHandler.Handle(requestPaymentCommand);
@@ -39,22 +39,20 @@ namespace Domain.Test
         [Test]
         public void WHEN_Handle_RequestPaymentCommand_And_eventRepository_return_error_THEN_return_Error()
         {
-            var expectedError = 
-                Error.CreateFrom(
-                    "Error Subject", 
-                    "Error Message");
+            var expectedError =
+                Error.CreateFrom("Error Subject", "Error Message");
 
-            var eventRepository =
+            var eventRepositoryMock =
                 new Mock<IEventRepository>();
 
-            eventRepository
+            eventRepositoryMock
                 .Setup(repository =>
                     repository.Add(It.IsAny<Event>())
-                    )
+                )
                 .Returns(Result.Failed<object>(expectedError));
 
-            var requestProcessPaymentCommandHandler = 
-                new RequestPaymentCommandHandler(eventRepository.Object);
+            var requestProcessPaymentCommandHandler =
+                new RequestPaymentCommandHandler(eventRepositoryMock.Object);
 
             var requestPaymentCommand = new RequestPaymentCommand(
                 PaymentStubsTests.CardTest,
@@ -66,12 +64,12 @@ namespace Domain.Test
 
             Assert.IsTrue(actualResult.HasErrors);
             Assert.AreEqual(1, actualResult.Errors.Count());
-            var error = actualResult.Errors.First();
+            var actualError = actualResult.Errors.First();
 
-            Assert.AreEqual(expectedError.Subject, error.Subject);
-            Assert.AreEqual(expectedError.Message, error.Message);
+            Assert.AreEqual(expectedError.Subject, actualError.Subject);
+            Assert.AreEqual(expectedError.Message, actualError.Message);
 
-            eventRepository.Verify(mock => mock.Add(It.IsAny<Event>()), Times.Once());
+            eventRepositoryMock.Verify(mock => mock.Add(It.IsAny<Event>()), Times.Once());
         }
     }
 }

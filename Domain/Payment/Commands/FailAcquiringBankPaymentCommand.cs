@@ -8,7 +8,7 @@ namespace Domain.Payment.Commands
             Guid paymentId,
             Guid? acquiringBankId,
             string details
-        ) 
+        )
             : base(paymentId)
         {
             AcquiringBankId = acquiringBankId;

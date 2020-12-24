@@ -5,45 +5,44 @@ using Domain.Payment.CommandHandlers;
 using Domain.Payment.Commands;
 using Domain.Payment.Events;
 using Moq;
-using NUnit.Framework; 
+using NUnit.Framework;
 
 namespace Domain.Test
 {
     public class CommandHandlerFailAcquiringBankPaymentTests
     {
-
         [Test]
         public void WHEN_handle_RequestPaymentCommand_THEN_create_PaymentRequestedEvent_and_return_Ok()
         {
-            var eventRepository = new Mock<IEventRepository>();
-            eventRepository
-                    .Setup(repository => 
-                        repository.Add(It.IsAny<Event>())
-                        )
-                    .Returns(Result.Ok<object>());
+            var eventRepositoryMock = new Mock<IEventRepository>();
+            eventRepositoryMock
+                .Setup(repository =>
+                    repository.Add(It.IsAny<Event>())
+                )
+                .Returns(Result.Ok<object>());
 
-            var commandHandler = new FailAcquiringBankPaymentCommandHandler(eventRepository.Object);
-            var command = new FailAcquiringBankPaymentCommand(
+            var commandHandler = new FailAcquiringBankPaymentCommandHandler(eventRepositoryMock.Object);
+            var expectedCommand = new FailAcquiringBankPaymentCommand(
                 PaymentStubsTests.PaymentIdTest,
                 PaymentStubsTests.AcquiringBankIdTest,
                 "Error message"
             );
 
-            var expectedVersion = 1; 
-            var actualResult = 
+            var expectedVersion = 1;
+            var actualResult =
                 commandHandler.Handle(
-                    command ,
+                    expectedCommand,
                     expectedVersion);
 
             Assert.IsTrue(actualResult.IsOk);
-            var actualEvent = (AcquiringBankPaymentFailedEvent)actualResult.Value;
+            var actualEvent = (AcquiringBankPaymentFailedEvent) actualResult.Value;
             Assert.AreEqual("AcquiringBankPaymentFailedEvent", actualEvent.Type);
-            Assert.AreEqual(command.PaymentId, actualEvent.AggregateId);
-            Assert.AreEqual(command.AcquiringBankId, actualEvent.AcquiringBankId);
-            Assert.AreEqual(command.Details, actualEvent.Details); 
+            Assert.AreEqual(expectedCommand.PaymentId, actualEvent.AggregateId);
+            Assert.AreEqual(expectedCommand.AcquiringBankId, actualEvent.AcquiringBankId);
+            Assert.AreEqual(expectedCommand.Details, actualEvent.Details);
 
             Assert.AreEqual(expectedVersion + 1, actualEvent.Version);
-            eventRepository.Verify(mock => mock.Add(It.IsAny<Event>()), Times.Once());
+            eventRepositoryMock.Verify(mock => mock.Add(It.IsAny<Event>()), Times.Once());
         }
 
         [Test]
@@ -54,16 +53,15 @@ namespace Domain.Test
                     "Error Subject",
                     "Error Message");
 
-            var eventRepository =
-                new Mock<IEventRepository>();
+            var eventRepositoryMock = new Mock<IEventRepository>();
 
-            eventRepository
+            eventRepositoryMock
                 .Setup(repository =>
                     repository.Add(It.IsAny<Event>())
-                    )
+                )
                 .Returns(Result.Failed<object>(expectedError));
 
-            var commandHandler = new FailAcquiringBankPaymentCommandHandler(eventRepository.Object);
+            var commandHandler = new FailAcquiringBankPaymentCommandHandler(eventRepositoryMock.Object);
             var command = new FailAcquiringBankPaymentCommand(
                 PaymentStubsTests.PaymentIdTest,
                 PaymentStubsTests.AcquiringBankIdTest,
@@ -75,15 +73,15 @@ namespace Domain.Test
                 commandHandler.Handle(
                     command,
                     expectedVersion);
-             
+
             Assert.IsTrue(actualResult.HasErrors);
             Assert.AreEqual(1, actualResult.Errors.Count());
-            var error = actualResult.Errors.First();
 
+            var error = actualResult.Errors.First();
             Assert.AreEqual(expectedError.Subject, error.Subject);
             Assert.AreEqual(expectedError.Message, error.Message);
 
-            eventRepository.Verify(mock => mock.Add(It.IsAny<Event>()), Times.Once());
+            eventRepositoryMock.Verify(mock => mock.Add(It.IsAny<Event>()), Times.Once());
         }
 
         [Test]
@@ -100,7 +98,6 @@ namespace Domain.Test
                     expectedMessage
                 );
 
-
             Assert.AreEqual(expectedSubject, rejectedAcquiringBankError.Subject);
             Assert.AreEqual(expectedMessage, rejectedAcquiringBankError.Message);
             Assert.AreEqual(expectedAcquiringBankId, rejectedAcquiringBankError.AcquiringBankResultId);
@@ -108,17 +105,15 @@ namespace Domain.Test
 
         [Test]
         public void WHEN_create_RejectedAcquiringBankError_with_exception_THEN_return_correct_Object()
-        { 
+        {
             var expectedSubject = "subject";
             var expectedException = new NotImplementedException();
 
             var rejectedAcquiringBankError =
-                RejectedAcquiringBankError.CreateFrom( 
+                RejectedAcquiringBankError.CreateFrom(
                     expectedSubject,
-                    expectedException 
-                );
-
-
+                    expectedException
+                ); 
             Assert.AreEqual(expectedSubject, rejectedAcquiringBankError.Subject);
             Assert.AreEqual(expectedException, rejectedAcquiringBankError.Exception);
         }

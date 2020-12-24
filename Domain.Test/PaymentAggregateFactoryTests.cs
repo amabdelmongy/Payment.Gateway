@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Domain.Payment;
 using Domain.Payment.Aggregate;
 using Domain.Payment.Events;
 using NUnit.Framework;

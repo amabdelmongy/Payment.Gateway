@@ -2,7 +2,10 @@
 {
     public class AcquiringBankMoney
     {
-        public AcquiringBankMoney(double value, string currency)
+        public AcquiringBankMoney(
+            double value,
+            string currency
+        )
         {
             Value = value;
             Currency = currency;

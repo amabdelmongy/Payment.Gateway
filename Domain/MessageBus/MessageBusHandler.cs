@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Domain.Payment.Aggregate;
+﻿using System.Threading.Tasks;
 using Domain.Payment.Events;
 using Domain.Payment.Projection;
 

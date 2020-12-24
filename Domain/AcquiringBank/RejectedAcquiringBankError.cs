@@ -8,17 +8,20 @@ namespace Domain.AcquiringBank
             Guid acquiringBankResultId,
             string subject,
             string message
-        ) : base(
-            subject,
-            null,
-            message)
+        )
+            : base(
+                subject,
+                null,
+                message
+            )
         {
             AcquiringBankResultId = acquiringBankResultId;
         }
 
         public Guid AcquiringBankResultId { get; }
 
-        public static RejectedAcquiringBankError CreateFrom(Guid acquiringBankResultId, string subject, string message = null)
+        public static RejectedAcquiringBankError CreateFrom(Guid acquiringBankResultId, string subject,
+            string message = null)
         {
             return new RejectedAcquiringBankError(acquiringBankResultId, subject, message);
         }

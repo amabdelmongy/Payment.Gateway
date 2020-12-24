@@ -7,7 +7,8 @@ namespace AcquiringBank.Fake
         public AcquiringBankPaymentResult(
             Guid acquiringBankPaymentId,
             AcquiringBankPaymentStatus paymentStatus,
-            string details)
+            string details
+        )
         {
             AcquiringBankPaymentId = acquiringBankPaymentId;
             PaymentStatus = paymentStatus;
@@ -15,7 +16,6 @@ namespace AcquiringBank.Fake
         }
 
         public Guid AcquiringBankPaymentId { get; }
-
         public AcquiringBankPaymentStatus PaymentStatus { get; }
         public string Details { get; }
 

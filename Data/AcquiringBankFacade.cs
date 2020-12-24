@@ -62,11 +62,10 @@ namespace Data
             }
             catch (Exception e)
             {
-                return Result.Failed<Guid>(
-                    Error.CreateFrom(
-                        "Failed calling Acquiring Bank",
-                        e
-                    ));
+                return
+                    Result.Failed<Guid>(
+                        Error.CreateFrom("Failed calling Acquiring Bank", e)
+                    );
             }
         }
     }

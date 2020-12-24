@@ -2,7 +2,6 @@
 using System.Linq;
 using Domain.Payment;
 using Domain.Payment.Aggregate;
-using Domain.Payment.Projection;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers.v1

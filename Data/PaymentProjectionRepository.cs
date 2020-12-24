@@ -5,17 +5,17 @@ using Dapper;
 using Dapper.Contrib.Extensions;
 using Domain;
 using Domain.Payment.Events;
-using Domain.Payment.Aggregate;
 using Domain.Payment.Projection;
 
 namespace Data
 {
     public class PaymentProjectionRepository : IPaymentProjectionRepository
     {
+        private const string TableName = "[PaymentProjections]";
         private readonly string _connectionString;
 
         public PaymentProjectionRepository(
-            String connectionString
+            string connectionString
         )
         {
             _connectionString = connectionString;
@@ -23,7 +23,7 @@ namespace Data
 
         public Result<PaymentProjection> Get(Guid id)
         {
-            var sql = $"SELECT * FROM [PaymentProjections] WHERE PaymentId = '{id}';";
+            var sql = $"SELECT * FROM {TableName} WHERE PaymentId = '{id}';";
             try
             {
                 using var connection = new SqlConnection(_connectionString);
@@ -38,7 +38,7 @@ namespace Data
 
         public Result<IEnumerable<PaymentProjection>> GetByMerchantId(Guid merchantId)
         {
-            var sql = $"SELECT * FROM [PaymentProjections] WHERE MerchantId = '{merchantId}';";
+            var sql = $"SELECT * FROM {TableName} WHERE MerchantId = '{merchantId}';";
             try
             {
                 using var connection = new SqlConnection(_connectionString);
@@ -47,7 +47,10 @@ namespace Data
             }
             catch (Exception ex)
             {
-                return Result.Failed<IEnumerable<PaymentProjection>>(Error.CreateFrom("PaymentProjection", ex));
+                return
+                    Result.Failed<IEnumerable<PaymentProjection>>(
+                        Error.CreateFrom("PaymentProjection", ex)
+                    );
             }
         }
 
@@ -62,24 +65,10 @@ namespace Data
             }
             catch (Exception ex)
             {
-                return Result.Failed<object>(Error.CreateFrom("Error when Adding to PaymentProjection", ex));
-            }
-        }
-        private Result<object> Update(string sql)
-        {
-            try
-            {
-                using (var connection = new SqlConnection(_connectionString))
-                {
-                    connection.Open();
-                    var command = new SqlCommand(sql, connection);
-                    command.ExecuteNonQuery();
-                    return Result.Ok<object>();
-                }
-            }
-            catch (Exception ex)
-            {
-                return Result.Failed<object>(Error.CreateFrom("PaymentProjection", ex));
+                return
+                    Result.Failed<object>(
+                        Error.CreateFrom("Error when Adding to PaymentProjection", ex)
+                    );
             }
         }
 
@@ -93,7 +82,7 @@ namespace Data
                 $"WHERE PaymentId = '{paymentEvent.AggregateId}'";
             return Update(sql);
         }
-         
+
         public Result<object> Update(AcquiringBankPaymentFailedEvent paymentEvent)
         {
             var sql =
@@ -109,6 +98,27 @@ namespace Data
                 $"WHERE PaymentId = '{paymentEvent.AggregateId}'";
 
             return Update(sql);
-        } 
+        }
+
+        private Result<object> Update(string sql)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    var command = new SqlCommand(sql, connection);
+                    command.ExecuteNonQuery();
+                    return Result.Ok<object>();
+                }
+            }
+            catch (Exception ex)
+            {
+                return
+                    Result.Failed<object>(
+                        Error.CreateFrom("PaymentProjection", ex)
+                    );
+            }
+        }
     }
 }

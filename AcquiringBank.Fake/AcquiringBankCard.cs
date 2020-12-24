@@ -2,7 +2,11 @@
 {
     public class AcquiringBankCard
     {
-        public AcquiringBankCard(string number, string expiry, string cvv)
+        public AcquiringBankCard(
+            string number,
+            string expiry,
+            string cvv
+        )
         {
             Number = number;
             Cvv = cvv;

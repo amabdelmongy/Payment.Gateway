@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using Domain.AcquiringBank;
-using Domain.Payment;
 using Domain.Payment.Aggregate;
 using Domain.Payment.CommandHandlers;
 using Domain.Payment.Commands;
@@ -35,7 +34,7 @@ namespace Domain.Test
                 acquiringBankFacadeMock.Object
             );
 
-            var command = new ProcessAcquiringBankPaymentCommand(
+            var expectedCommand = new ProcessAcquiringBankPaymentCommand(
                 PaymentStubsTests.PaymentIdTest
             );
             var paymentAggregate = PaymentStubsTests.PaymentAggregateTest();
@@ -43,14 +42,14 @@ namespace Domain.Test
             var actualResult =
                 commandHandler.Handle(
                     paymentAggregate,
-                    command
+                    expectedCommand
                 );
 
             Assert.IsTrue(actualResult.IsOk);
+
             var actualEvent = (AcquiringBankPaymentProcessedEvent) actualResult.Value;
             Assert.AreEqual("AcquiringBankPaymentProcessedEvent", actualEvent.Type);
-            Assert.AreEqual(command.PaymentId, actualEvent.AggregateId);
-
+            Assert.AreEqual(expectedCommand.PaymentId, actualEvent.AggregateId);
             Assert.AreEqual(paymentAggregate.Version + 1, actualEvent.Version);
             eventRepository.Verify(mock => mock.Add(It.IsAny<Event>()), Times.Once());
         }
@@ -96,10 +95,10 @@ namespace Domain.Test
 
             Assert.IsTrue(actualResult.HasErrors);
             Assert.AreEqual(1, actualResult.Errors.Count());
-            var error = actualResult.Errors.First();
+            var actualError = actualResult.Errors.First();
 
-            Assert.AreEqual(expectedError.Subject, error.Subject);
-            Assert.AreEqual(expectedError.Message, error.Message);
+            Assert.AreEqual(expectedError.Subject, actualError.Subject);
+            Assert.AreEqual(expectedError.Message, actualError.Message);
 
             eventRepository.Verify(mock => mock.Add(It.IsAny<Event>()), Times.Once());
         }
@@ -112,16 +111,14 @@ namespace Domain.Test
                     "Error Subject AcquiringBankFacade",
                     "Error Message AcquiringBankFacade");
 
-            var eventRepository =
-                new Mock<IEventRepository>();
+            var eventRepositoryMock = new Mock<IEventRepository>();
 
-            eventRepository
+            eventRepositoryMock
                 .Setup(repository =>
                     repository.Add(It.IsAny<Event>())
                 )
                 .Returns(Result.Ok<object>());
-
-
+             
             var acquiringBankFacade = new Mock<IAcquiringBankFacade>();
             acquiringBankFacade
                 .Setup(repository =>
@@ -130,7 +127,7 @@ namespace Domain.Test
                 .Returns(Result.Failed<Guid>(expectedError));
 
             var commandHandler = new ProcessAcquiringBankPaymentCommandHandler(
-                eventRepository.Object,
+                eventRepositoryMock.Object,
                 acquiringBankFacade.Object
             );
 
@@ -147,10 +144,10 @@ namespace Domain.Test
 
             Assert.IsTrue(actualResult.HasErrors);
             Assert.AreEqual(1, actualResult.Errors.Count());
-            var error = actualResult.Errors.First();
 
-            Assert.AreEqual(expectedError.Subject, error.Subject);
-            Assert.AreEqual(expectedError.Message, error.Message); 
+            var actualError = actualResult.Errors.First();
+            Assert.AreEqual(expectedError.Subject, actualError.Subject);
+            Assert.AreEqual(expectedError.Message, actualError.Message); 
         }
     }
 }

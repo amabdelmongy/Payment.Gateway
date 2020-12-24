@@ -14,20 +14,20 @@ namespace Domain.Test
         public void WHEN_eventRepository_has_error_THEN_return_Aggregate()
         {
             var expectedEvent = PaymentStubsTests.PaymentRequestedEventTest;
-            var eventRepository = new Mock<IEventRepository>();
-            eventRepository
+            var eventRepositoryMock = new Mock<IEventRepository>();
+            eventRepositoryMock
                 .Setup(t =>
                     t.Get(It.IsAny<Guid>())
                 )
                 .Returns(Result.Ok<IEnumerable<Event>>(
-                        new List<Event>()
-                        {
-                            expectedEvent
-                        }) 
-                    );
+                    new List<Event>()
+                    {
+                        expectedEvent
+                    })
+                );
 
             var paymentService =
-                new PaymentService(eventRepository.Object);
+                new PaymentService(eventRepositoryMock.Object);
 
             var actual =
                 paymentService.Get(PaymentStubsTests.PaymentIdTest);
@@ -40,15 +40,15 @@ namespace Domain.Test
         public void WHEN_eventRepository_has_error_THEN_return_Error()
         {
             var expectedError = Error.CreateFrom("subject", "message");
-            var eventRepository = new Mock<IEventRepository>();
-            eventRepository
+            var eventRepositoryMock = new Mock<IEventRepository>();
+            eventRepositoryMock
                 .Setup(t =>
                     t.Get(It.IsAny<Guid>())
                 )
                 .Returns(Result.Failed<IEnumerable<Event>>(expectedError));
 
             var paymentService = 
-                new PaymentService(eventRepository.Object);
+                new PaymentService(eventRepositoryMock.Object);
 
             var actual = 
                 paymentService.Get(PaymentStubsTests.PaymentIdTest);
@@ -62,15 +62,15 @@ namespace Domain.Test
         [Test]
         public void WHEN_eventRepository_has_no_event_THEN_return_Error()
         {
-            var eventRepository = new Mock<IEventRepository>();
-            eventRepository
+            var eventRepositoryMock = new Mock<IEventRepository>();
+            eventRepositoryMock
                 .Setup(t =>
                     t.Get(It.IsAny<Guid>())
                 )
                 .Returns(Result.Ok<IEnumerable<Event>>(new List<Event>()));
 
             var paymentService =
-                new PaymentService(eventRepository.Object);
+                new PaymentService(eventRepositoryMock.Object);
 
             var actual =
                 paymentService.Get(PaymentStubsTests.PaymentIdTest);

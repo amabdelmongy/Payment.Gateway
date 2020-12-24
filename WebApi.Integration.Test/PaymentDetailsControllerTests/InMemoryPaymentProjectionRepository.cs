@@ -9,7 +9,7 @@ namespace WebApi.Integration.Test.PaymentDetailsControllerTests
 {
     public class InMemoryPaymentProjectionRepository : IPaymentProjectionRepository
     {
-        readonly List<PaymentProjection> _paymentProjections =  new List<PaymentProjection>();
+        readonly List<PaymentProjection> _paymentProjections = new List<PaymentProjection>();
 
         private Result<PaymentProjection> _resultGet;
         private Result<IEnumerable<PaymentProjection>> _resultGetByMerchantId;
@@ -32,7 +32,8 @@ namespace WebApi.Integration.Test.PaymentDetailsControllerTests
             return Result.Ok<IEnumerable<PaymentProjection>>(
                 _paymentProjections.
                     Where(t => 
-                        t.MerchantId == merchantId)
+                        t.MerchantId == merchantId
+                    )
                     .ToList()
             );
         }
@@ -59,7 +60,8 @@ namespace WebApi.Integration.Test.PaymentDetailsControllerTests
             return Result.Ok<PaymentProjection>(
                 _paymentProjections
                     .FirstOrDefault(t =>
-                    t.PaymentId == id)
+                    t.PaymentId == id
+                    )
             );
         }
     }

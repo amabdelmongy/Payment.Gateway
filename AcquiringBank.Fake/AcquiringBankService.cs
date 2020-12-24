@@ -17,29 +17,43 @@ namespace AcquiringBank.Fake
             {
                 0 => AcceptedResult(),
                 1 => ExceptionResult(),
-                2 => RejectedResultWithCard(),
-                3 => RejectedResultWithAmount(),
+                2 => RejectedCardResult(),
+                3 => RejectedAmountResult(),
                 _ => AcceptedResult()
             };
         }
 
         private AcquiringBankPaymentResult AcceptedResult()
         {
-            return new AcquiringBankPaymentResult(Guid.NewGuid(), AcquiringBankPaymentStatus.Accepted, "Accepted");
+            return 
+                new AcquiringBankPaymentResult(
+                    Guid.NewGuid(), 
+                    AcquiringBankPaymentStatus.Accepted, "Accepted"
+                );
         }
         private AcquiringBankPaymentResult ExceptionResult()
         {
             throw new Exception("something modified at Acquiring Bank Service.");
         }
 
-        private AcquiringBankPaymentResult RejectedResultWithCard()
+        private AcquiringBankPaymentResult RejectedCardResult()
         {
-            return new AcquiringBankPaymentResult(Guid.NewGuid(), AcquiringBankPaymentStatus.Rejected, "Card is not valid.");
+            return 
+                new AcquiringBankPaymentResult(
+                    Guid.NewGuid(), 
+                    AcquiringBankPaymentStatus.Rejected, 
+                    "Card is not valid."
+                );
         }
 
-        private AcquiringBankPaymentResult RejectedResultWithAmount()
+        private AcquiringBankPaymentResult RejectedAmountResult()
         {
-            return new AcquiringBankPaymentResult(Guid.NewGuid(), AcquiringBankPaymentStatus.Rejected, "Amount is less than the required to transfer.");
+            return 
+                new AcquiringBankPaymentResult(
+                    Guid.NewGuid(), 
+                    AcquiringBankPaymentStatus.Rejected, 
+                    "Amount is less than the required to transfer."
+                );
         }
     }
 }

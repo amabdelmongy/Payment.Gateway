@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Domain.Extension;
-using Domain.Payment;
-using Domain.Payment.Aggregate;
 using Domain.Payment.Projection;
 using Microsoft.AspNetCore.Mvc;
 
@@ -48,8 +46,8 @@ namespace WebApi.Controllers.v1
                     paymentId = payment.PaymentId,
                     MerchantId = payment.MerchantId,
                     CardNumber = payment.CardNumber.Masked(),
-                    CardExpiry = payment.CardExpiry.Masked(1,4),
-                    CardCvv = payment.CardCvv.Masked(1, 2),
+                    CardExpiry = payment.CardExpiry,
+                    CardCvv = payment.CardCvv,
                     Amount = payment.Amount,
                     Currency = payment.Currency,
                     PaymentStatus = payment.PaymentStatus,
@@ -87,8 +85,8 @@ namespace WebApi.Controllers.v1
                         paymentId = payment.PaymentId,
                         MerchantId = payment.MerchantId,
                         CardNumber = payment.CardNumber.Masked(),
-                        CardExpiry = payment.CardExpiry.Masked(1, 4),
-                        CardCvv = payment.CardCvv.Masked(1, 2),
+                        CardExpiry = payment.CardExpiry,
+                        CardCvv = payment.CardCvv,
                         Amount = payment.Amount,
                         Currency = payment.Currency,
                         PaymentStatus = payment.PaymentStatus,

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Domain.MessageBus;
-using Domain.Payment.Aggregate;
 using Domain.Payment.Events;
 using Domain.Payment.Projection;
 using Moq;
@@ -65,7 +60,8 @@ namespace Domain.Test
             paymentProjectionRepositoryMock.Verify(
                 t => t.Update(
                     expectedEvent
-                ), Times.Once);
+                ), Times.Once
+            );
         }
 
         [Test]

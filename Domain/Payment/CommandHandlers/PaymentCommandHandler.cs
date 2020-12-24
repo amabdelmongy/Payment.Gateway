@@ -59,7 +59,6 @@ namespace Domain.Payment.CommandHandlers
                         "Payment Command Handler",
                         "Command not found")
                 )
-
             };
         }
     }
