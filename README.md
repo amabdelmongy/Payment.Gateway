@@ -74,6 +74,21 @@ Event Sourcing ensures that all changes to application state are stored as a se
 ### Onion architecture
 The Onion Architecture is an Architectural Pattern that enables maintainable and evolutionary enterprise systems.
 
+### unit tests 
+ It validates if that code results in the expected state (state testing) or executes the expected sequence of events (behavior testing).
+It cover more than 83% for all code and more than 98% for Domain
+
+### integration tests
+individual software modules are combined and tested as a group
+
+### Swagger documentation
+  - Swagger generate file for last version of api under this link ```/swagger/v1/swagger.json```
+  - I created another swagger file before start working under ```Git\Payment.Gateway\WebApi\docs\WebApi.swagger.json```
+
+### Database scripts 
+Path under ```Payment.Gateway\Database\Up```
+Database scripts to create tables 
+
 ##  How to run the code
  - Build with Visiual studio 2019 and run
 
@@ -82,54 +97,94 @@ The Onion Architecture is an Architectural Pattern that enables maintainable and
     A. Process a payment through your payment gateway.  
       Using API url Post action ```/api/v1/payment/request-payment``` 
         Input Dto like
-        ```
-        {
-          "MerchantId": "21220994-fc2a-43ed-bc80-2f42990ae3ac",
-          "Amount": {
-              "Value": 10,
-              "Currency": "Euro"
-          },
-          "Card": {
-              "Number": "5105105105105100",
-              "Expiry": "9/24",
-              "Cvv": "123"
-
-          }
-        }
-        ```
-        • In case of Accepted result will be like :-
+    ```
+                {
+                  "MerchantId": "21220994-fc2a-43ed-bc80-2f42990ae3ac",
+                  "Amount": {
+                      "Value": 10,
+                      "Currency": "Euro"
+                  },
+                  "Card": {
+                      "Number": "5105105105105100",
+                      "Expiry": "9/24",
+                      "Cvv": "123"
+        
+                  }
+                }
+    ```
+    • In case of Accepted result will be like :-
         Http status 200 Ok
-        ```
+    ```
         {
           "PaymentId": "e075b909-1971-4e83-a4e5-c4c79eb09501",
           "MerchantId": "21220994-fc2a-43ed-bc80-2f42990ae3ac",
           "AcquiringBankId": "a0670fc8-9f70-47e6-8214-45eb8cc36eea"
         }
-        ```
-        PaymentId:- is id generating by our gateway system and it's unique for every transaction.
-        AcquiringBankId:- is id coming from bank unique for every transaction.
-        MerchantId:- is id comming from request
+    ```
+    PaymentId:- is id generating by our gateway system and it's unique for every transaction.
+    AcquiringBankId:- is id coming from bank unique for every transaction.
+    MerchantId:- is id comming from request
 
-
-        • In case of Rejected result will be like :-
-        Http status 400 Bad Request
-        ```
+    • In case of Rejected result will be like :-
+    Http status 400 Bad Request
+    ```
         {
           "subject": "Rejected to acquiring Bank with Payment Id 6e45835c-0b0e-4ab7-9141-46a406ef1b7d",
           "message": "Card is not valid."
         }
-        ```
-        • In case of Bank throw exception result will be like :-
-        Http status 400 Bad Request
-          {
-              "subject": "Failed calling Acquiring Bank",
-              "message": "something modified at Acquiring Bank Service."
-          }
+    ```
+    • In case of Bank throw exception result will be like :-
+    Http status 400 Bad Request
+    ```
+        {
+          "subject": "Failed calling Acquiring Bank",
+          "message": "something modified at Acquiring Bank Service."
+        }
+    ```
 
     B. Retrieve details of a previously made payment.  
+    • Get all payments a previously made by merchant-id
+    
       ```
       api/v1/payment-details/{merchant-id}/get-by-merchant-id
       ```
+      it should return array of payment
+      ```
+      [
+        {
+            "paymentId": "251910dc-b482-4d48-910d-1c249ea86998",
+            "merchantId": "21220994-fc2a-43ed-bc80-2f42990ae3ac",
+            "cardNumber": "510510xxxxxx5100",
+            "cardExpiry": ""9/24"",
+            "cardCvv": "123",
+            "amount": 10,
+            "currency": "Euro",
+            "paymentStatus": "processed",
+            "lastUpdatedDate": "2020-12-23T17:59:01",
+            "acquiringBankId": "7c8aa583-dd5e-44d1-8bd0-02538a17eee0"
+        }
+        ]
+      ```
+    • Get details for payment by gateway payment id 
+      ```
+      api/v1/payment-details/{PaymentId}
+      ``` 
+      it should return one payment
+      ```
+      {
+            "paymentId": "183ed540-cb9a-4c37-bbbd-ca0804f266cf",
+            "merchantId": "21220994-fc2a-43ed-bc80-2f42990ae3ac",
+            "cardNumber": "510510xxxxxx5100",
+            "cardExpiry": "9/24",
+            "cardCvv": "123",
+            "amount": 10,
+            "currency": "Euro",
+            "paymentStatus": "processed",
+            "lastUpdatedDate": "2020-12-24T08:47:44",
+            "acquiringBankId": "ab4104bc-3c46-4670-81c0-528c0890b292"
+        }
+      ```
+      
 
 2. Build a simulator to mock the responses from the bank to test the API from your first deliverable.
     ### Acquiring Bank Mock returns  
@@ -144,6 +199,8 @@ The Onion Architecture is an Architectural Pattern that enables maintainable and
 
       • Rejected Amount :-  
         for example Bank rejects the transfer because the card amount is not enough. It retuen Rejected with bank result Id.  
+        
+        
 
 ## ToDo
 1. Added more unit tests.
